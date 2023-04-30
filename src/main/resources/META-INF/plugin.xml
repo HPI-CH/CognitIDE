@@ -15,4 +15,13 @@
     <applicationListeners>
         <listener class="com.github.diekautz.ideplugin.listeners.MyFrameStateListener" topic="com.intellij.ide.FrameStateListener"/>
     </applicationListeners>
+    <actions>
+        <action id="com.github.diekautz.ideplugin.actions.MyAction"
+            class="com.github.diekautz.ideplugin.actions.MyAction" text="Test Action">
+            <add-to-group group-id="ToolsMenu" anchor="last" />
+        </action>
+        <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
+            class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction" text="Resolve LSL Streams"
+            description="Refreshes resolved lab streaming layer stream infos" />
+    </actions>
 </idea-plugin>

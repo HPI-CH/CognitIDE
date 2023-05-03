@@ -25,6 +25,7 @@ class MyProjectService(project: Project) {
     fun resolveStreams(): List<LSL.StreamInfo> {
         streamInfos.clear()
         streamInfos.addAll(LSL.resolve_streams())
+        thisLogger().info("Resolved ${streamInfos.size} LSL streams.")
 
         streamInfoTableModel.data.clear()
         streamInfoTableModel.data.addAll(streamInfos)

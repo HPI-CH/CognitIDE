@@ -1,6 +1,6 @@
-package com.github.diekautz.ideplugin.actions
+package com.github.diekautz.ideplugin.actions.demo
 
-import com.github.diekautz.ideplugin.services.MyProjectService
+import com.github.diekautz.ideplugin.services.MyLSLService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
@@ -13,6 +13,6 @@ class ScanLSLStreamsAction: AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.project!!.service<MyProjectService>().resolveStreams()
+        e.project!!.service<MyLSLService>().resolveStreams()
     }
 }

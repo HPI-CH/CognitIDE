@@ -1,8 +1,8 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.diekautz.ideplugin</id>
-    <name>ide-plugin Template</name>
-    <vendor>diekautz</vendor>
+    <name>OpenEye IDEA</name>
+    <vendor>Malte Stellmacher</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
@@ -16,8 +16,8 @@
         <listener class="com.github.diekautz.ideplugin.listeners.MyFrameStateListener" topic="com.intellij.ide.FrameStateListener"/>
     </applicationListeners>
     <actions>
-        <action id="com.github.diekautz.ideplugin.actions.MyAction"
-            class="com.github.diekautz.ideplugin.actions.MyAction" text="Test Action">
+        <action id="com.github.diekautz.ideplugin.actions.demo.CalculateScreenBrightnessAction"
+                class="com.github.diekautz.ideplugin.actions.demo.CalculateScreenBrightnessAction" text="Screen Brightness">
             <add-to-group group-id="ToolsMenu" anchor="last" />
         </action>
         <action id="com.github.diekautz.ideplugin.actions.demo.ScanLSLStreamsAction"

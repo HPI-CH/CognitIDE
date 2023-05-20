@@ -29,11 +29,17 @@ class MyMousePositionService(val project: Project) {
         refreshJob?.start()
     }
 
+    fun stopTrackMouse() {
+        task.shouldRun = false
+    }
+
     private val task = object : Task.Backgroundable(project, "Recording Mouse", true) {
+        var shouldRun = true
+
         override fun run(indicator: ProgressIndicator) {
             runBlocking {
                 indicator.isIndeterminate = true
-                while (true) {
+                while (shouldRun) {
                     if(indicator.isCanceled) return@runBlocking
                     val mousePoint = MouseInfo.getPointerInfo().location
 

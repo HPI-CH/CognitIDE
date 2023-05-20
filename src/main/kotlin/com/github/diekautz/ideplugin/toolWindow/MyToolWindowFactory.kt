@@ -23,7 +23,7 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         arrayOf(
             contentFactory.createContent(myToolWindow.connectTabContent(), "Connect", false),
-                    contentFactory.createContent(myToolWindow.inletTabContent(), "Inlet", false),
+            contentFactory.createContent(myToolWindow.inletTabContent(), "Inlet", false),
         ).forEach(toolWindow.contentManager::addContent)
     }
 
@@ -38,6 +38,9 @@ class MyToolWindowFactory : ToolWindowFactory {
             row {
                 button("Record Mouse") {
                     mousePositionService.trackMouse()
+                }
+                button("Stop Mouse") {
+                    mousePositionService.stopTrackMouse()
                 }
             }
         }

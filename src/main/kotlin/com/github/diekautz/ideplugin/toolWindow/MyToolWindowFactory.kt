@@ -9,7 +9,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import com.intellij.ui.dsl.builder.*
+import com.intellij.ui.dsl.builder.bindIntText
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.intellij.ui.table.JBTable
 
@@ -41,6 +43,9 @@ class MyToolWindowFactory : ToolWindowFactory {
                 }
                 button("Stop Mouse") {
                     mousePositionService.stopTrackMouse()
+                }
+                button("Visualize Seen") {
+                    mousePositionService.visualizeSeen()
                 }
             }
         }

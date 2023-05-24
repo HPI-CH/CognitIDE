@@ -37,14 +37,16 @@ class MyToolWindowFactory : ToolWindowFactory {
         private val dataModel = Model()
         fun connectTabContent() = panel {
             val mousePositionService = project.service<MyMousePositionService>()
-            row {
-                button("Record Mouse") {
+            row("Mouse") {
+                button("Record") {
                     mousePositionService.trackMouse()
                 }
-                button("Stop Mouse") {
+                button("Stop") {
                     mousePositionService.stopTrackMouse()
                 }
-                button("Visualize Seen") {
+            }
+            row("Visualize") {
+                button("Highlight in Editor") {
                     mousePositionService.visualizeSeen()
                 }
             }

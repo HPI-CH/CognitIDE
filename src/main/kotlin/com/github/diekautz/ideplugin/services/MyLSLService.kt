@@ -1,9 +1,9 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.StreamInfoTableModel
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
-import com.github.diekautz.ideplugin.StreamInfoTableModel
 import edu.ucsd.sccn.LSL
 
 @Service(Service.Level.PROJECT)

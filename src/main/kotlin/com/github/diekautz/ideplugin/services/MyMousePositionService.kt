@@ -1,11 +1,9 @@
 package com.github.diekautz.ideplugin.services
 
-import com.github.diekautz.ideplugin.ui.MyColors
-import com.intellij.codeInsight.highlighting.HighlightManager
+import com.github.diekautz.ideplugin.utils.highlightSeenElements
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
@@ -28,8 +26,8 @@ class MyMousePositionService(val project: Project) {
     fun trackMouse() {
         thisLogger().debug("Track mouse started!")
 
-        ProgressManager.getInstance().run(task)
         task.shouldRun = true
+        ProgressManager.getInstance().run(task)
         refreshJob?.start()
     }
 
@@ -39,21 +37,10 @@ class MyMousePositionService(val project: Project) {
 
     val seen = ConcurrentHashMap<PsiElement, Int>()
 
-    fun visualizeSeen() {
+    fun visualizeInEditor() {
         invokeLater {
             FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
-                val groupedSeen = seen.toList().groupBy { entry ->
-                    val index = MyColors.boarders.indexOfFirst { entry.second < it }
-                    if (index >= 0) index else MyColors.boarders.lastIndex
-                }
-                groupedSeen.forEach { (colorIndex, entries) ->
-                    highlightElements(
-                        colorIndex,
-                        entries.map { it.first },
-                        editor,
-                        project
-                    )
-                }
+                highlightSeenElements(seen, editor, project)
             }
         }
     }
@@ -91,16 +78,6 @@ class MyMousePositionService(val project: Project) {
                 }
             }
         }
-    }
-
-    private fun highlightElements(index: Int, elements: List<PsiElement>, editor: Editor, project: Project) {
-        HighlightManager.getInstance(project).addOccurrenceHighlights(
-            editor,
-            elements.toTypedArray(),
-            MyColors.LOOKED_ATTRIBUTES[index],
-            true,
-            null
-        )
     }
 
 }

@@ -3,6 +3,7 @@ package com.github.diekautz.ideplugin.toolWindow
 import com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction
 import com.github.diekautz.ideplugin.services.MyLSLService
 import com.github.diekautz.ideplugin.services.MyMousePositionService
+import com.github.diekautz.ideplugin.services.MyTobiiProService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -37,6 +38,7 @@ class MyToolWindowFactory : ToolWindowFactory {
         private val dataModel = Model()
         fun connectTabContent() = panel {
             val mousePositionService = project.service<MyMousePositionService>()
+            val tobiiProService = project.service<MyTobiiProService>()
             row("Mouse") {
                 button("Record") {
                     mousePositionService.trackMouse()
@@ -44,10 +46,19 @@ class MyToolWindowFactory : ToolWindowFactory {
                 button("Stop") {
                     mousePositionService.stopTrackMouse()
                 }
+                button("Visualize in Editor") {
+                    mousePositionService.visualizeInEditor()
+                }
             }
-            row("Visualize") {
-                button("Highlight in Editor") {
-                    mousePositionService.visualizeSeen()
+            row("Tobii Pro Nano") {
+                button("Record") {
+                    tobiiProService.startRecording()
+                }
+                button("Stop") {
+                    tobiiProService.stopRecording()
+                }
+                button("Visualize in Editor") {
+                    tobiiProService.visualizeInEditor()
                 }
             }
         }

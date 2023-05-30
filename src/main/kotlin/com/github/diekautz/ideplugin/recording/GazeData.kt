@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.utils
+package com.github.diekautz.ideplugin.recording
 
 import kotlinx.datetime.Instant
 import java.awt.Point

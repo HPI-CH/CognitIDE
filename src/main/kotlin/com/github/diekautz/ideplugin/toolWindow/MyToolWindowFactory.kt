@@ -1,14 +1,18 @@
 package com.github.diekautz.ideplugin.toolWindow
 
 import com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction
+import com.github.diekautz.ideplugin.recording.MyRecordingService
 import com.github.diekautz.ideplugin.services.MyLSLService
 import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.fileChooser.FileSaverDialog
+import com.intellij.openapi.fileChooser.ex.FileSaverDialogImpl
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.psi.impl.file.impl.FileManager
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.bindIntText
 import com.intellij.ui.dsl.builder.bindText
@@ -27,6 +31,7 @@ class MyToolWindowFactory : ToolWindowFactory {
         arrayOf(
             contentFactory.createContent(myToolWindow.connectTabContent(), "Connect", false),
             contentFactory.createContent(myToolWindow.inletTabContent(), "Inlet", false),
+            contentFactory.createContent(myToolWindow.recorderTabContent(), "Recorder", false),
         ).forEach(toolWindow.contentManager::addContent)
     }
 
@@ -88,6 +93,14 @@ class MyToolWindowFactory : ToolWindowFactory {
                     text("Test")
                         .bindIntText(dataModel::selectedLSLDeviceRow)
                 }
+            }
+        }
+
+        fun recorderTabContent() = panel {
+            val recordingService = project.service<MyRecordingService>()
+            row {
+                button("New Recording") { recordingService.newRecording() }
+                button("Save to disk") {  }
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.services
 
-import com.github.diekautz.ideplugin.utils.GazeData
+import com.github.diekautz.ideplugin.recording.GazeData
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger

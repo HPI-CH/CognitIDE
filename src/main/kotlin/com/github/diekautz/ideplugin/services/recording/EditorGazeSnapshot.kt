@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services.recording
 
 data class EditorGazeSnapshot(
-    val timeUTCSeconds: Double,
+    val epochMillis: Long,
     val filePath: String,
     val elementStartOffset: Int
 )

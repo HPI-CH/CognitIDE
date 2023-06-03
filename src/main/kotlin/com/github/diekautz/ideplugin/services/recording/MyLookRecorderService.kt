@@ -1,8 +1,11 @@
 package com.github.diekautz.ideplugin.services.recording
 
 import com.github.diekautz.ideplugin.utils.GazeData
+import com.github.diekautz.ideplugin.utils.highlightElements
 import com.github.diekautz.ideplugin.utils.increment
+import com.github.diekautz.ideplugin.utils.serializeAndSaveToDisk
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -18,9 +21,25 @@ class MyLookRecorderService(val project: Project) {
     private val gazeSnapshots = mutableListOf<GazeSnapshot>()
     private val elementGazePoints = mutableMapOf<PsiElement, Double>()
 
-    fun addElementGaze(timeSeconds: Double, virtualFile: VirtualFile, psiElement: PsiElement, rawGazeData: GazeData) {
+    fun saveGazeSnapshots() {
+        gazeSnapshots.ifEmpty {
+            thisLogger().warn("No gaze snapshots to be saved. Aborting.")
+            return
+        }
+        serializeAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location")
+    }
+
+    fun saveElementsGazePoints() {
+        elementGazePoints.ifEmpty {
+            thisLogger().warn("No element gaze points to be saved. Aborting.")
+            return
+        }
+        serializeAndSaveToDisk(project, elementGazePoints, "Element Gaze Points Save Location")
+    }
+
+    fun addGazeSnapshot(epochMillis: Long, virtualFile: VirtualFile, psiElement: PsiElement, rawGazeData: GazeData) {
         val editorGazeSnapshot = EditorGazeSnapshot(
-            timeSeconds,
+            epochMillis,
             virtualFile.path,
             psiElement.startOffset
         )
@@ -43,8 +62,8 @@ class MyLookRecorderService(val project: Project) {
         arrayOf(0.0018, 0.0044, 0.0082, 0.0119, 0.0135, 0.0119, 0.0082, 0.0044, 0.0018),
         arrayOf(0.0008, 0.0018, 0.0034, 0.0050, 0.0056, 0.0050, 0.0034, 0.0018, 0.0008),
     )
-    val errorMatrixSize1 = errorMatrix.size
-    val errorMatrixSize2 = errorMatrix.first().size
+    private val errorMatrixSize1 = errorMatrix.size
+    private val errorMatrixSize2 = errorMatrix.first().size
 
     fun addAreaGaze(psiFile: PsiFile, editor: Editor, rawGazeData: GazeData) {
         // distribute look onto surrounding elements evenly
@@ -67,6 +86,10 @@ class MyLookRecorderService(val project: Project) {
                 }
             }
         }
+    }
+
+    fun highlightElements(editor: Editor) {
+        editor.highlightElements(0, elementGazePoints.keys.toList(), project)
     }
 
 }

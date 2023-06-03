@@ -4,6 +4,7 @@ import com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction
 import com.github.diekautz.ideplugin.services.MyLSLService
 import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
+import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -38,15 +39,30 @@ class MyToolWindowFactory : ToolWindowFactory {
         private val dataModel = Model()
         fun recordTabContent() = panel {
             val tobiiProService = project.service<MyTobiiProService>()
-            row("Tobii Pro Nano") {
-                button("Record") {
-                    tobiiProService.startRecording()
+            val lookRecorderService = project.service<MyLookRecorderService>()
+            group("Tobii Pro Nano") {
+                row {
+                    button("Record") {
+                        tobiiProService.startRecording()
+                    }
+                    button("Stop") {
+                        tobiiProService.stopRecording()
+                    }
                 }
-                button("Stop") {
-                    tobiiProService.stopRecording()
+                row {
+                    button("Visualize in Editor") {
+                        tobiiProService.visualizeInEditor()
+                    }
                 }
-                button("Visualize in Editor") {
-                    tobiiProService.visualizeInEditor()
+            }
+            group("Save") {
+                row {
+                    button("Save Gaze Snapshots") {
+                        lookRecorderService.saveGazeSnapshots()
+                    }
+                    button("Save Element Gaze Points") {
+                        lookRecorderService.saveElementsGazePoints()
+                    }
                 }
             }
         }

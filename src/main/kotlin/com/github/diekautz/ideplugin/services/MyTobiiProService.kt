@@ -1,26 +1,32 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.github.diekautz.ideplugin.utils.GazeData
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiWhiteSpace
 import edu.ucsd.sccn.LSL
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Instant
 import java.awt.Point
 import java.awt.Rectangle
 import java.awt.Toolkit
+import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
 class MyTobiiProService(val project: Project) {
 
-    val gazeData = mutableListOf<GazeData>()
+
+    private val lookRecorderService = project.service<MyLookRecorderService>()
 
     fun startRecording() {
         task.shouldRun = true
@@ -79,14 +85,33 @@ class MyTobiiProService(val project: Project) {
                         if (timestampSeconds == 0.0) continue
                         timestampSeconds += inlet.time_correction()
                         val data = GazeData(
-                            Instant.fromEpochSeconds(timestampSeconds.toLong(), 0),
                             Point((buffer[0] * screenRect.width).toInt(), (buffer[1] * screenRect.height).toInt()),
                             Point((buffer[3] * screenRect.width).toInt(), (buffer[4] * screenRect.height).toInt()),
                             buffer[2].toDouble(),
                             buffer[5].toDouble(),
                         )
                         thisLogger().info("New gaze data: $data")
-                        gazeData.add(data)
+
+                        invokeLater {
+                            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
+                            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
+
+                            val eyeCenter = Point(
+                                (data.leftEye.x + data.rightEye.x) / 2,
+                                (data.leftEye.y + data.rightEye.y) / 2,
+                            )
+                            SwingUtilities.convertPointFromScreen(eyeCenter, editor.contentComponent)
+                            if (!editor.contentComponent.contains(eyeCenter)) return@invokeLater
+                            val logicalPosition = editor.xyToLogicalPosition(eyeCenter)
+                            val offset = editor.logicalPositionToOffset(logicalPosition)
+
+                            val element = psiFile.findElementAt(offset)
+                            val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
+                            if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
+                                lookRecorderService.addGazeSnapshot((timestampSeconds * 1_000.0).toLong(), virtualFile, element, data)
+                            }
+                            lookRecorderService.addAreaGaze(psiFile, editor, data)
+                        }
                     }
                 } catch (ex: Exception) {
                     invokeLater {
@@ -103,7 +128,7 @@ class MyTobiiProService(val project: Project) {
     fun visualizeInEditor() {
         invokeLater {
             FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
-                thisLogger().debug(gazeData.joinToString("\n"))
+                lookRecorderService.highlightElements(editor)
             }
         }
     }

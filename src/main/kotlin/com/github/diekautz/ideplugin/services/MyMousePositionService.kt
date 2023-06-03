@@ -1,27 +1,29 @@
 package com.github.diekautz.ideplugin.services
 
-import com.github.diekautz.ideplugin.utils.highlightSeenElements
-import com.github.diekautz.ideplugin.utils.increment
+import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
+import com.github.diekautz.ideplugin.utils.GazeData
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import kotlinx.coroutines.*
 import java.awt.MouseInfo
 import java.awt.Point
-import java.util.concurrent.ConcurrentHashMap
+import java.time.Instant
 import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
 class MyMousePositionService(val project: Project) {
 
+    private val lookRecorderService = project.service<MyLookRecorderService>()
     private var refreshJob: Job? = null
 
     fun trackMouse() {
@@ -36,12 +38,10 @@ class MyMousePositionService(val project: Project) {
         task.shouldRun = false
     }
 
-    val seen = ConcurrentHashMap<PsiElement, Int>()
-
     fun visualizeInEditor() {
         invokeLater {
             FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
-                editor.highlightSeenElements(seen, project)
+                lookRecorderService.highlightElements(editor)
             }
         }
     }
@@ -57,22 +57,25 @@ class MyMousePositionService(val project: Project) {
                     val mousePoint = MouseInfo.getPointerInfo().location
 
                     invokeLater {
-                        FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
+                        val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
 
-                            val relativePoint = Point(mousePoint)
-                            SwingUtilities.convertPointFromScreen(relativePoint, editor.contentComponent)
-                            if (!editor.contentComponent.contains(relativePoint)) return@let
-                            val logicalPosition = editor.xyToLogicalPosition(relativePoint)
-                            indicator.text = "${logicalPosition.line}:${logicalPosition.column}"
+                        val relativePoint = Point(mousePoint)
+                        SwingUtilities.convertPointFromScreen(relativePoint, editor.contentComponent)
+                        if (!editor.contentComponent.contains(relativePoint)) return@invokeLater
+                        val logicalPosition = editor.xyToLogicalPosition(relativePoint)
+                        indicator.text = "${logicalPosition.line}:${logicalPosition.column}"
 
-                            val offset = editor.logicalPositionToOffset(logicalPosition)
-                            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
-                            val element = psiFile?.findElementAt(offset)
-                            if (element != null && element !is PsiWhiteSpace) {
-                                seen.increment(element)
-                                thisLogger().info("Have seen element ${element.node} ${seen[element]}")
-                            }
+                        val offset = editor.logicalPositionToOffset(logicalPosition)
+                        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
+                        val element = psiFile.findElementAt(offset)
+
+                        val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
+
+                        val fakeData = GazeData(mousePoint, mousePoint, 1.0, 1.0)
+                        if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
+                            lookRecorderService.addGazeSnapshot(Instant.now().toEpochMilli(), virtualFile, element, fakeData)
                         }
+                        lookRecorderService.addAreaGaze(psiFile, editor, fakeData)
                     }
                     delay(1000)
                 }

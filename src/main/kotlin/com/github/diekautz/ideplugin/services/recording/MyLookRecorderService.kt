@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services.recording
 
 import com.github.diekautz.ideplugin.utils.GazeData
+import com.github.diekautz.ideplugin.utils.increment
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -62,8 +63,7 @@ class MyLookRecorderService(val project: Project) {
                 val offset = editor.logicalPositionToOffset(logicalPosition)
                 val element = psiFile.findElementAt(offset)
                 if (element != null && element !is PsiWhiteSpace) {
-                    val value = elementGazePoints.getOrDefault(element, 0.0)
-                    elementGazePoints[element] = value + error
+                    elementGazePoints.increment(element, error)
                 }
             }
         }

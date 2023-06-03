@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.utils.highlightSeenElements
+import com.github.diekautz.ideplugin.utils.increment
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -68,8 +69,7 @@ class MyMousePositionService(val project: Project) {
                             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
                             val element = psiFile?.findElementAt(offset)
                             if (element != null && element !is PsiWhiteSpace) {
-                                val value = seen.getOrDefault(element, 0)
-                                seen[element] = value + 1
+                                seen.increment(element)
                                 thisLogger().info("Have seen element ${element.node} ${seen[element]}")
                             }
                         }

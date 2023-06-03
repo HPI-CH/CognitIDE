@@ -25,8 +25,8 @@ class MyToolWindowFactory : ToolWindowFactory {
         val myToolWindow = MyToolWindow(toolWindow)
 
         arrayOf(
-            contentFactory.createContent(myToolWindow.connectTabContent(), "Connect", false),
-            contentFactory.createContent(myToolWindow.inletTabContent(), "Inlet", false),
+            contentFactory.createContent(myToolWindow.recordTabContent(), "Record", false),
+            contentFactory.createContent(myToolWindow.debugTabContent(), "Debug", false),
         ).forEach(toolWindow.contentManager::addContent)
     }
 
@@ -36,20 +36,8 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         private val project = toolWindow.project
         private val dataModel = Model()
-        fun connectTabContent() = panel {
-            val mousePositionService = project.service<MyMousePositionService>()
+        fun recordTabContent() = panel {
             val tobiiProService = project.service<MyTobiiProService>()
-            row("Mouse") {
-                button("Record") {
-                    mousePositionService.trackMouse()
-                }
-                button("Stop") {
-                    mousePositionService.stopTrackMouse()
-                }
-                button("Visualize in Editor") {
-                    mousePositionService.visualizeInEditor()
-                }
-            }
             row("Tobii Pro Nano") {
                 button("Record") {
                     tobiiProService.startRecording()
@@ -63,9 +51,22 @@ class MyToolWindowFactory : ToolWindowFactory {
             }
         }
 
-        fun inletTabContent() = panel {
+        fun debugTabContent() = panel {
             val lslService = project.service<MyLSLService>()
+            val mousePositionService = project.service<MyMousePositionService>()
             val tableModel = lslService.getStreamInfoTableModel()
+
+            row("Mouse") {
+                button("Record") {
+                    mousePositionService.trackMouse()
+                }
+                button("Stop") {
+                    mousePositionService.stopTrackMouse()
+                }
+                button("Visualize in Editor") {
+                    mousePositionService.visualizeInEditor()
+                }
+            }
             group("1: Scan Devices") {
                 row {
                     button("Rescan", ScanLSLStreamsAction())

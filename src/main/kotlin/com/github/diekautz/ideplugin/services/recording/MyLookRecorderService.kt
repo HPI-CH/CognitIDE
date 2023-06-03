@@ -3,6 +3,7 @@ package com.github.diekautz.ideplugin.services.recording
 import com.github.diekautz.ideplugin.utils.GazeData
 import com.github.diekautz.ideplugin.utils.highlightElements
 import com.github.diekautz.ideplugin.utils.increment
+import com.github.diekautz.ideplugin.utils.infoMsg
 import com.github.diekautz.ideplugin.utils.serializeAndSaveToDisk
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -23,7 +24,7 @@ class MyLookRecorderService(val project: Project) {
 
     fun saveGazeSnapshots() {
         gazeSnapshots.ifEmpty {
-            thisLogger().warn("No gaze snapshots to be saved. Aborting.")
+            project.infoMsg("No gaze snapshots to be saved.", thisLogger())
             return
         }
         serializeAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location")
@@ -31,7 +32,7 @@ class MyLookRecorderService(val project: Project) {
 
     fun saveElementsGazePoints() {
         elementGazePoints.ifEmpty {
-            thisLogger().warn("No element gaze points to be saved. Aborting.")
+            project.infoMsg("No element gaze points to be saved.", thisLogger())
             return
         }
         serializeAndSaveToDisk(project, elementGazePoints, "Element Gaze Points Save Location")

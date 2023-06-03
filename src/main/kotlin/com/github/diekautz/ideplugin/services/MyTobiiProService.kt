@@ -2,6 +2,7 @@ package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.github.diekautz.ideplugin.utils.GazeData
+import com.github.diekautz.ideplugin.utils.infoMsg
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -39,6 +40,7 @@ class MyTobiiProService(val project: Project) {
 
     private val task = object : Task.Backgroundable(project, "Recording gaze", true) {
         var shouldRun = true
+        val logger = this@MyTobiiProService.thisLogger()
 
         override fun run(indicator: ProgressIndicator) {
             runBlocking {
@@ -53,7 +55,7 @@ class MyTobiiProService(val project: Project) {
                     ).forEach {
                         val inlet = LSL.StreamInlet(it)
                         val info = inlet.info(1.0)
-                        thisLogger().debug(
+                        logger.debug(
                             "Got stream ${info.name()}: ${
                                 info.desc().child("acquisition").child_value("manufacturer")
                             }"
@@ -66,16 +68,13 @@ class MyTobiiProService(val project: Project) {
                         }
                     }
                     if (streamInlet == null) {
-                        invokeLater {
-                            Messages.showInfoMessage(project, "No TobiiPro stream found!", "TobiiService")
-                        }
-                        thisLogger().info("No TobiiPro stream found!")
+                        project.infoMsg("No TobiiPro stream found!", logger)
                         return@runBlocking
                     }
                     val inlet = streamInlet!!
                     val screenRect = Rectangle(Toolkit.getDefaultToolkit().screenSize)
 
-                    thisLogger().info("Tobii Recording started")
+                    logger.info("Tobii Recording started")
                     indicator.text = "Opening inlet"
                     inlet.open_stream()
                     indicator.text = "Inlet Open. Waiting for data.."
@@ -90,7 +89,7 @@ class MyTobiiProService(val project: Project) {
                             buffer[2].toDouble(),
                             buffer[5].toDouble(),
                         )
-                        thisLogger().info("New gaze data: $data")
+                        logger.info("New gaze data: $data")
 
                         invokeLater {
                             val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
@@ -117,9 +116,9 @@ class MyTobiiProService(val project: Project) {
                     invokeLater {
                         Messages.showErrorDialog(project, ex.localizedMessage, "TobiiRecording Exception")
                     }
-                    thisLogger().error(ex)
+                    logger.error(ex)
                 }
-                thisLogger().info("Tobii Recording stopped")
+                logger.info("Tobii Recording stopped")
             }
         }
     }

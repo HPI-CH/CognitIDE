@@ -9,15 +9,15 @@ import com.intellij.psi.PsiElement
 import java.awt.Point
 import javax.swing.SwingUtilities
 
-fun screenToLogicalInEditor(textEditor: Editor, point: Point): LogicalPosition {
+fun Editor.xyScreenToLogical(point: Point): LogicalPosition {
     val relativePoint = Point(point)
-    SwingUtilities.convertPointFromScreen(relativePoint, textEditor.contentComponent)
-    return textEditor.xyToLogicalPosition(relativePoint)
+    SwingUtilities.convertPointFromScreen(relativePoint, contentComponent)
+    return xyToLogicalPosition(relativePoint)
 }
 
-fun highlightElements(index: Int, elements: List<PsiElement>, editor: Editor, project: Project) {
+fun Editor.highlightElements(index: Int, elements: List<PsiElement>, project: Project) {
     HighlightManager.getInstance(project).addOccurrenceHighlights(
-        editor,
+        this,
         elements.toTypedArray(),
         MyColors.LOOKED_ATTRIBUTES[index],
         true,
@@ -25,7 +25,7 @@ fun highlightElements(index: Int, elements: List<PsiElement>, editor: Editor, pr
     )
 }
 
-fun highlightSeenElements(seen: Map<PsiElement, Int>, editor: Editor, project: Project) {
+fun Editor.highlightSeenElements(seen: Map<PsiElement, Int>, project: Project) {
     val groupedSeen = seen.toList().groupBy { entry ->
         val index = MyColors.boarders.indexOfFirst { entry.second < it }
         if (index >= 0) index else MyColors.boarders.lastIndex
@@ -34,7 +34,6 @@ fun highlightSeenElements(seen: Map<PsiElement, Int>, editor: Editor, project: P
         highlightElements(
             colorIndex,
             entries.map { it.first },
-            editor,
             project
         )
     }

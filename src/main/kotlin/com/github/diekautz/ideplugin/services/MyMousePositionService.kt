@@ -40,7 +40,7 @@ class MyMousePositionService(val project: Project) {
     fun visualizeInEditor() {
         invokeLater {
             FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
-                highlightSeenElements(seen, editor, project)
+                editor.highlightSeenElements(seen, project)
             }
         }
     }

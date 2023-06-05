@@ -1,6 +1,5 @@
 package com.github.diekautz.ideplugin.services.recording
 
-import com.github.diekautz.ideplugin.utils.GazeData
 import com.github.diekautz.ideplugin.utils.highlightElements
 import com.github.diekautz.ideplugin.utils.increment
 import com.github.diekautz.ideplugin.utils.infoMsg

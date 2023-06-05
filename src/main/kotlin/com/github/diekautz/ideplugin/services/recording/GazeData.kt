@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.utils
+package com.github.diekautz.ideplugin.services.recording
 
 import java.awt.Point
 

@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
-import com.github.diekautz.ideplugin.utils.GazeData
 import com.github.diekautz.ideplugin.utils.infoMsg
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -93,7 +93,8 @@ class MyTobiiProService(val project: Project) {
 
                         invokeLater {
                             val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
-                            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
+                            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
+                                ?: return@invokeLater
 
                             val eyeCenter = Point(
                                 (data.leftEye.x + data.rightEye.x) / 2,
@@ -107,7 +108,12 @@ class MyTobiiProService(val project: Project) {
                             val element = psiFile.findElementAt(offset)
                             val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
                             if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-                                lookRecorderService.addGazeSnapshot((timestampSeconds * 1_000.0).toLong(), virtualFile, element, data)
+                                lookRecorderService.addGazeSnapshot(
+                                    (timestampSeconds * 1_000.0).toLong(),
+                                    virtualFile,
+                                    element,
+                                    data
+                                )
                             }
                             lookRecorderService.addAreaGaze(psiFile, editor, data)
                         }

@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.serialization) // KotlinX Serialization
 }
 
 group = properties("pluginGroup").get()
@@ -25,6 +26,7 @@ repositories {
 dependencies {
     implementation(libs.annotations)
     implementation(libs.jna)
+    implementation(libs.kotlinx.serialization)
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

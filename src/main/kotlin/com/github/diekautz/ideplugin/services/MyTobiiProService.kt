@@ -92,7 +92,6 @@ class MyTobiiProService(val project: Project) {
                             buffer[2].toDouble(),
                             buffer[5].toDouble(),
                         )
-                        logger.info("New gaze data: $data")
 
                         invokeLater {
                             val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
@@ -100,8 +99,8 @@ class MyTobiiProService(val project: Project) {
                                 ?: return@invokeLater
 
                             val eyeCenter = Point(
-                                (data.leftEye.x + data.rightEye.x) / 2,
-                                (data.leftEye.y + data.rightEye.y) / 2,
+                                (data.leftEyeX + data.rightEyeY) / 2,
+                                (data.leftEyeY + data.rightEyeY) / 2,
                             )
                             SwingUtilities.convertPointFromScreen(eyeCenter, editor.contentComponent)
                             if (!editor.contentComponent.contains(eyeCenter)) return@invokeLater
@@ -120,6 +119,7 @@ class MyTobiiProService(val project: Project) {
                             }
                             elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, data)
                             indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
+                            indicator.text2 = "eye: ${eyeCenter.x},${eyeCenter.y} ${logicalPosition.line}:${logicalPosition.column} ${element?.text}"
                         }
                     }
                 } catch (ex: Exception) {

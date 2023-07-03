@@ -41,10 +41,23 @@ class MyLookRecorderService(val project: Project) {
             project.infoMsg("No element gaze points to be saved.", thisLogger())
             return
         }
-        serializeAndSaveToDisk(project, elementGazePoints, "Element Gaze Points Save Location", "elements")
+
+        serializeAndSaveToDisk(
+            project,
+            elementGazePoints.mapKeys { (psiElement, _) ->
+                SerializableElement(psiElement)
+            },
+            "Element Gaze Points Save Location",
+            "elements"
+        )
     }
 
-    fun addGazeSnapshot(epochMillis: Long, virtualFile: VirtualFile, psiElement: PsiElement, rawGazeData: GazeData): Int {
+    fun addGazeSnapshot(
+        epochMillis: Long,
+        virtualFile: VirtualFile,
+        psiElement: PsiElement,
+        rawGazeData: GazeData
+    ): Int {
         val editorGazeSnapshot = EditorGazeSnapshot(
             epochMillis,
             virtualFile.path,
@@ -75,8 +88,8 @@ class MyLookRecorderService(val project: Project) {
 
     fun addAreaGaze(psiFile: PsiFile, editor: Editor, rawGazeData: GazeData): Int {
         // distribute look onto surrounding elements evenly
-        val eyeX = (rawGazeData.leftEye.x + rawGazeData.rightEye.x) / 2
-        val eyeY = (rawGazeData.leftEye.y + rawGazeData.rightEye.y) / 2
+        val eyeX = (rawGazeData.leftEyeX + rawGazeData.rightEyeX) / 2
+        val eyeY = (rawGazeData.leftEyeY + rawGazeData.rightEyeY) / 2
 
         val errorPos = Point(eyeX, eyeY)
         errorMatrix.forEachIndexed { i, rows ->

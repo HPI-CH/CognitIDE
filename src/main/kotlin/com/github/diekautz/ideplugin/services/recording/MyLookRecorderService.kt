@@ -14,6 +14,8 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Service(Service.Level.PROJECT)
 class MyLookRecorderService(val project: Project) {
@@ -21,12 +23,16 @@ class MyLookRecorderService(val project: Project) {
     private val gazeSnapshots = mutableListOf<GazeSnapshot>()
     private val elementGazePoints = mutableMapOf<PsiElement, Double>()
 
+    private val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
+
     fun saveGazeSnapshots() {
         gazeSnapshots.ifEmpty {
             project.infoMsg("No gaze snapshots to be saved.", thisLogger())
             return
         }
-        serializeAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location")
+        val recordingStart = Date(gazeSnapshots.first().editorGazeSnapshot.epochMillis)
+        val filename = "gaze-${timestampFormat.format(recordingStart)}"
+        serializeAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location", filename)
     }
 
     fun saveElementsGazePoints() {
@@ -34,7 +40,7 @@ class MyLookRecorderService(val project: Project) {
             project.infoMsg("No element gaze points to be saved.", thisLogger())
             return
         }
-        serializeAndSaveToDisk(project, elementGazePoints, "Element Gaze Points Save Location")
+        serializeAndSaveToDisk(project, elementGazePoints, "Element Gaze Points Save Location", "elements")
     }
 
     fun addGazeSnapshot(epochMillis: Long, virtualFile: VirtualFile, psiElement: PsiElement, rawGazeData: GazeData) {

@@ -20,18 +20,5 @@
         <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
                 class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction" text="Resolve LSL Streams"
                 description="Refreshes resolved lab streaming layer stream infos" />
-        <action id="com.github.diekautz.ideplugin.actions.demo.EditorAreaIllustrationAction"
-                class="com.github.diekautz.ideplugin.actions.demo.EditorAreaIllustrationAction" text="Area Illustration">
-            <add-to-group group-id="ToolsMenu" anchor="last" />
-        </action>
-        <action id="com.github.diekautz.ideplugin.actions.demo.PsiNavigationDemoAction"
-                class="com.github.diekautz.ideplugin.actions.demo.PsiNavigationDemoAction" text="Psi Nav Demo">
-            <add-to-group group-id="ToolsMenu" anchor="last" />
-        </action>
-        <action id="com.github.diekautz.ideplugin.actions.demo.ProjectFileIndexSampleAction"
-                class="com.github.diekautz.ideplugin.actions.demo.ProjectFileIndexSampleAction"
-                text="ProjectFileIndexSample">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
     </actions>
 </idea-plugin>

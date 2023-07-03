@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
-import com.github.diekautz.ideplugin.utils.GazeData
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service

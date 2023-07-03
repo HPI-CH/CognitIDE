@@ -73,7 +73,7 @@ class MyMousePositionService(val project: Project) {
                         elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, fakeData)
                         indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
                     }
-                    delay(1000)
+                    delay(100)
                 }
             }
         }

@@ -101,4 +101,9 @@ class MyLookRecorderService(val project: Project) {
         editor.highlightElementGazePoints(elementGazePoints, project)
     }
 
+    fun clearData() {
+        gazeSnapshots.clear()
+        elementGazePoints.clear()
+    }
+
 }

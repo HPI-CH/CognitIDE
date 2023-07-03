@@ -38,14 +38,6 @@ class MyMousePositionService(val project: Project) {
         task.shouldRun = false
     }
 
-    fun visualizeInEditor() {
-        invokeLater {
-            FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
-                lookRecorderService.highlightElements(editor)
-            }
-        }
-    }
-
     private val task = object : Task.Backgroundable(project, "Recording Mouse", true) {
         var shouldRun = true
 

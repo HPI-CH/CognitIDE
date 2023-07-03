@@ -8,6 +8,7 @@ import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
@@ -49,13 +50,21 @@ class MyToolWindowFactory : ToolWindowFactory {
                         tobiiProService.stopRecording()
                     }
                 }
+            }
+            group("Recording") {
                 row {
+                    button("Clear") {
+                        if (MessageDialogBuilder
+                                .okCancel("Clear Recording", "Do you want clear all recorded data?")
+                                .ask(project)
+                        ) {
+                            lookRecorderService.clearData()
+                        }
+                    }
                     button("Visualize in Editor") {
                         tobiiProService.visualizeInEditor()
                     }
                 }
-            }
-            group("Save") {
                 row {
                     button("Save Gaze Snapshots") {
                         lookRecorderService.saveGazeSnapshots()
@@ -78,9 +87,6 @@ class MyToolWindowFactory : ToolWindowFactory {
                 }
                 button("Stop") {
                     mousePositionService.stopTrackMouse()
-                }
-                button("Visualize in Editor") {
-                    mousePositionService.visualizeInEditor()
                 }
             }
             group("1: Scan Devices") {

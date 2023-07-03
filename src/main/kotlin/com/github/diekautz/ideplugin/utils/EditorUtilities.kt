@@ -25,15 +25,13 @@ fun Editor.highlightElements(index: Int, elements: List<PsiElement>, project: Pr
     )
 }
 
-fun Editor.highlightSeenElements(seen: Map<PsiElement, Int>, project: Project) {
-    val groupedSeen = seen.toList().groupBy { entry ->
-        val index = MyColors.boarders.indexOfFirst { entry.second < it }
-        if (index >= 0) index else MyColors.boarders.lastIndex
-    }
-    groupedSeen.forEach { (colorIndex, entries) ->
+fun Editor.highlightElementGazePoints(seen: Map<PsiElement, Double>, project: Project) {
+    val assignedColors = MyColors.assignColors(seen)
+
+    assignedColors.forEach { (colorIndex, entries) ->
         highlightElements(
             colorIndex,
-            entries.map { it.first },
+            entries,
             project
         )
     }

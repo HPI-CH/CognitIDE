@@ -1,9 +1,10 @@
 package com.github.diekautz.ideplugin.services.recording
 
-import com.github.diekautz.ideplugin.utils.highlightElements
+import com.github.diekautz.ideplugin.utils.highlightElementGazePoints
 import com.github.diekautz.ideplugin.utils.increment
 import com.github.diekautz.ideplugin.utils.infoMsg
 import com.github.diekautz.ideplugin.utils.serializeAndSaveToDisk
+import com.github.diekautz.ideplugin.utils.xyScreenToLogical
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
@@ -15,7 +16,7 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 @Service(Service.Level.PROJECT)
 class MyLookRecorderService(val project: Project) {
@@ -85,7 +86,7 @@ class MyLookRecorderService(val project: Project) {
                     eyeY + (j - errorMatrixSize2 / 2)
                 )
 
-                val logicalPosition = editor.xyToLogicalPosition(errorPos)
+                val logicalPosition = editor.xyScreenToLogical(errorPos)
                 val offset = editor.logicalPositionToOffset(logicalPosition)
                 val element = psiFile.findElementAt(offset)
                 if (element != null && element !is PsiWhiteSpace) {
@@ -97,7 +98,7 @@ class MyLookRecorderService(val project: Project) {
     }
 
     fun highlightElements(editor: Editor) {
-        editor.highlightElements(0, elementGazePoints.keys.toList(), project)
+        editor.highlightElementGazePoints(elementGazePoints, project)
     }
 
 }

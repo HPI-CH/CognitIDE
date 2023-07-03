@@ -63,7 +63,7 @@ class MyMousePositionService(val project: Project) {
                         SwingUtilities.convertPointFromScreen(relativePoint, editor.contentComponent)
                         if (!editor.contentComponent.contains(relativePoint)) return@invokeLater
                         val logicalPosition = editor.xyToLogicalPosition(relativePoint)
-                        indicator.text = "${logicalPosition.line}:${logicalPosition.column}"
+                        indicator.text = "[debug] mouse ${logicalPosition.line}:${logicalPosition.column}"
 
                         val offset = editor.logicalPositionToOffset(logicalPosition)
                         val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater

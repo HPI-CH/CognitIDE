@@ -13,19 +13,17 @@ object MyColors {
     val boarders = arrayOf(2, 4, 8, 16)
 
     private val colors = arrayOf(
-        JBColor.GREEN,
+        JBColor.LIGHT_GRAY,
         JBColor.YELLOW,
         JBColor.ORANGE,
         JBColor.RED,
-        JBColor.PINK
     )
 
     private val percentiles = arrayOf(
-        0.0,
-        0.1,
+        1.0,
         0.2,
-        0.3,
-        0.4
+        0.1,
+        0.05,
     )
 
     val LOOKED_ATTRIBUTES = colors.map {
@@ -37,20 +35,19 @@ object MyColors {
 
     fun assignColors(elements: Map<PsiElement, Double>): Map<Int, List<PsiElement>> {
         val assignedColors = colors.indices.associateWith { mutableListOf<PsiElement>() }
-        val total = elements.values.sum()
         val sortedElements = elements.entries.sortedByDescending { it.value }
-        var colorIndex = colors.size - 1
-        sortedElements.forEach { (psiElement, value) ->
-            val percent = value / total
-            while (colorIndex > 0 && percent < percentiles[colorIndex]) {
-                colorIndex--
+        val size = elements.size
+        var percentileIndex = percentiles.lastIndex
+        sortedElements.forEachIndexed { index, (psiElement, value) ->
+            while (percentileIndex > 0 && index + 1 > percentiles[percentileIndex] * size) {
+                percentileIndex--
             }
-            assignedColors[colorIndex]?.add(psiElement)
+            assignedColors[percentileIndex]?.add(psiElement)
         }
 
         thisLogger().info("Assigned colors! Percentiles were: \n"
                 + percentiles.withIndex().joinToString("\n") {
-            "(${it.value}) ${it.value * total} -> ${colors[it.index]}"
+            "(${it.value}) ${it.value * size} -> ${colors[it.index]}"
         })
         return assignedColors
     }

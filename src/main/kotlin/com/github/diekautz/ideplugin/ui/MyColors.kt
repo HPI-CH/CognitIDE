@@ -9,14 +9,7 @@ import com.intellij.ui.JBColor
 
 
 object MyColors {
-    val boarders = arrayOf(2, 4, 8, 16)
 
-    //    private val colors = arrayOf(
-//        JBColor.LIGHT_GRAY,
-//        JBColor.YELLOW,
-//        JBColor.ORANGE,
-//        JBColor.RED,
-//    )
     private val colors = arrayOf(
         JBColor(0xF1A4A1, 0xF1A4A1),
         JBColor(0xEE8E89, 0xEE8E89),
@@ -48,7 +41,7 @@ object MyColors {
         val sortedElements = elements.entries.sortedByDescending { it.value }
         val size = elements.size
         var percentileIndex = percentiles.lastIndex
-        sortedElements.forEachIndexed { index, (psiElement, value) ->
+        sortedElements.forEachIndexed { index, (psiElement, _) ->
             while (percentileIndex > 0 && index + 1 > percentiles[percentileIndex] * size) {
                 percentileIndex--
             }

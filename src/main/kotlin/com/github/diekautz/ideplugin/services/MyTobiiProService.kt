@@ -42,6 +42,9 @@ class MyTobiiProService(val project: Project) {
         var shouldRun = true
         val logger = this@MyTobiiProService.thisLogger()
 
+        var gazeSnapshotN = 0
+        var elementGazeN = 0
+
         override fun run(indicator: ProgressIndicator) {
             runBlocking {
                 indicator.isIndeterminate = true
@@ -108,14 +111,15 @@ class MyTobiiProService(val project: Project) {
                             val element = psiFile.findElementAt(offset)
                             val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
                             if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-                                lookRecorderService.addGazeSnapshot(
+                                gazeSnapshotN = lookRecorderService.addGazeSnapshot(
                                     (timestampSeconds * 1_000.0).toLong(),
                                     virtualFile,
                                     element,
                                     data
                                 )
                             }
-                            lookRecorderService.addAreaGaze(psiFile, editor, data)
+                            elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, data)
+                            indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
                         }
                     }
                 } catch (ex: Exception) {

@@ -49,6 +49,9 @@ class MyMousePositionService(val project: Project) {
     private val task = object : Task.Backgroundable(project, "Recording Mouse", true) {
         var shouldRun = true
 
+        var gazeSnapshotN = 0
+        var elementGazeN = 0
+
         override fun run(indicator: ProgressIndicator) {
             runBlocking {
                 indicator.isIndeterminate = true
@@ -63,7 +66,7 @@ class MyMousePositionService(val project: Project) {
                         SwingUtilities.convertPointFromScreen(relativePoint, editor.contentComponent)
                         if (!editor.contentComponent.contains(relativePoint)) return@invokeLater
                         val logicalPosition = editor.xyToLogicalPosition(relativePoint)
-                        indicator.text = "[debug] mouse ${logicalPosition.line}:${logicalPosition.column}"
+                        indicator.text2 = "[debug] mouse ${logicalPosition.line}:${logicalPosition.column}"
 
                         val offset = editor.logicalPositionToOffset(logicalPosition)
                         val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
@@ -73,9 +76,10 @@ class MyMousePositionService(val project: Project) {
 
                         val fakeData = GazeData(mousePoint, mousePoint, 1.0, 1.0)
                         if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-                            lookRecorderService.addGazeSnapshot(Instant.now().toEpochMilli(), virtualFile, element, fakeData)
+                            gazeSnapshotN = lookRecorderService.addGazeSnapshot(Instant.now().toEpochMilli(), virtualFile, element, fakeData)
                         }
-                        lookRecorderService.addAreaGaze(psiFile, editor, fakeData)
+                        elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, fakeData)
+                        indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
                     }
                     delay(1000)
                 }

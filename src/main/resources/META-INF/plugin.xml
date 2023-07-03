@@ -9,7 +9,7 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.diekautz.ideplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="com.github.diekautz.ideplugin.toolWindow.MyToolWindowFactory" id="OpenEyeToolWindow"/>
     </extensions>
 
     <actions>

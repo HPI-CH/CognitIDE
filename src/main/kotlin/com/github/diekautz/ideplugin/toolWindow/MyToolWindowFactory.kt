@@ -61,7 +61,7 @@ class MyToolWindowFactory : ToolWindowFactory {
                             lookRecorderService.clearData()
                         }
                     }
-                    button("Visualize in Editor") {
+                    button("Visualize in Editor(s)") {
                         tobiiProService.visualizeInEditor()
                     }
                 }

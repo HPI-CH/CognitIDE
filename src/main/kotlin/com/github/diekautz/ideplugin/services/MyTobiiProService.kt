@@ -7,6 +7,7 @@ import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
@@ -136,7 +137,7 @@ class MyTobiiProService(val project: Project) {
 
     fun visualizeInEditor() {
         invokeLater {
-            FileEditorManager.getInstance(project).selectedTextEditor?.let { editor ->
+            EditorFactory.getInstance().allEditors.forEach { editor ->
                 lookRecorderService.highlightElements(editor)
             }
         }

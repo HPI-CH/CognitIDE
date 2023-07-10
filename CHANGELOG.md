@@ -4,10 +4,6 @@
 
 ## [Unreleased]
 ### Added
-- Nothing so far
-
-## 0.0.1
-### Added
 - Export for raw gaze data along with time-synchronized file or editor focus
 - Export for gaze counters of elements
 - Visualization feature for recorded gaze

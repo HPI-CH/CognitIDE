@@ -6,8 +6,8 @@ import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -38,7 +38,7 @@ class MyMousePositionService(val project: Project) {
         task.shouldRun = false
     }
 
-    private val task = object : Task.Backgroundable(project, "Recording Mouse", true) {
+    private val task = object : Task.Backgroundable(project, "Recording mouse", true) {
         var shouldRun = true
 
         var gazeSnapshotN = 0
@@ -52,11 +52,13 @@ class MyMousePositionService(val project: Project) {
                     val mousePoint = MouseInfo.getPointerInfo().location
 
                     invokeLater {
-                        val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
+                        var relativePoint = Point(mousePoint)
+                        val editor = EditorFactory.getInstance().allEditors.firstOrNull {
+                            relativePoint = Point(mousePoint)
+                            SwingUtilities.convertPointFromScreen(relativePoint, it.contentComponent)
+                            it.contentComponent.contains(relativePoint)
+                        } ?: return@invokeLater
 
-                        val relativePoint = Point(mousePoint)
-                        SwingUtilities.convertPointFromScreen(relativePoint, editor.contentComponent)
-                        if (!editor.contentComponent.contains(relativePoint)) return@invokeLater
                         val logicalPosition = editor.xyToLogicalPosition(relativePoint)
                         indicator.text2 = "[debug] mouse ${logicalPosition.line}:${logicalPosition.column}"
 

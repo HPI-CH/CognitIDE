@@ -9,7 +9,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -95,16 +94,19 @@ class MyTobiiProService(val project: Project) {
                         )
 
                         invokeLater {
-                            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return@invokeLater
+                            var eyeCenter = Point(0, 0)
+                            val editor = EditorFactory.getInstance().allEditors.firstOrNull {
+                                eyeCenter = Point(
+                                    (data.leftEyeX + data.rightEyeY) / 2,
+                                    (data.leftEyeY + data.rightEyeY) / 2,
+                                )
+                                SwingUtilities.convertPointFromScreen(eyeCenter, it.contentComponent)
+                                it.contentComponent.contains(eyeCenter)
+                            } ?: return@invokeLater
+
                             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
                                 ?: return@invokeLater
 
-                            val eyeCenter = Point(
-                                (data.leftEyeX + data.rightEyeY) / 2,
-                                (data.leftEyeY + data.rightEyeY) / 2,
-                            )
-                            SwingUtilities.convertPointFromScreen(eyeCenter, editor.contentComponent)
-                            if (!editor.contentComponent.contains(eyeCenter)) return@invokeLater
                             val logicalPosition = editor.xyToLogicalPosition(eyeCenter)
                             val offset = editor.logicalPositionToOffset(logicalPosition)
 

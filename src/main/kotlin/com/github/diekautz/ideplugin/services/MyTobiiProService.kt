@@ -97,7 +97,7 @@ class MyTobiiProService(val project: Project) {
                             var eyeCenter = Point(0, 0)
                             val editor = EditorFactory.getInstance().allEditors.firstOrNull {
                                 eyeCenter = Point(
-                                    (data.leftEyeX + data.rightEyeY) / 2,
+                                    (data.leftEyeX + data.rightEyeX) / 2,
                                     (data.leftEyeY + data.rightEyeY) / 2,
                                 )
                                 SwingUtilities.convertPointFromScreen(eyeCenter, it.contentComponent)

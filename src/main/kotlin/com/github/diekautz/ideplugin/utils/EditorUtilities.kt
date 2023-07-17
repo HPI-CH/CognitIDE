@@ -3,6 +3,7 @@ package com.github.diekautz.ideplugin.utils
 import com.github.diekautz.ideplugin.ui.MyColors
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -34,5 +35,11 @@ fun Editor.highlightElementGazePoints(seen: Map<PsiElement, Double>, project: Pr
             entries,
             project
         )
+    }
+}
+
+fun EditorFactory.removeAllHighlighters() {
+    allEditors.forEach {
+        it.markupModel.removeAllHighlighters()
     }
 }

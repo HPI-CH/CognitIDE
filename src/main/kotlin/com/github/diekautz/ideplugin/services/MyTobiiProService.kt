@@ -3,6 +3,7 @@ package com.github.diekautz.ideplugin.services
 import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.github.diekautz.ideplugin.utils.infoMsg
+import com.github.diekautz.ideplugin.utils.removeAllHighlighters
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -32,6 +33,7 @@ class MyTobiiProService(val project: Project) {
     fun startRecording() {
         task.shouldRun = true
         ProgressManager.getInstance().run(task)
+        EditorFactory.getInstance().removeAllHighlighters()
     }
 
     fun stopRecording() {

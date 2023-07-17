@@ -1,13 +1,10 @@
 package com.github.diekautz.ideplugin.services.recording
 
-import com.github.diekautz.ideplugin.utils.highlightElementGazePoints
-import com.github.diekautz.ideplugin.utils.increment
-import com.github.diekautz.ideplugin.utils.infoMsg
-import com.github.diekautz.ideplugin.utils.serializeAndSaveToDisk
-import com.github.diekautz.ideplugin.utils.xyScreenToLogical
+import com.github.diekautz.ideplugin.utils.*
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -117,6 +114,7 @@ class MyLookRecorderService(val project: Project) {
     fun clearData() {
         gazeSnapshots.clear()
         elementGazePoints.clear()
+        EditorFactory.getInstance().removeAllHighlighters()
     }
 
 }

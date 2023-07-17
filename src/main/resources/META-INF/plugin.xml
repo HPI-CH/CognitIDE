@@ -15,10 +15,15 @@
     <actions>
         <action id="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
                 class="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction" text="Screen Brightness">
-            <add-to-group group-id="ToolsMenu" anchor="last" />
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
                 class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction" text="Resolve LSL Streams"
-                description="Refreshes resolved lab streaming layer stream infos" />
+                description="Refreshes resolved lab streaming layer stream infos"/>
+        <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
+                class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction" text="Clear Hightlights"
+                description="Clears all previously highlighted elements">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt C"/>
+        </action>
     </actions>
 </idea-plugin>

@@ -2,7 +2,7 @@ package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
-import com.github.diekautz.ideplugin.utils.infoMsg
+import com.github.diekautz.ideplugin.utils.openTobiiProConnector
 import com.github.diekautz.ideplugin.utils.removeAllHighlighters
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -14,6 +14,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiWhiteSpace
@@ -73,7 +74,14 @@ class MyTobiiProService(val project: Project) {
                         }
                     }
                     if (streamInlet == null) {
-                        project.infoMsg("No TobiiPro stream found!", logger)
+                        invokeLater {
+                            if (MessageDialogBuilder
+                                    .okCancel("No TobiiPro stream found!", "Open TobiiPro Connector?")
+                                    .ask(project)
+                            ) {
+                                openTobiiProConnector(project)
+                            }
+                        }
                         return@runBlocking
                     }
                     val inlet = streamInlet!!
@@ -123,8 +131,9 @@ class MyTobiiProService(val project: Project) {
                                 )
                             }
                             elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, data)
-                            indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
-                            indicator.text2 = "eye: ${eyeCenter.x},${eyeCenter.y} ${logicalPosition.line}:${logicalPosition.column} ${element?.text}"
+                            indicator.text = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
+                            indicator.text2 =
+                                "eye: ${eyeCenter.x},${eyeCenter.y} ${logicalPosition.line}:${logicalPosition.column} ${element?.text}"
                         }
                     }
                 } catch (ex: Exception) {

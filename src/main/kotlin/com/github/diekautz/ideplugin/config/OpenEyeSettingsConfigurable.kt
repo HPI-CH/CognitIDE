@@ -11,7 +11,7 @@ class OpenEyeSettingsConfigurable : BoundConfigurable(
     private val model = OpenEyeSettingsState.instance
 
     override fun createPanel() = panel {
-        group("External Applications") {
+        collapsibleGroup("External Applications") {
             row("TobiiPro Connector:") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(model::tobiiProConnectorExecutable)

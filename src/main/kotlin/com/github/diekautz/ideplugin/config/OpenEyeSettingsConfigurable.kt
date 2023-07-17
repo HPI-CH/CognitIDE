@@ -1,39 +1,25 @@
 package com.github.diekautz.ideplugin.config
 
-import com.intellij.openapi.options.Configurable
-import javax.swing.JComponent
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.options.BoundConfigurable
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 
-class OpenEyeSettingsConfigurable : Configurable {
+class OpenEyeSettingsConfigurable : BoundConfigurable(
+    "OpenEyeSettingsConfigurable"
+) {
+    private val model = OpenEyeSettingsState.instance
 
-    private var component: OpenEyeSettingsComponent? = null
-
-    override fun getDisplayName() = "OpenEye Settings"
-    override fun createComponent(): JComponent {
-        component = OpenEyeSettingsComponent()
-        return component!!.panel
+    override fun createPanel() = panel {
+        group("External Applications") {
+            row("TobiiPro Connector:") {
+                textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                    .bindText(model::tobiiProConnectorExecutable)
+            }
+            row("Eye Tracker Manager:") {
+                textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                    .bindText(model::eyeTrackerManagerExecutable)
+            }
+        }
     }
-
-    override fun isModified(): Boolean {
-        val settings = OpenEyeSettingsState.instance
-        return settings.tobiiProConnectorExecutable != component!!.tobiiProConnectorExecutable
-                || settings.eyeTrackerManagerExecutable != component!!.eyeTrackerManagerExecutable
-    }
-
-    override fun apply() {
-        val settings = OpenEyeSettingsState.instance
-        settings.tobiiProConnectorExecutable = component!!.tobiiProConnectorExecutable
-        settings.eyeTrackerManagerExecutable = component!!.eyeTrackerManagerExecutable
-    }
-
-    override fun reset() {
-        val settings = OpenEyeSettingsState.instance
-        component!!.tobiiProConnectorExecutable = settings.tobiiProConnectorExecutable
-        component!!.eyeTrackerManagerExecutable = settings.eyeTrackerManagerExecutable
-    }
-
-    override fun disposeUIResources() {
-        component = null
-    }
-
-    override fun getPreferredFocusedComponent() = component?.getPreferredFocusedComponent()
 }

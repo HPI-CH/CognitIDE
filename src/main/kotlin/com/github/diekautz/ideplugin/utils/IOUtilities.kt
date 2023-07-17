@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 
 val json = Json {
     allowStructuredMapKeys = true
+    allowSpecialFloatingPointValues = true
 }
 
 inline fun <reified T> serializeAndSaveToDisk(project: Project, data: T, dialogTitle: String, filename: String? = null) {

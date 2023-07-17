@@ -10,6 +10,13 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.diekautz.ideplugin.toolWindow.MyToolWindowFactory" id="OpenEyeToolWindow"/>
+
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable"
+                id="openeye.app.tobiipro"
+                displayName="OpenEye Settings"/>
+        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.OpenEyeSettingsState"/>
     </extensions>
 
     <actions>

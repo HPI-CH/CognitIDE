@@ -12,8 +12,6 @@ class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
 
-    var wasTrackerCalibrated = false
-
     override fun getState(): OpenEyeSettingsState = this
 
     override fun loadState(state: OpenEyeSettingsState) {

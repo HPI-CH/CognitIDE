@@ -1,5 +1,6 @@
 package com.github.diekautz.ideplugin.actions
 
+import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -13,5 +14,6 @@ class StopRecordingAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         e.project?.service<MyTobiiProService>()?.stopRecording()
+        e.project?.service<MyMousePositionService>()?.stopTrackMouse()
     }
 }

@@ -61,16 +61,16 @@ class MyToolWindowFactory : ToolWindowFactory {
                             lookRecorderService.clearData()
                         }
                     }
-                    button("Visualize in Editor(s)") {
+                    button("Visualize in Editors") {
                         tobiiProService.visualizeInEditor()
                     }
                 }
                 row {
                     button("Save Gaze Snapshots") {
-                        lookRecorderService.saveGazeSnapshots()
+                        lookRecorderService.askAndSaveGazeSnapshots()
                     }
                     button("Save Element Gaze Points") {
-                        lookRecorderService.saveElementsGazePoints()
+                        lookRecorderService.askAndSaveElementsGazePoints()
                     }
                 }
             }

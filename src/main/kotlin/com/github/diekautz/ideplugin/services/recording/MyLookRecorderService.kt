@@ -13,7 +13,9 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
+
 
 @Service(Service.Level.PROJECT)
 class MyLookRecorderService(val project: Project) {
@@ -23,23 +25,23 @@ class MyLookRecorderService(val project: Project) {
 
     private val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
 
-    fun saveGazeSnapshots() {
+    fun askAndSaveGazeSnapshots() {
         gazeSnapshots.ifEmpty {
             project.infoMsg("No gaze snapshots to be saved.", thisLogger())
             return
         }
         val recordingStart = Date(gazeSnapshots.first().editorGazeSnapshot.epochMillis)
         val filename = "gaze-${timestampFormat.format(recordingStart)}"
-        serializeAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location", filename)
+        askAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location", filename)
     }
 
-    fun saveElementsGazePoints() {
+    fun askAndSaveElementsGazePoints() {
         elementGazePoints.ifEmpty {
             project.infoMsg("No element gaze points to be saved.", thisLogger())
             return
         }
 
-        serializeAndSaveToDisk(
+        askAndSaveToDisk(
             project,
             elementGazePoints.map { (psiElement, gazeWeight) ->
                 SerializableElementGaze(psiElement, gazeWeight)
@@ -47,6 +49,13 @@ class MyLookRecorderService(val project: Project) {
             "Element Gaze Points Save Location",
             "element-gaze"
         )
+    }
+
+    fun askAndSaveBoth(participantId: Int) {
+        if (elementGazePoints.isNotEmpty() || gazeSnapshots.isNotEmpty()) {
+            val date = Date.from(Instant.now())
+            askAndSaveToDisk(project, participantId, date, elementGazePoints, gazeSnapshots)
+        }
     }
 
     fun addGazeSnapshot(

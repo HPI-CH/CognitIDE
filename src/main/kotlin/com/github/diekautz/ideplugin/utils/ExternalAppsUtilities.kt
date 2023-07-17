@@ -25,13 +25,21 @@ fun openEyeTrackerManager(project: Project) {
 
 fun execExternalUtility(project: Project, path: String, notFoundMessage: String) {
     if (path.isBlank() || File(path).exists()) {
-        if (MessageDialogBuilder
-                .okCancel("Invalid settings", notFoundMessage)
-                .ask(project)
-        ) {
-            ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
-        }
+        requestSettingsChange(project, notFoundMessage)
         return
     }
-    Runtime.getRuntime().exec(path)
+    try {
+        Runtime.getRuntime().exec(path)
+    } catch (ex: Exception) {
+        requestSettingsChange(project, "${ex.localizedMessage} $notFoundMessage")
+    }
+}
+
+fun requestSettingsChange(project: Project, notFoundMessage: String) {
+    if (MessageDialogBuilder
+            .okCancel("Invalid settings", notFoundMessage)
+            .ask(project)
+    ) {
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
+    }
 }

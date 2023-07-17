@@ -31,6 +31,12 @@
                icon="AllIcons.Toolbar.AddSlot">
             <add-to-group group-id="MainMenu" anchor="last"/>
 
+            <action id="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
+                    class="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction" text="Setup New Participant"
+                    description="Clears all data and opens questionaire for new participant"/>
+
+            <separator/>
+
             <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
                     class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction" text="Clear Hightlights"
                     description="Clears all previously highlighted elements">

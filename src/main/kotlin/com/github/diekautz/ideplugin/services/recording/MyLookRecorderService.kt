@@ -51,10 +51,10 @@ class MyLookRecorderService(val project: Project) {
         )
     }
 
-    fun askAndSaveBoth(participantId: Int) {
+    fun askAndSaveBoth() {
         if (elementGazePoints.isNotEmpty() || gazeSnapshots.isNotEmpty()) {
             val date = Date.from(Instant.now())
-            askAndSaveToDisk(project, participantId, date, elementGazePoints, gazeSnapshots)
+            askAndSaveToDisk(project, date, elementGazePoints, gazeSnapshots)
         }
     }
 

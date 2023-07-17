@@ -1,7 +1,9 @@
 package com.github.diekautz.ideplugin.utils
 
+import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
 import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
@@ -21,7 +23,6 @@ val json = Json {
 
 fun askAndSaveToDisk(
     project: Project,
-    participantId: Int,
     date: Date,
     elementGazePoints: Map<PsiElement, Double>,
     gazeSnapshots: List<GazeSnapshot>
@@ -31,6 +32,9 @@ fun askAndSaveToDisk(
 
     val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
     val selectedFolder = FileChooser.chooseFile(descriptor, project, null)
+
+    val participantState = ApplicationManager.getApplication().getService(ParticipantState::class.java)
+    val participantId = participantState.id
 
     if (selectedFolder != null && selectedFolder.isDirectory) {
         if (gazeSnapshots.isNotEmpty()) {
@@ -45,6 +49,8 @@ fun askAndSaveToDisk(
                 }, file
             )
         }
+        val file = File(selectedFolder.path, "${participantId}_participant.json")
+        saveToDisk(participantState, file)
     }
 }
 

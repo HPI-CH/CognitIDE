@@ -5,8 +5,10 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
+import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
+@Serializable
 @State(
     name = "com.github.diekautz.ideplugin.config.ParticipantState",
     storages = [Storage("OpenEyePlugin_participant.xml")]

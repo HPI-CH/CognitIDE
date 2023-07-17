@@ -12,11 +12,16 @@
         <toolWindow factoryClass="com.github.diekautz.ideplugin.toolWindow.MyToolWindowFactory" id="OpenEyeToolWindow"/>
 
         <applicationConfigurable
-                parentId="tools"
+                parentId="root"
                 instance="com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable"
-                id="openeye.app.tobiipro"
+                id="plugin.openeye"
                 displayName="OpenEye Settings"/>
         <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.OpenEyeSettingsState"/>
+        <applicationConfigurable parentId="plugin.openeye"
+                                 instance="com.github.diekautz.ideplugin.config.ParticipantConfigurable"
+                                 id="plugin.openeye.participant"
+                                 displayName="Participant Configuration"/>
+        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.ParticipantState"/>
     </extensions>
 
     <actions>

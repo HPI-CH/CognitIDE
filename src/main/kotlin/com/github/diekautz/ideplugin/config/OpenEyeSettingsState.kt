@@ -8,9 +8,11 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "com.github.diekautz.ideplugin.config.OpenEyeSettingsState", storages = [Storage("OpenEyePlugin.xml")])
 class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
-
+    // external applications
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
+
+    var wasTrackerCalibrated = false
 
     override fun getState(): OpenEyeSettingsState = this
 

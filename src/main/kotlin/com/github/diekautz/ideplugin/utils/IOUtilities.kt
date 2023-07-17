@@ -8,7 +8,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 val json = Json {
-    allowStructuredMapKeys = true
     allowSpecialFloatingPointValues = true
 }
 

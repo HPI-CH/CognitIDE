@@ -4,14 +4,16 @@ import com.intellij.psi.PsiElement
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SerializableElement(
+data class SerializableElementGaze(
     val text: String,
     val path: String,
-    val offset: Int
+    val offset: Int,
+    val gazeWeight: Double,
 ) {
-    constructor(psiElement: PsiElement) : this(
+    constructor(psiElement: PsiElement, gazeWeight: Double) : this(
         psiElement.text,
         psiElement.containingFile.virtualFile.path,
-        psiElement.textOffset
+        psiElement.textOffset,
+        gazeWeight
     )
 }

@@ -44,11 +44,11 @@ class MyLookRecorderService(val project: Project) {
 
         serializeAndSaveToDisk(
             project,
-            elementGazePoints.mapKeys { (psiElement, _) ->
-                SerializableElement(psiElement)
+            elementGazePoints.map { (psiElement, gazeWeight) ->
+                SerializableElementGaze(psiElement, gazeWeight)
             },
             "Element Gaze Points Save Location",
-            "elements"
+            "element-gaze"
         )
     }
 

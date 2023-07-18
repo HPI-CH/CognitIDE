@@ -128,4 +128,6 @@ class MyLookRecorderService(val project: Project) {
         EditorFactory.getInstance().removeAllHighlighters()
     }
 
+    fun couldHighlight() = elementGazePoints.isNotEmpty()
+
 }

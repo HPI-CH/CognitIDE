@@ -35,47 +35,58 @@
             <add-to-group group-id="MainMenu" anchor="last"/>
 
             <action id="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
-                    class="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction" text="Setup New Participant"
+                    class="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
+                    text="Setup New Participant"
                     description="Clears all data and opens questioner for new participant"
                     icon="AllIcons.Actions.AddFile"/>
 
             <separator/>
 
+            <action id="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
+                    class="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
+                    text="Visualize Recorded Gaze"
+                    description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at"
+                    icon="AllIcons.Diff.MagicResolveToolbar"/>
             <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
-                    class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction" text="Clear Hightlights"
+                    class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
+                    text="Clear Hightlights"
                     description="Clears all previously highlighted elements"
-                    icon="AllIcons.Actions.InSelection">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt C"/>
-            </action>
+                    icon="AllIcons.Actions.Undo"/>
             <action id="com.github.diekautz.ideplugin.actions.StartRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.StartRecordingAction" text="Start Tobii Pro Recording"
+                    class="com.github.diekautz.ideplugin.actions.StartRecordingAction"
+                    text="Start Tobii Pro Recording"
                     description="Starts or continous a Tobii Pro recording via LSL"
-                    icon="AllIcons.Actions.RunAll">
+                    icon="AllIcons.Actions.Execute">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.StopRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.StopRecordingAction" text="Stop OpenEye Recording"
+                    class="com.github.diekautz.ideplugin.actions.StopRecordingAction"
+                    text="Stop OpenEye Recording"
                     description="Stops an ongoing recording"
-                    icon="AllIcons.Actions.Suspend">
+                    icon="AllIcons.Actions.Pause">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
+
+            <separator/>
+
             <action id="com.github.diekautz.ideplugin.actions.SaveAllRunDataAction"
-                    class="com.github.diekautz.ideplugin.actions.SaveAllRunDataAction" text="Save OpenEye Run"
+                    class="com.github.diekautz.ideplugin.actions.SaveAllRunDataAction"
+                    text="Save OpenEye Run"
                     description="Saves element gazes and raw recorded data"
                     icon="AllIcons.Actions.MenuSaveall">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt ENTER"/>
             </action>
+
+            <separator/>
 
             <separator text="Debug"/>
 
             <action id="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
                     class="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
-                    icon="AllIcons.Actions.Show">
-                <add-to-group group-id="ToolsMenu"/>
-            </action>
+                    icon="AllIcons.Actions.Show"/>
             <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
-                    class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction" text="Resolve LSL Streams"
+                    class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
+                    text="Resolve LSL Streams"
                     description="Refreshes resolved lab streaming layer stream infos"/>
         </group>
     </actions>

@@ -18,14 +18,14 @@ class ParticipantConfigurable : BoundConfigurable(
         group("Traits") {
             row("Gender:") {
                 comboBox(listOf("male", "female", "non-binary", "prefer not to disclose"))
-                    .bindItem(model::gender.toNullableProperty())
+                    .bindItem(model::gender)
             }
             row("Profession:") {
                 textField().bindText(model::profession)
             }
             row("Handedness:") {
                 comboBox(listOf("left", "right", "mixed", "ambidextrous"))
-                    .bindItem(model::handedness.toNullableProperty())
+                    .bindItem(model::handedness)
             }
         }
         group("How do you estimate") {

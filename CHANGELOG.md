@@ -6,6 +6,9 @@
 
 ### Added
 
+- Added action for highlighting gaze elements
+- Added icons for all actions
+- Improved interactive participant setup
 - Added configuration option for device sn, to directly open user calibration screen
 - Added extra description to external programs
 - Added open file action after save
@@ -14,6 +17,7 @@
 
 ### Fixed
 
+- Calls to deprecated api
 - Elements being highlighted in wrong editor
 
 ## [1.0.0-rc.2] - 2023-07-18

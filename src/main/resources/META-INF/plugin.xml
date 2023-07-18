@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.diekautz.ideplugin</id>
-    <name>OpenEye IDEA</name>
+    <name>OpenEye - Eye-Tracking Studies</name>
     <vendor>Malte Stellmacher</vendor>
 
     <depends>com.intellij.modules.platform</depends>

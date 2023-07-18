@@ -6,6 +6,7 @@
 
 ### Added
 
+- Added open file action after save
 - Added correction if one eye was not recognised
 - Improve highlight colors readability
 

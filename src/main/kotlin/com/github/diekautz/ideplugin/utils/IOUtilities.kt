@@ -5,6 +5,7 @@ import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
 import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
+import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ApplicationManager
@@ -20,6 +21,7 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.psi.PsiElement
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.awt.Desktop
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -102,12 +104,19 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
 
 fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""
 
+private fun openFileAction(file: File) = NotificationAction.createSimple("Open") {
+    if (Desktop.isDesktopSupported()) {
+        Desktop.getDesktop().open(file)
+    }
+}
+
 private fun notifyFileSaved(project: Project, file: File) {
     Logger.getInstance("IOUtilities").info("Successfully saved ${file.path}")
     invokeLater {
         NotificationGroupManager.getInstance()
             .getNotificationGroup("Recording File Saved")
             .createNotification("Successfully saved ${file.path}", NotificationType.INFORMATION)
+            .addAction(openFileAction(file))
             .notify(project);
     }
 }

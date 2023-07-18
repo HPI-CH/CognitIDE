@@ -101,7 +101,7 @@ class MyTobiiProService(val project: Project) {
                             Point((buffer[3] * screenRect.width).toInt(), (buffer[4] * screenRect.height).toInt()),
                             buffer[2].toDouble(),
                             buffer[5].toDouble(),
-                        )
+                        ).correctMissingOne() ?: continue
 
                         invokeLater {
                             var eyeCenter = Point(0, 0)

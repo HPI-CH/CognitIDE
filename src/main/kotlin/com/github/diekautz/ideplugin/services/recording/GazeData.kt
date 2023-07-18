@@ -20,4 +20,17 @@ data class GazeData(
         leftPupil,
         rightPupil
     )
+
+    fun correctMissingOne(): GazeData? {
+        if (leftPupil.isNaN() && rightPupil.isNaN()) {
+            return null
+        }
+        if (leftPupil.isNaN()) {
+            return GazeData(rightEyeX, rightEyeY, rightEyeX, rightEyeY, leftPupil, rightPupil)
+        }
+        if (rightPupil.isNaN()) {
+            return GazeData(leftEyeX, leftEyeY, leftEyeX, leftEyeY, leftPupil, rightPupil)
+        }
+        return this
+    }
 }

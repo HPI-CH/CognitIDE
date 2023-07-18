@@ -6,7 +6,6 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 import kotlinx.serialization.Serializable
-import kotlin.random.Random
 
 @Serializable
 @State(
@@ -14,7 +13,7 @@ import kotlin.random.Random
     storages = [Storage("OpenEyePlugin_participant.xml")]
 )
 class ParticipantState : PersistentStateComponent<ParticipantState> {
-    var id: Int = Random.nextInt().mod(10000)
+    var id: Int = (1..10000).random()
 
     // traits
     var gender: String? = null

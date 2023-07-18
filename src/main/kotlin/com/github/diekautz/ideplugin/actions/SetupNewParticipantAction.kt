@@ -28,7 +28,7 @@ class SetupNewParticipantAction : AnAction() {
 
         // clear data
         when (MessageDialogBuilder
-            .yesNoCancel("OpenEye", "Clear all recorded data?")
+            .yesNoCancel("New Participant Setup", "Clear all recorded data?")
             .asWarning()
             .show(e.project)) {
             YES -> e.project?.service<MyLookRecorderService>()?.clearData()
@@ -37,7 +37,7 @@ class SetupNewParticipantAction : AnAction() {
 
         // reset participant questioner, generate new id
         when (MessageDialogBuilder
-            .yesNoCancel("OpenEye", "Reset participant?")
+            .yesNoCancel("New Participant Setup", "Reset participant?")
             .asWarning()
             .show(e.project)) {
             YES -> {
@@ -49,6 +49,22 @@ class SetupNewParticipantAction : AnAction() {
             CANCEL -> return
         }
 
-        openEyeTrackerManager(e.project!!)
+        // calibrate user
+        when (MessageDialogBuilder
+            .yesNoCancel("New Participant Setup", "Redo calibration?")
+            .show(e.project)
+        ) {
+            YES -> openEyeTrackerManager(e.project!!)
+            CANCEL -> return
+        }
+
+        // start new recording
+        when (MessageDialogBuilder
+            .yesNoCancel("New Participant Setup", "Start new recording now?")
+            .show(e.project)
+        ) {
+            YES -> e.project?.service<MyTobiiProService>()?.startRecording()
+            CANCEL -> return
+        }
     }
 }

@@ -9,7 +9,8 @@ class SaveAllRunDataAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
-        e.presentation.isEnabledAndVisible = currentProject != null
+        val lookRecorderService = currentProject?.service<MyLookRecorderService>()
+        e.presentation.isEnabledAndVisible = lookRecorderService?.couldSave() ?: false
     }
 
     override fun actionPerformed(e: AnActionEvent) {

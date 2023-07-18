@@ -52,13 +52,15 @@ class MyLookRecorderService(val project: Project) {
     }
 
     fun askAndSaveBoth() {
-        if (elementGazePoints.isNotEmpty() || gazeSnapshots.isNotEmpty()) {
+        if (couldSave()) {
             val date = Date.from(Instant.now())
             saveRecordingToDisk(project, date, elementGazePoints, gazeSnapshots)
         } else {
             project.infoMsg("No data to be saved!")
         }
     }
+
+    fun couldSave() = elementGazePoints.isNotEmpty() || gazeSnapshots.isNotEmpty()
 
     fun addGazeSnapshot(
         epochMillis: Long,

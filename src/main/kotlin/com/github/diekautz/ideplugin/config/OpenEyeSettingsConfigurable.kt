@@ -2,6 +2,7 @@ package com.github.diekautz.ideplugin.config
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.BoundConfigurable
+import com.intellij.ui.dsl.builder.EMPTY_LABEL
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 
@@ -42,7 +43,7 @@ class OpenEyeSettingsConfigurable : BoundConfigurable(
                                     "It will be called on the fly to setup the calibration of a new participant."
                         )
                 }
-                row("") {
+                row(EMPTY_LABEL) {
                     textField()
                         .bindText(model::eyeTrackerSerial)
                         .comment(

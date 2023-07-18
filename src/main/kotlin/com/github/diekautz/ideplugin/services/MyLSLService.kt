@@ -3,18 +3,13 @@ package com.github.diekautz.ideplugin.services
 import com.github.diekautz.ideplugin.StreamInfoTableModel
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.project.Project
 import edu.ucsd.sccn.LSL
 
 @Service(Service.Level.PROJECT)
-class MyLSLService(project: Project) {
-
-    fun getRandomNumber() = (1..100).random()
-
+class MyLSLService {
     private val streamInfoTableModel = StreamInfoTableModel(mutableListOf())
     val streamInfos = mutableListOf<LSL.StreamInfo>()
 
-    val streamInfoIds = streamInfos.map { it.uid() }
     fun getStreamInfoTableModel() = streamInfoTableModel
     fun resolveStreams(): List<LSL.StreamInfo> {
         streamInfos.clear()
@@ -26,5 +21,4 @@ class MyLSLService(project: Project) {
         streamInfoTableModel.fireTableDataChanged()
         return streamInfos
     }
-
 }

@@ -10,24 +10,35 @@ import com.intellij.ui.JBColor
 
 object MyColors {
 
-    private val colors = arrayOf(
-        JBColor(0xF1A4A1, 0xF1A4A1),
-        JBColor(0xEE8E89, 0xEE8E89),
-        JBColor(0xEA7771, 0xEA7771),
-        JBColor(0xE7605A, 0xE7605A),
-        JBColor(0xE34942, 0xE34942),
-        JBColor(0xE0332B, 0xE0332B),
-        JBColor(0xDC1C13, 0xDC1C13)
-    )
+//    private val colors = arrayOf(
+//        JBColor(0x5FF1A4A1, 0xF1A4A1),
+//        JBColor(0xEE8E89, 0xEE8E89),
+//        JBColor(0xEA7771, 0xEA7771),
+//        JBColor(0xE7605A, 0xE7605A),
+//        JBColor(0xE34942, 0xE34942),
+//        JBColor(0xE0332B, 0xE0332B),
+//        JBColor(0xDC1C13, 0xDC1C13)
+//    )
 
     private val percentiles = arrayOf(
         1.0,
-        0.2,
-        0.1,
+        0.4,
+        0.15,
         0.08,
         0.05,
         0.02,
     )
+
+    val baseColor = JBColor(0xFF4000, 0xFF4000)
+    val colors = Array(percentiles.size + 1) { baseColor }
+
+    init {
+        val alphaStep = 0xFF / (percentiles.size + 1)
+        percentiles.forEachIndexed { index, _ ->
+            val rgb = baseColor.rgb + (alphaStep * (index + 1)).shl(24)
+            colors[index] = JBColor(rgb, rgb)
+        }
+    }
 
     val LOOKED_ATTRIBUTES = colors.map {
         TextAttributesKey.createTextAttributesKey(
@@ -48,10 +59,17 @@ object MyColors {
             assignedColors[percentileIndex]?.add(psiElement)
         }
 
-        thisLogger().info("Assigned colors! Percentiles were: \n"
-                + percentiles.withIndex().joinToString("\n") {
-            "(${it.value}) ${it.value * size} -> ${colors[it.index]}"
-        })
+        thisLogger().info(
+            "Assigned colors! Percentiles were: \n"
+                    + percentiles.withIndex().joinToString("\n") { percentile ->
+                "(${percentile.value}) ${percentile.value * size} -> ${
+                    colors[percentile.index].let {
+                        "0x${
+                            it.rgb.toUInt().toString(16).uppercase()
+                        } ${it.alpha}"
+                    }
+                }"
+            })
         return assignedColors
     }
 

@@ -4,9 +4,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Improve highlight colors readability
+
 ## [1.0.0-rc.2] - 2023-07-18
 
 ### Added
+
 - Ask if recording and participant data should be cleared
 - Added Add global setting for recordings save location
 - Save participant information alongside data

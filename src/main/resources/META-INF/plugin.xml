@@ -31,33 +31,38 @@
         <group id="com.github.diekautz.ideplugin.actions.OpenEyeGroup"
                text="OpenEye"
                popup="true"
-               icon="AllIcons.Toolbar.AddSlot">
+               icon="AllIcons.Actions.ShowCode">
             <add-to-group group-id="MainMenu" anchor="last"/>
 
             <action id="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
                     class="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction" text="Setup New Participant"
-                    description="Clears all data and opens questionaire for new participant"/>
+                    description="Clears all data and opens questioner for new participant"
+                    icon="AllIcons.Actions.AddFile"/>
 
             <separator/>
 
             <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
                     class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction" text="Clear Hightlights"
-                    description="Clears all previously highlighted elements">
+                    description="Clears all previously highlighted elements"
+                    icon="AllIcons.Actions.InSelection">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt C"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.StartRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.StartRecordingAction" text="Start Tobii Pro Recording"
-                    description="Starts or continous a Tobii Pro recording via LSL">
+                    description="Starts or continous a Tobii Pro recording via LSL"
+                    icon="AllIcons.Actions.RunAll">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.StopRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.StopRecordingAction" text="Stop OpenEye Recording"
-                    description="Stops an ongoing recording">
+                    description="Stops an ongoing recording"
+                    icon="AllIcons.Actions.Suspend">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.SaveAllRunDataAction"
                     class="com.github.diekautz.ideplugin.actions.SaveAllRunDataAction" text="Save OpenEye Run"
-                    description="Saves element gazes and raw recorded data">
+                    description="Saves element gazes and raw recorded data"
+                    icon="AllIcons.Actions.MenuSaveall">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt ENTER"/>
             </action>
 
@@ -65,7 +70,8 @@
 
             <action id="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
                     class="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
-                    text="Screen Brightness">
+                    text="Screen Brightness"
+                    icon="AllIcons.Actions.Show">
                 <add-to-group group-id="ToolsMenu"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"

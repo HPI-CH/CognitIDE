@@ -32,17 +32,17 @@ class ParticipantConfigurable : BoundConfigurable(
             row {
                 comboBox((1..10).toList())
                     .label("your programming experience?")
-                    .bindItemNullable(model::experience10)
+                    .bindItem(model::experience10)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("your programming experience compared to \nexperts with 20 years of practical experience?")
-                    .bindItemNullable(model::compareExpert5)
+                    .bindItem(model::compareExpert5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("your programming experience compared to \nyour class mates?")
-                    .bindItemNullable(model::compareClassmates5)
+                    .bindItem(model::compareClassmates5)
             }.layout(RowLayout.PARENT_GRID)
         }
 
@@ -50,23 +50,23 @@ class ParticipantConfigurable : BoundConfigurable(
             row {
                 comboBox((1..5).toList())
                     .label("Java")
-                    .bindItemNullable(model::experienceJava5)
+                    .bindItem(model::experienceJava5)
             }.layout(RowLayout.PARENT_GRID)
             row {
 
                 comboBox((1..5).toList())
                     .label("C")
-                    .bindItemNullable(model::experienceC5)
+                    .bindItem(model::experienceC5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Haskell")
-                    .bindItemNullable(model::experienceHaskell5)
+                    .bindItem(model::experienceHaskell5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Prolog")
-                    .bindItemNullable(model::experienceProlog5)
+                    .bindItem(model::experienceProlog5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 textField()
@@ -78,22 +78,22 @@ class ParticipantConfigurable : BoundConfigurable(
             row {
                 comboBox((1..5).toList())
                     .label("Functional programming")
-                    .bindItemNullable(model::paradigmFunctional5)
+                    .bindItem(model::paradigmFunctional5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Imperative programming")
-                    .bindItemNullable(model::paradigmImperative5)
+                    .bindItem(model::paradigmImperative5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Logical programming")
-                    .bindItemNullable(model::paradigmLogical5)
+                    .bindItem(model::paradigmLogical5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Object-oriented programming")
-                    .bindItemNullable(model::paradigmOOP5)
+                    .bindItem(model::paradigmOOP5)
             }.layout(RowLayout.PARENT_GRID)
         }
         group("For how many years have you been...") {

@@ -12,6 +12,9 @@ class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
 
+    // recording save location
+    var recordingsSaveLocation = ""
+
     override fun getState(): OpenEyeSettingsState = this
 
     override fun loadState(state: OpenEyeSettingsState) {

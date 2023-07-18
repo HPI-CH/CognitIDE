@@ -5,7 +5,7 @@
 ## [Unreleased]
 
 ### Added
-
+- Added Add global setting for recordings save location
 - Save participant information alongside data
 - Added SetupNewParticipantAction
 - Added participant questioner

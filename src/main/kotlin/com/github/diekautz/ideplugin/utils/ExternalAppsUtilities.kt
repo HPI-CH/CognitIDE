@@ -1,10 +1,7 @@
 package com.github.diekautz.ideplugin.utils
 
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
-import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageDialogBuilder
 import java.io.File
 
 fun openTobiiProConnector(project: Project) {
@@ -34,14 +31,3 @@ fun execExternalUtility(project: Project, path: String, notFoundMessage: String)
         requestSettingsChange(project, "${ex.localizedMessage} $notFoundMessage")
     }
 }
-
-fun requestSettingsChange(project: Project, notFoundMessage: String) {
-    if (MessageDialogBuilder
-            .okCancel("Invalid settings", notFoundMessage)
-            .ask(project)
-    ) {
-        ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
-    }
-}
-
-private fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""

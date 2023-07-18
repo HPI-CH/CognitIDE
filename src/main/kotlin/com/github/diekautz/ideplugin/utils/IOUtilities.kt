@@ -1,15 +1,19 @@
 package com.github.diekautz.ideplugin.utils
 
+import com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable
+import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
 import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.fileChooser.FileChooser
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.psi.PsiElement
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -21,7 +25,7 @@ val json = Json {
     allowSpecialFloatingPointValues = true
 }
 
-fun askAndSaveToDisk(
+fun saveRecordingToDisk(
     project: Project,
     date: Date,
     elementGazePoints: Map<PsiElement, Double>,
@@ -30,27 +34,34 @@ fun askAndSaveToDisk(
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
     val timestamp = timestampFormat.format(date)
 
-    val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-    val selectedFolder = FileChooser.chooseFile(descriptor, project, null)
+    val recordingsSaveLocation = OpenEyeSettingsState.instance.recordingsSaveLocation
+    val saveFolder = File(wrapPath(recordingsSaveLocation))
 
     val participantState = ApplicationManager.getApplication().getService(ParticipantState::class.java)
     val participantId = participantState.id
 
-    if (selectedFolder != null && selectedFolder.isDirectory) {
+    saveFolder.mkdirs()
+    try {
         if (gazeSnapshots.isNotEmpty()) {
-            val file = File(selectedFolder.path, "${participantId}_${timestamp}_gaze.json")
+            val file = File(wrapPath("$recordingsSaveLocation/${participantId}_${timestamp}_gaze.json"))
             saveToDisk(gazeSnapshots, file)
         }
         if (elementGazePoints.isNotEmpty()) {
-            val file = File(selectedFolder.path, "${participantId}_${timestamp}_elements.json")
+            val file = File(wrapPath("$recordingsSaveLocation/${participantId}_${timestamp}_elements.json"))
             saveToDisk(
                 elementGazePoints.map { (psiElement, gazeWeight) ->
                     SerializableElementGaze(psiElement, gazeWeight)
                 }, file
             )
         }
-        val file = File(selectedFolder.path, "${participantId}_participant.json")
+        val file = File(wrapPath("$recordingsSaveLocation/${participantId}_participant.json"))
         saveToDisk(participantState, file)
+    } catch (ex: Exception) {
+        OpenEyeSettingsState.thisLogger().error(ex)
+        requestSettingsChange(
+            project,
+            "${ex.localizedMessage}: Please specify a valid location for recording to be saved!"
+        )
     }
 }
 
@@ -71,5 +82,17 @@ inline fun <reified T> saveToDisk(data: T, file: File) {
     runWriteAction {
         file.createNewFile()
         file.writeText(encoded)
+        Logger.getInstance("IOUtilities").info("Successfully saved ${file.path}")
     }
 }
+
+fun requestSettingsChange(project: Project, notFoundMessage: String) {
+    if (MessageDialogBuilder
+            .okCancel("Invalid settings", notFoundMessage)
+            .ask(project)
+    ) {
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
+    }
+}
+
+fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""

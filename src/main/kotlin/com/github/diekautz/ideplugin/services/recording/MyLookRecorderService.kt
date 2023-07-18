@@ -54,7 +54,7 @@ class MyLookRecorderService(val project: Project) {
     fun askAndSaveBoth() {
         if (elementGazePoints.isNotEmpty() || gazeSnapshots.isNotEmpty()) {
             val date = Date.from(Instant.now())
-            askAndSaveToDisk(project, date, elementGazePoints, gazeSnapshots)
+            saveRecordingToDisk(project, date, elementGazePoints, gazeSnapshots)
         }
     }
 

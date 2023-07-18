@@ -24,12 +24,12 @@ fun openEyeTrackerManager(project: Project) {
 }
 
 fun execExternalUtility(project: Project, path: String, notFoundMessage: String) {
-    if (path.isBlank() || File(path).exists()) {
+    if (path.isBlank() || File(wrapPath(path)).exists()) {
         requestSettingsChange(project, notFoundMessage)
         return
     }
     try {
-        Runtime.getRuntime().exec(path)
+        Runtime.getRuntime().exec(wrapPath(path))
     } catch (ex: Exception) {
         requestSettingsChange(project, "${ex.localizedMessage} $notFoundMessage")
     }
@@ -43,3 +43,5 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
         ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
     }
 }
+
+private fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""

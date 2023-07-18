@@ -9,6 +9,10 @@
 - Added correction if one eye was not recognised
 - Improve highlight colors readability
 
+### Fixed
+
+- Elements being highlighted in wrong editor
+
 ## [1.0.0-rc.2] - 2023-07-18
 
 ### Added

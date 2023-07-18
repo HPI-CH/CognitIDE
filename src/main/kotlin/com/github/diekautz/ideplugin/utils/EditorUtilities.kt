@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.LogicalPosition
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import java.awt.Point
 import javax.swing.SwingUtilities
@@ -17,9 +18,14 @@ fun Editor.xyScreenToLogical(point: Point): LogicalPosition {
 }
 
 fun Editor.highlightElements(index: Int, elements: List<PsiElement>, project: Project) {
+    val editorPsiFile = PsiDocumentManager.getInstance(project).getPsiFile(document)
+    val filteredElement = elements.filter {
+        it.containingFile == editorPsiFile
+    }.toTypedArray()
+
     HighlightManager.getInstance(project).addOccurrenceHighlights(
         this,
-        elements.toTypedArray(),
+        filteredElement,
         MyColors.LOOKED_ATTRIBUTES[index],
         true,
         null

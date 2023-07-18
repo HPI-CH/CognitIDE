@@ -29,21 +29,18 @@ class ParticipantConfigurable : BoundConfigurable(
             }
         }
         group("How do you estimate") {
-            row {
+            row("Your programming experience:") {
                 comboBox((1..10).toList())
-                    .label("your programming experience?")
                     .bindItem(model::experience10)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
+            }
+            row("Your programming experience compared to experts\nwith 20 years of practical experience?") {
                 comboBox((1..5).toList())
-                    .label("your programming experience compared to \nexperts with 20 years of practical experience?")
                     .bindItem(model::compareExpert5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
+            }
+            row("Your programming experience compared to \nyour class mates?") {
                 comboBox((1..5).toList())
-                    .label("your programming experience compared to \nyour class mates?")
                     .bindItem(model::compareClassmates5)
-            }.layout(RowLayout.PARENT_GRID)
+            }
         }
 
         group("How experienced are you with the following languages:") {

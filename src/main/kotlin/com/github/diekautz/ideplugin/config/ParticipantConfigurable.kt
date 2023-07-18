@@ -1,7 +1,13 @@
 package com.github.diekautz.ideplugin.config
 
 import com.intellij.openapi.options.BoundConfigurable
-import com.intellij.ui.dsl.builder.*
+import com.intellij.ui.dsl.builder.RowLayout
+import com.intellij.ui.dsl.builder.bindIntText
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindItemNullable
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.builder.toNullableProperty
 import java.time.Year
 
 class ParticipantConfigurable : BoundConfigurable(
@@ -18,28 +24,28 @@ class ParticipantConfigurable : BoundConfigurable(
         group("Traits") {
             row("Gender:") {
                 comboBox(listOf("male", "female", "non-binary", "prefer not to disclose"))
-                    .bindItem(model::gender)
+                    .bindItem(model::gender.toNullableProperty())
             }
             row("Profession:") {
                 textField().bindText(model::profession)
             }
             row("Handedness:") {
                 comboBox(listOf("left", "right", "mixed", "ambidextrous"))
-                    .bindItem(model::handedness)
+                    .bindItem(model::handedness.toNullableProperty())
             }
         }
         group("How do you estimate") {
             row("Your programming experience:") {
                 comboBox((1..10).toList())
-                    .bindItem(model::experience10)
+                    .bindItemNullable(model::experience10)
             }
             row("Your programming experience compared to experts\nwith 20 years of practical experience?") {
                 comboBox((1..5).toList())
-                    .bindItem(model::compareExpert5)
+                    .bindItemNullable(model::compareExpert5)
             }
             row("Your programming experience compared to \nyour class mates?") {
                 comboBox((1..5).toList())
-                    .bindItem(model::compareClassmates5)
+                    .bindItemNullable(model::compareClassmates5)
             }
         }
 
@@ -47,23 +53,23 @@ class ParticipantConfigurable : BoundConfigurable(
             row {
                 comboBox((1..5).toList())
                     .label("Java")
-                    .bindItem(model::experienceJava5)
+                    .bindItemNullable(model::experienceJava5)
             }.layout(RowLayout.PARENT_GRID)
             row {
 
                 comboBox((1..5).toList())
                     .label("C")
-                    .bindItem(model::experienceC5)
+                    .bindItemNullable(model::experienceC5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Haskell")
-                    .bindItem(model::experienceHaskell5)
+                    .bindItemNullable(model::experienceHaskell5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Prolog")
-                    .bindItem(model::experienceProlog5)
+                    .bindItemNullable(model::experienceProlog5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 textField()
@@ -75,22 +81,22 @@ class ParticipantConfigurable : BoundConfigurable(
             row {
                 comboBox((1..5).toList())
                     .label("Functional programming")
-                    .bindItem(model::paradigmFunctional5)
+                    .bindItemNullable(model::paradigmFunctional5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Imperative programming")
-                    .bindItem(model::paradigmImperative5)
+                    .bindItemNullable(model::paradigmImperative5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Logical programming")
-                    .bindItem(model::paradigmLogical5)
+                    .bindItemNullable(model::paradigmLogical5)
             }.layout(RowLayout.PARENT_GRID)
             row {
                 comboBox((1..5).toList())
                     .label("Object-oriented programming")
-                    .bindItem(model::paradigmOOP5)
+                    .bindItemNullable(model::paradigmOOP5)
             }.layout(RowLayout.PARENT_GRID)
         }
         group("For how many years have you been...") {

@@ -5,7 +5,10 @@ import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
 import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
+import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.thisLogger
@@ -35,7 +38,7 @@ fun saveRecordingToDisk(
     val timestamp = timestampFormat.format(date)
 
     val recordingsSaveLocation = OpenEyeSettingsState.instance.recordingsSaveLocation
-    val saveFolder = File(wrapPath(recordingsSaveLocation))
+    val saveFolder = File(recordingsSaveLocation)
 
     val participantState = ApplicationManager.getApplication().getService(ParticipantState::class.java)
     val participantId = participantState.id
@@ -43,19 +46,22 @@ fun saveRecordingToDisk(
     saveFolder.mkdirs()
     try {
         if (gazeSnapshots.isNotEmpty()) {
-            val file = File(wrapPath("$recordingsSaveLocation/${participantId}_${timestamp}_gaze.json"))
+            val file = File(saveFolder, "${participantId}_${timestamp}_gaze.json")
             saveToDisk(gazeSnapshots, file)
+            notifyFileSaved(project, file)
         }
         if (elementGazePoints.isNotEmpty()) {
-            val file = File(wrapPath("$recordingsSaveLocation/${participantId}_${timestamp}_elements.json"))
+            val file = File(saveFolder, "${participantId}_${timestamp}_elements.json")
             saveToDisk(
                 elementGazePoints.map { (psiElement, gazeWeight) ->
                     SerializableElementGaze(psiElement, gazeWeight)
                 }, file
             )
+            notifyFileSaved(project, file)
         }
-        val file = File(wrapPath("$recordingsSaveLocation/${participantId}_participant.json"))
+        val file = File(saveFolder, "${participantId}_participant.json")
         saveToDisk(participantState, file)
+        notifyFileSaved(project, file)
     } catch (ex: Exception) {
         OpenEyeSettingsState.thisLogger().error(ex)
         requestSettingsChange(
@@ -82,7 +88,6 @@ inline fun <reified T> saveToDisk(data: T, file: File) {
     runWriteAction {
         file.createNewFile()
         file.writeText(encoded)
-        Logger.getInstance("IOUtilities").info("Successfully saved ${file.path}")
     }
 }
 
@@ -96,3 +101,13 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
 }
 
 fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""
+
+private fun notifyFileSaved(project: Project, file: File) {
+    Logger.getInstance("IOUtilities").info("Successfully saved ${file.path}")
+    invokeLater {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Recording File Saved")
+            .createNotification("Successfully saved ${file.path}", NotificationType.INFORMATION)
+            .notify(project);
+    }
+}

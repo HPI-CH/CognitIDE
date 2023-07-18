@@ -22,6 +22,9 @@
                                  id="plugin.openeye.participant"
                                  displayName="Participant Configuration"/>
         <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.ParticipantState"/>
+
+        <notificationGroup id="Recording File Saved"
+                           displayType="BALLOON"/>
     </extensions>
 
     <actions>

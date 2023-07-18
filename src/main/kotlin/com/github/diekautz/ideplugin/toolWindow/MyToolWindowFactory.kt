@@ -12,10 +12,10 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.bindIntText
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.intellij.ui.table.JBTable
 
 
@@ -104,7 +104,8 @@ class MyToolWindowFactory : ToolWindowFactory {
             group("2: Select Device") {
 
                 row {
-                    scrollCell(table).align(Align.FILL)
+                    scrollCell(table)
+                        .horizontalAlign(HorizontalAlign.FILL)
                 }
                 row {
                     text("Test")

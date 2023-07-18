@@ -11,20 +11,32 @@ class OpenEyeSettingsConfigurable : BoundConfigurable(
     private val model = OpenEyeSettingsState.instance
 
     override fun createPanel() = panel {
-        group {
+        group("Recordings") {
             row("Recording Save Location") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor())
                     .bindText(model::recordingsSaveLocation)
+                    .comment("The location where participant data will be saved.")
             }
         }
-        collapsibleGroup("External Applications") {
+        group("External Applications") {
             row("TobiiPro Connector:") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(model::tobiiProConnectorExecutable)
+                    .comment(
+                        "Please <a href='https://github.com/labstreaminglayer/App-TobiiPro'>build the TobiiPro Connector</a>. " +
+                                "It is used to create an LSL stream of the eye tracker. " +
+                                "It will be used by the plugin to get the required data.\n" +
+                                "Provide the application path <i>optionally</i> so the application can be opened when needed."
+                    )
             }
             row("Eye Tracker Manager:") {
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(model::eyeTrackerManagerExecutable)
+                    .comment(
+                        "<i>optional:</i> Provide the path to your " +
+                                "<a href='https://www.tobii.com/products/software/applications-and-developer-kits/tobii-pro-eye-tracker-manager'>Tobii Pro Eye Tracker Manager</a>. " +
+                                "It will be called on the fly to setup the calibration of a new participant."
+                    )
             }
         }
     }

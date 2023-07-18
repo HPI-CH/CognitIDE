@@ -6,6 +6,7 @@
 
 ### Added
 
+- Added configuration option for device sn, to directly open user calibration screen
 - Added extra description to external programs
 - Added open file action after save
 - Added correction if one eye was not recognised

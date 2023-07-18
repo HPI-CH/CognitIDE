@@ -11,6 +11,7 @@ class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
     // external applications
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
+    var eyeTrackerSerial = ""
 
     // recording save location
     var recordingsSaveLocation = ""

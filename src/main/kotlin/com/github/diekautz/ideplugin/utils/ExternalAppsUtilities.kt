@@ -13,9 +13,14 @@ fun openTobiiProConnector(project: Project) {
 }
 
 fun openEyeTrackerManager(project: Project) {
+    var command = OpenEyeSettingsState.instance.eyeTrackerManagerExecutable
+    val deviceSerial = OpenEyeSettingsState.instance.eyeTrackerSerial
+    if (deviceSerial.isNotBlank()) {
+        command += " --mode=usercalibration --device-sn=$deviceSerial"
+    }
     execExternalUtility(
         project,
-        OpenEyeSettingsState.instance.eyeTrackerManagerExecutable,
+        command,
         "Please provide a valid path to the Eye Tracker Manager executable."
     )
 }

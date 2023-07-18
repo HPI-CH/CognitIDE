@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [1.0.0-rc.2] - 2023-07-18
+
 ### Added
 - Ask if recording and participant data should be cleared
 - Added Add global setting for recordings save location
@@ -20,16 +22,14 @@
 - Fix serialization of invalid pupil diameters
 - Fix coordinate typo in Tobii recording service
 
-## 0.0.2
+## [0.0.2]
 
 ### Added
-
 - Consider all opened editors not just the one with keyboard focus
 
-## 0.0.1
+## [0.0.1]
 
 ### Added
-
 - Export for raw gaze data along with time-synchronized file or editor focus
 - Export for gaze counters of elements
 - Visualization feature for recorded gaze
@@ -37,3 +37,8 @@
 - Debug mouse cursor recording mode to simulate an eye tracking device with 10Hz
 - Initial scaffold created
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+
+[Unreleased]: https://github.com/DieKautz/ide-plugin/compare/v1.0.0-rc.2...HEAD
+[1.0.0-rc.2]: https://github.com/DieKautz/ide-plugin/compare/v0.0.2...v1.0.0-rc.2
+[0.0.2]: https://github.com/DieKautz/ide-plugin/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/DieKautz/ide-plugin/commits/v0.0.1

@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Added
+- Ask if recording and participant data should be cleared
 - Added Add global setting for recordings save location
 - Save participant information alongside data
 - Added SetupNewParticipantAction

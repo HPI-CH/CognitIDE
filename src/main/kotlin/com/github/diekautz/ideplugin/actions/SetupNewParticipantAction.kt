@@ -11,6 +11,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ShowSettingsUtil
+import com.intellij.openapi.ui.MessageDialogBuilder
+import com.intellij.openapi.ui.Messages.CANCEL
+import com.intellij.openapi.ui.Messages.YES
 
 class SetupNewParticipantAction : AnAction() {
     override fun update(e: AnActionEvent) {
@@ -24,12 +27,27 @@ class SetupNewParticipantAction : AnAction() {
         e.project?.service<MyMousePositionService>()?.stopTrackMouse()
 
         // clear data
-        e.project?.service<MyLookRecorderService>()?.clearData()
+        when (MessageDialogBuilder
+            .yesNoCancel("OpenEye", "Clear all recorded data?")
+            .asWarning()
+            .show(e.project)) {
+            YES -> e.project?.service<MyLookRecorderService>()?.clearData()
+            CANCEL -> return
+        }
 
         // reset participant questioner, generate new id
-        ApplicationManager.getApplication().getService(ParticipantState::class.java)?.loadState(ParticipantState())
+        when (MessageDialogBuilder
+            .yesNoCancel("OpenEye", "Reset participant?")
+            .asWarning()
+            .show(e.project)) {
+            YES -> {
+                ApplicationManager.getApplication().getService(ParticipantState::class.java)
+                    ?.loadState(ParticipantState())
+                ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
+            }
 
-        ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
+            CANCEL -> return
+        }
 
         openEyeTrackerManager(e.project!!)
     }

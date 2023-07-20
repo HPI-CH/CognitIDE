@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin
+package com.github.diekautz.ideplugin.ui
 
 import edu.ucsd.sccn.LSL.StreamInfo
 import javax.swing.table.AbstractTableModel

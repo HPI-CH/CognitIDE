@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.services.debug
 
-import com.github.diekautz.ideplugin.StreamInfoTableModel
+import com.github.diekautz.ideplugin.ui.StreamInfoTableModel
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import edu.ucsd.sccn.LSL

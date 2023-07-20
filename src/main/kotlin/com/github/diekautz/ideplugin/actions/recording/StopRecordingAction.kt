@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.actions.recording
 
-import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
+import com.github.diekautz.ideplugin.services.debug.MyMousePositionService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service

@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.services
+package com.github.diekautz.ideplugin.services.debug
 
 import com.github.diekautz.ideplugin.StreamInfoTableModel
 import com.intellij.openapi.components.Service

@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.services
+package com.github.diekautz.ideplugin.services.debug
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
@@ -63,17 +63,23 @@ class MyMousePositionService(val project: Project) {
                         indicator.text2 = "[debug] mouse ${logicalPosition.line}:${logicalPosition.column}"
 
                         val offset = editor.logicalPositionToOffset(logicalPosition)
-                        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
+                        val psiFile =
+                            PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
                         val element = psiFile.findElementAt(offset)
 
                         val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
 
                         val fakeData = GazeData(mousePoint, mousePoint, 1.0, 1.0)
                         if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-                            gazeSnapshotN = lookRecorderService.addGazeSnapshot(Instant.now().toEpochMilli(), virtualFile, element, fakeData)
+                            gazeSnapshotN = lookRecorderService.addGazeSnapshot(
+                                Instant.now().toEpochMilli(),
+                                virtualFile,
+                                element,
+                                fakeData
+                            )
                         }
                         elementGazeN = lookRecorderService.addAreaGaze(psiFile, editor, fakeData)
-                        indicator.text  = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
+                        indicator.text = "rawGaze: $gazeSnapshotN elements: $elementGazeN"
                     }
                     delay(100)
                 }

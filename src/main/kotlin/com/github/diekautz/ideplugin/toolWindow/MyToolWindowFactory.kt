@@ -1,9 +1,9 @@
 package com.github.diekautz.ideplugin.toolWindow
 
 import com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction
-import com.github.diekautz.ideplugin.services.MyLSLService
-import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
+import com.github.diekautz.ideplugin.services.debug.MyLSLService
+import com.github.diekautz.ideplugin.services.debug.MyMousePositionService
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger

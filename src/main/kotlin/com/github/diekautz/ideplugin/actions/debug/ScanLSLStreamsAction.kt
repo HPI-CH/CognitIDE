@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.actions.debug
 
-import com.github.diekautz.ideplugin.services.MyLSLService
+import com.github.diekautz.ideplugin.services.debug.MyLSLService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service

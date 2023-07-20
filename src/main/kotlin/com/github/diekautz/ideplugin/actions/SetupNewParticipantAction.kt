@@ -2,8 +2,8 @@ package com.github.diekautz.ideplugin.actions
 
 import com.github.diekautz.ideplugin.config.ParticipantConfigurable
 import com.github.diekautz.ideplugin.config.ParticipantState
-import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService
+import com.github.diekautz.ideplugin.services.debug.MyMousePositionService
 import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
 import com.github.diekautz.ideplugin.utils.openEyeTrackerManager
 import com.intellij.openapi.actionSystem.AnAction

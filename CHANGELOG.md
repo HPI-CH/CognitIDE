@@ -6,6 +6,8 @@
 
 ### Added
 
+- Interrupt user and prompt for answer/code while recording
+- Added configuration option for interrupt
 - Added action for highlighting gaze elements
 - Added icons for all actions
 - Improved interactive participant setup

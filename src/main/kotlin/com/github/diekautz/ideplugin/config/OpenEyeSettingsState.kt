@@ -8,13 +8,19 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "com.github.diekautz.ideplugin.config.OpenEyeSettingsState", storages = [Storage("OpenEyePlugin.xml")])
 class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
+    // recording save location
+    var recordingsSaveLocation = ""
+
+    // interrupt
+    var interruptUser = false
+    var interruptStopRecordingAfterLast = true
+    var interruptDelay = 60
+    var interruptCount = 10
+
     // external applications
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
     var eyeTrackerSerial = ""
-
-    // recording save location
-    var recordingsSaveLocation = ""
 
     override fun getState(): OpenEyeSettingsState = this
 

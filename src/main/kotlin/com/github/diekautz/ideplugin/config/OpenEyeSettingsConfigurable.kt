@@ -2,9 +2,8 @@ package com.github.diekautz.ideplugin.config
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.BoundConfigurable
-import com.intellij.ui.dsl.builder.EMPTY_LABEL
-import com.intellij.ui.dsl.builder.bindText
-import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.dsl.builder.*
 
 class OpenEyeSettingsConfigurable : BoundConfigurable(
     "OpenEyeSettingsConfigurable"
@@ -18,6 +17,28 @@ class OpenEyeSettingsConfigurable : BoundConfigurable(
                     .bindText(model::recordingsSaveLocation)
                     .comment("The location where participant data will be saved.")
             }
+
+            lateinit var interruptCheckBox: Cell<JBCheckBox>
+            row {
+                interruptCheckBox = checkBox("Interrupt user:")
+                    .bindSelected(model::interruptUser)
+            }
+            panel {
+                indent {
+                    row("Delay:") {
+                        spinner(1..99999)
+                            .bindIntValue(model::interruptDelay)
+                    }
+                    row("Count:") {
+                        spinner(1..100)
+                            .bindIntValue(model::interruptCount)
+                    }
+                    row {
+                        checkBox("Stop recording after last")
+                            .bindSelected(model::interruptStopRecordingAfterLast)
+                    }
+                }
+            }.enabledIf(interruptCheckBox.selected)
         }
         group("External Applications") {
             group("TobiiPro Connector") {

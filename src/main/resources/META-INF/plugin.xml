@@ -50,13 +50,13 @@
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
             <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
                     class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
-                    text="Clear Hightlights"
+                    text="Clear Highlights"
                     description="Clears all previously highlighted elements"
-                    icon="AllIcons.Actions.Undo"/>
+                    icon="AllIcons.General.Reset"/>
             <action id="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
                     text="Start Tobii Pro Recording"
-                    description="Starts or continous a Tobii Pro recording via LSL"
+                    description="Starts or continuous a Tobii Pro recording via LSL"
                     icon="AllIcons.Actions.Execute">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>

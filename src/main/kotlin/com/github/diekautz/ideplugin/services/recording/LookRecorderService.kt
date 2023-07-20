@@ -18,7 +18,7 @@ import java.util.*
 
 
 @Service(Service.Level.PROJECT)
-class MyLookRecorderService(val project: Project) {
+class LookRecorderService(val project: Project) {
 
     private val gazeSnapshots = mutableListOf<GazeSnapshot>()
     private val elementGazePoints = mutableMapOf<PsiElement, Double>()

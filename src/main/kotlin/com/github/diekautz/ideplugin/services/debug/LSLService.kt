@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.thisLogger
 import edu.ucsd.sccn.LSL
 
 @Service(Service.Level.PROJECT)
-class MyLSLService {
+class LSLService {
     private val streamInfoTableModel = StreamInfoTableModel(mutableListOf())
     val streamInfos = mutableListOf<LSL.StreamInfo>()
 

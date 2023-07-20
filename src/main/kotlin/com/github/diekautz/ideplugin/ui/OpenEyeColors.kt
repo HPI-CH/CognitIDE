@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.ui.JBColor
 
 
-object MyColors {
+object OpenEyeColors {
 
 //    private val colors = arrayOf(
 //        JBColor(0x5FF1A4A1, 0xF1A4A1),

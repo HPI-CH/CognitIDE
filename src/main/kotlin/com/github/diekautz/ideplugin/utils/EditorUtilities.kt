@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.utils
 
-import com.github.diekautz.ideplugin.ui.MyColors
+import com.github.diekautz.ideplugin.ui.OpenEyeColors
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
@@ -26,14 +26,14 @@ fun Editor.highlightElements(index: Int, elements: List<PsiElement>, project: Pr
     HighlightManager.getInstance(project).addOccurrenceHighlights(
         this,
         filteredElement,
-        MyColors.LOOKED_ATTRIBUTES[index],
+        OpenEyeColors.LOOKED_ATTRIBUTES[index],
         true,
         null
     )
 }
 
 fun Editor.highlightElementGazePoints(seen: Map<PsiElement, Double>, project: Project) {
-    val assignedColors = MyColors.assignColors(seen)
+    val assignedColors = OpenEyeColors.assignColors(seen)
 
     assignedColors.forEach { (colorIndex, entries) ->
         highlightElements(

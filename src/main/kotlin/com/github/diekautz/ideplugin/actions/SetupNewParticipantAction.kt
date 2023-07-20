@@ -2,9 +2,9 @@ package com.github.diekautz.ideplugin.actions
 
 import com.github.diekautz.ideplugin.config.ParticipantConfigurable
 import com.github.diekautz.ideplugin.config.ParticipantState
-import com.github.diekautz.ideplugin.services.MyTobiiProService
-import com.github.diekautz.ideplugin.services.debug.MyMousePositionService
-import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
+import com.github.diekautz.ideplugin.services.TobiiProService
+import com.github.diekautz.ideplugin.services.debug.MousePositionService
+import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.github.diekautz.ideplugin.utils.openEyeTrackerManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -23,15 +23,15 @@ class SetupNewParticipantAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         // stop recordings
-        e.project?.service<MyTobiiProService>()?.stopRecording()
-        e.project?.service<MyMousePositionService>()?.stopTrackMouse()
+        e.project?.service<TobiiProService>()?.stopRecording()
+        e.project?.service<MousePositionService>()?.stopTrackMouse()
 
         // clear data
         when (MessageDialogBuilder
             .yesNoCancel("New Participant Setup", "Clear all recorded data?")
             .asWarning()
             .show(e.project)) {
-            YES -> e.project?.service<MyLookRecorderService>()?.clearData()
+            YES -> e.project?.service<LookRecorderService>()?.clearData()
             CANCEL -> return
         }
 
@@ -63,7 +63,7 @@ class SetupNewParticipantAction : AnAction() {
             .yesNoCancel("New Participant Setup", "Start new recording now?")
             .show(e.project)
         ) {
-            YES -> e.project?.service<MyTobiiProService>()?.startRecording()
+            YES -> e.project?.service<TobiiProService>()?.startRecording()
             CANCEL -> return
         }
     }

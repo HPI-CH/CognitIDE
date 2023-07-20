@@ -1,10 +1,10 @@
 package com.github.diekautz.ideplugin.toolWindow
 
 import com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction
-import com.github.diekautz.ideplugin.services.MyTobiiProService
-import com.github.diekautz.ideplugin.services.debug.MyLSLService
-import com.github.diekautz.ideplugin.services.debug.MyMousePositionService
-import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
+import com.github.diekautz.ideplugin.services.TobiiProService
+import com.github.diekautz.ideplugin.services.debug.LSLService
+import com.github.diekautz.ideplugin.services.debug.MousePositionService
+import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
@@ -19,7 +19,7 @@ import com.intellij.ui.dsl.gridLayout.HorizontalAlign
 import com.intellij.ui.table.JBTable
 
 
-class MyToolWindowFactory : ToolWindowFactory {
+class OpenEyeToolWindowFactory : ToolWindowFactory {
 
     private val contentFactory = ContentFactory.SERVICE.getInstance()
 
@@ -39,8 +39,8 @@ class MyToolWindowFactory : ToolWindowFactory {
         private val project = toolWindow.project
         private val dataModel = Model()
         fun recordTabContent() = panel {
-            val tobiiProService = project.service<MyTobiiProService>()
-            val lookRecorderService = project.service<MyLookRecorderService>()
+            val tobiiProService = project.service<TobiiProService>()
+            val lookRecorderService = project.service<LookRecorderService>()
             group("Tobii Pro Nano") {
                 row {
                     button("Record") {
@@ -77,8 +77,8 @@ class MyToolWindowFactory : ToolWindowFactory {
         }
 
         fun debugTabContent() = panel {
-            val lslService = project.service<MyLSLService>()
-            val mousePositionService = project.service<MyMousePositionService>()
+            val lslService = project.service<LSLService>()
+            val mousePositionService = project.service<MousePositionService>()
             val tableModel = lslService.getStreamInfoTableModel()
 
             row("Mouse") {

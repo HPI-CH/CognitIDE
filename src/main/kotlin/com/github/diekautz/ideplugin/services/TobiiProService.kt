@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
-import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
+import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.github.diekautz.ideplugin.utils.openTobiiProConnector
 import com.github.diekautz.ideplugin.utils.removeAllHighlighters
 import com.intellij.openapi.application.invokeLater
@@ -26,10 +26,10 @@ import java.awt.Toolkit
 import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
-class MyTobiiProService(val project: Project) {
+class TobiiProService(val project: Project) {
 
 
-    private val lookRecorderService = project.service<MyLookRecorderService>()
+    private val lookRecorderService = project.service<LookRecorderService>()
 
     fun startRecording() {
         task.shouldRun = true
@@ -43,7 +43,7 @@ class MyTobiiProService(val project: Project) {
 
     private val task = object : Task.Backgroundable(project, "Recording gaze", true) {
         var shouldRun = true
-        val logger = this@MyTobiiProService.thisLogger()
+        val logger = this@TobiiProService.thisLogger()
 
         var gazeSnapshotN = 0
         var elementGazeN = 0

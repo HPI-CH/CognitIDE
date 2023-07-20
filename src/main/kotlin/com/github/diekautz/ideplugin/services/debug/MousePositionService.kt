@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services.debug
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
-import com.github.diekautz.ideplugin.services.recording.MyLookRecorderService
+import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
@@ -21,9 +21,9 @@ import java.time.Instant
 import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
-class MyMousePositionService(val project: Project) {
+class MousePositionService(val project: Project) {
 
-    private val lookRecorderService = project.service<MyLookRecorderService>()
+    private val lookRecorderService = project.service<LookRecorderService>()
     private var refreshJob: Job? = null
 
     fun trackMouse() {

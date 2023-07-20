@@ -8,7 +8,6 @@ import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.Logger
@@ -42,7 +41,7 @@ fun saveRecordingToDisk(
     val recordingsSaveLocation = OpenEyeSettingsState.instance.recordingsSaveLocation
     val saveFolder = File(recordingsSaveLocation)
 
-    val participantState = ApplicationManager.getApplication().getService(ParticipantState::class.java)
+    val participantState = ParticipantState.instance
     val participantId = participantState.id
 
     saveFolder.mkdirs()

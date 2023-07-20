@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.utils
+package com.github.diekautz.ideplugin.extensions
 
 import com.github.diekautz.ideplugin.ui.OpenEyeColors
 import com.intellij.codeInsight.highlighting.HighlightManager

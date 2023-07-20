@@ -1,5 +1,9 @@
 package com.github.diekautz.ideplugin.services.recording
 
+import com.github.diekautz.ideplugin.extensions.highlightElementGazePoints
+import com.github.diekautz.ideplugin.extensions.increment
+import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
+import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
 import com.github.diekautz.ideplugin.utils.*
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger

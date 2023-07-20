@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.utils
+package com.github.diekautz.ideplugin.extensions
 
 fun <K> MutableMap<K, Double>.increment(key: K, delta: Double, defaultValue: Double = 0.0) {
     val value = getOrDefault(key, defaultValue)

@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.actions
 
-import com.github.diekautz.ideplugin.utils.removeAllHighlighters
+import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.editor.EditorFactory

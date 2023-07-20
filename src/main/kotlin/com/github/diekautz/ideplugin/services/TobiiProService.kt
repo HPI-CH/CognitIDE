@@ -1,10 +1,10 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.services.recording.GazeData
 import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.github.diekautz.ideplugin.utils.openTobiiProConnector
-import com.github.diekautz.ideplugin.utils.removeAllHighlighters
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service

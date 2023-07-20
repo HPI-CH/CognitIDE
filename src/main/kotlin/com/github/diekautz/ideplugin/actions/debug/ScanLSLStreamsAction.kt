@@ -9,7 +9,7 @@ class ScanLSLStreamsAction: AnAction() {
 
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
-        e.presentation.isEnabledAndVisible = currentProject != null
+        e.presentation.isEnabled = currentProject != null
     }
 
     override fun actionPerformed(e: AnActionEvent) {

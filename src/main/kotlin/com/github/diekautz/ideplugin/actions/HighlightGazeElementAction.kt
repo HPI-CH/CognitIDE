@@ -11,7 +11,7 @@ class HighlightGazeElementAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
         val lookRecorderService = currentProject?.service<LookRecorderService>()
-        e.presentation.isEnabledAndVisible = lookRecorderService?.couldHighlight() ?: false
+        e.presentation.isEnabled = lookRecorderService?.couldHighlight() ?: false
     }
 
     override fun actionPerformed(e: AnActionEvent) {

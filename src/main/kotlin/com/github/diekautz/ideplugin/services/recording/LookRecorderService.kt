@@ -1,21 +1,22 @@
 package com.github.diekautz.ideplugin.services.recording
 
-import com.github.diekautz.ideplugin.extensions.highlightElementGazePoints
-import com.github.diekautz.ideplugin.extensions.increment
-import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
-import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
+import com.github.diekautz.ideplugin.extensions.*
 import com.github.diekautz.ideplugin.utils.*
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
+import java.awt.image.BufferedImage
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
@@ -135,5 +136,22 @@ class LookRecorderService(val project: Project) {
     }
 
     fun couldHighlight() = elementGazePoints.isNotEmpty()
+
+    fun openAllFiles() = runReadAction {
+        val fileEditorManager = FileEditorManager.getInstance(project)
+        mutableListOf<BufferedImage>()
+        gazeSnapshots.map { it.editorGazeSnapshot.filePath }.forEach { filePath ->
+            val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
+            if (vFile == null) {
+                thisLogger().error("Could not find recorded file in my $filePath")
+                return@forEach
+            }
+            val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
+            if (editor == null) {
+                thisLogger().error("Could not open an editor for $filePath")
+                return@forEach
+            }
+        }
+    }
 
 }

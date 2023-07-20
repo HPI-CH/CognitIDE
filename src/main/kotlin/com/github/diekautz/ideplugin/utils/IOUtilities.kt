@@ -105,7 +105,6 @@ fun saveRecordingToDisk(
 fun screenshotFilesInEditor(project: Project, filePaths: List<String>): Map<String, BufferedImage?> = runReadAction {
     val logger = Logger.getInstance("EditorScreenshots")
     val fileEditorManager = FileEditorManager.getInstance(project)
-    mutableListOf<BufferedImage>()
     return@runReadAction filePaths.associateWith { filePath ->
         val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
         if (vFile == null) {

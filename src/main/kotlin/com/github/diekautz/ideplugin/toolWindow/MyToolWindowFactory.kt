@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.toolWindow
 
-import com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction
+import com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction
 import com.github.diekautz.ideplugin.services.MyLSLService
 import com.github.diekautz.ideplugin.services.MyMousePositionService
 import com.github.diekautz.ideplugin.services.MyTobiiProService

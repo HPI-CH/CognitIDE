@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.actions
+package com.github.diekautz.ideplugin.actions.debug
 
 import com.github.diekautz.ideplugin.services.MyLSLService
 import com.intellij.openapi.actionSystem.AnAction

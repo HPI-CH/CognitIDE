@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.actions
+package com.github.diekautz.ideplugin.actions.debug
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

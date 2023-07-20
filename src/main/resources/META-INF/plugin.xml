@@ -80,12 +80,12 @@
 
             <separator text="Debug"/>
 
-            <action id="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
-                    class="com.github.diekautz.ideplugin.actions.CalculateScreenBrightnessAction"
+            <action id="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
+                    class="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
-            <action id="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
-                    class="com.github.diekautz.ideplugin.actions.ScanLSLStreamsAction"
+            <action id="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
+                    class="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
                     text="Resolve LSL Streams"
                     description="Refreshes resolved lab streaming layer stream infos"/>
         </group>

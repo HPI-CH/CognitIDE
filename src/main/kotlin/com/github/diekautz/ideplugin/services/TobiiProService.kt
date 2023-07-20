@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
+import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.github.diekautz.ideplugin.utils.openTobiiProConnector
 import com.github.diekautz.ideplugin.utils.removeAllHighlighters
@@ -27,18 +28,19 @@ import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
 class TobiiProService(val project: Project) {
-
-
     private val lookRecorderService = project.service<LookRecorderService>()
+    private val interruptService by lazy { project.service<InterruptService>() }
 
     fun startRecording() {
         task.shouldRun = true
         ProgressManager.getInstance().run(task)
+        interruptService.startInterrupting()
         EditorFactory.getInstance().removeAllHighlighters()
     }
 
     fun stopRecording() {
         task.shouldRun = false
+        interruptService.stopInterrupting()
     }
 
     private val task = object : Task.Backgroundable(project, "Recording gaze", true) {

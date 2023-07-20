@@ -4,12 +4,14 @@ import com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
+import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileChooser.FileChooserFactory
@@ -38,8 +40,10 @@ fun saveRecordingToDisk(
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
     val timestamp = timestampFormat.format(date)
 
-    val recordingsSaveLocation = OpenEyeSettingsState.instance.recordingsSaveLocation
-    val saveFolder = File(recordingsSaveLocation)
+    val interruptService = project.service<InterruptService>()
+
+    val settingsState = OpenEyeSettingsState.instance
+    val saveFolder = File(settingsState.recordingsSaveLocation)
 
     val participantState = ParticipantState.instance
     val participantId = participantState.id
@@ -58,6 +62,11 @@ fun saveRecordingToDisk(
                     SerializableElementGaze(psiElement, gazeWeight)
                 }, file
             )
+            notifyFileSaved(project, file)
+        }
+        if (interruptService.recordedInterrupts.isNotEmpty()) {
+            val file = File(saveFolder, "${participantId}_${timestamp}_interrupts.json")
+            saveToDisk(interruptService.recordedInterrupts, file)
             notifyFileSaved(project, file)
         }
         val file = File(saveFolder, "${participantId}_participant.json")

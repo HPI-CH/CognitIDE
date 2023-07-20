@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services.debug
 
 import com.github.diekautz.ideplugin.services.recording.GazeData
+import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -22,8 +23,8 @@ import javax.swing.SwingUtilities
 
 @Service(Service.Level.PROJECT)
 class MousePositionService(val project: Project) {
-
     private val lookRecorderService = project.service<LookRecorderService>()
+    private val interruptService = project.service<InterruptService>()
     private var refreshJob: Job? = null
 
     fun trackMouse() {
@@ -31,11 +32,13 @@ class MousePositionService(val project: Project) {
 
         task.shouldRun = true
         ProgressManager.getInstance().run(task)
+        interruptService.startInterrupting()
         refreshJob?.start()
     }
 
     fun stopTrackMouse() {
         task.shouldRun = false
+        interruptService.stopInterrupting()
     }
 
     private val task = object : Task.Backgroundable(project, "Recording mouse", true) {

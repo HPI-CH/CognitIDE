@@ -56,21 +56,21 @@ fun saveRecordingToDisk(
     try {
         if (gazeSnapshots.isNotEmpty()) {
             val file = File(saveFolder, "gaze.json")
-            saveToDisk(gazeSnapshots, file)
+            saveToDisk(json.encodeToString(gazeSnapshots), file)
             notifyFileSaved(project, file)
         }
         if (lookElementGazeList.isNotEmpty()) {
             val file = File(saveFolder, "elements.json")
-            saveToDisk(lookElementGazeList, file)
+            saveToDisk(json.encodeToString(lookElementGazeList), file)
             notifyFileSaved(project, file)
         }
         if (userInterrupts.isNotEmpty()) {
             val file = File(saveFolder, "interrupts.json")
-            saveToDisk(userInterrupts, file)
+            saveToDisk(json.encodeToString(userInterrupts), file)
             notifyFileSaved(project, file)
         }
         val file = File(saveFolder, "participant.json")
-        saveToDisk(participantState, file)
+        saveToDisk(json.encodeToString(participantState), file)
         notifyFileSaved(project, file)
 
         // highlight, open editors and save screenshots
@@ -108,8 +108,7 @@ fun screenshotFilesInEditor(project: Project, filePaths: List<String>): Map<Stri
     }
 }
 
-inline fun <reified T> saveToDisk(data: T, file: File) {
-    val encoded = json.encodeToString(data)
+fun saveToDisk(encoded: String, file: File) {
     try {
         runWriteAction {
             logger.info("Saving ${file.path}")
@@ -121,13 +120,9 @@ inline fun <reified T> saveToDisk(data: T, file: File) {
                 .yesNo("Saving Error!", "The file could not be saved to ${file.path}.\nChoose directory?")
                 .guessWindowAndAsk()
         ) {
-            backupSaveData()?.let { saveToDisk2(data, it) }
+            backupSaveData()?.let { saveToDisk(encoded, file) }
         }
     }
-}
-
-inline fun <reified T> saveToDisk2(data: T, file: File) {
-    saveToDisk(data, file)
 }
 
 fun saveToDisk(data: BufferedImage, file: File) {

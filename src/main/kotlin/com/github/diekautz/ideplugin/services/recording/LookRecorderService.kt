@@ -63,12 +63,12 @@ class LookRecorderService(val project: Project) {
     fun askAndSaveBoth() {
         if (couldSave()) {
             val date = Date.from(Instant.now())
-            saveRecordingToDisk(
-                project, date,
-                elementGazePoints.map { (psiElement, gazeWeight) ->
-                    LookElementGaze(psiElement, gazeWeight)
-                }, gazeSnapshots
-            )
+//            saveRecordingToDisk(
+//                project, date,
+//                elementGazePoints.map { (psiElement, gazeWeight) ->
+//                    LookElementGaze(psiElement, gazeWeight)
+//                }, gazeSnapshots, project.service<InterruptService>()
+//            )
         } else {
             project.infoMsg("No data to be saved!")
         }

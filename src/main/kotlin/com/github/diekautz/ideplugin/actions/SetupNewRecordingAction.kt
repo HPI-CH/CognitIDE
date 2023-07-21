@@ -2,9 +2,7 @@ package com.github.diekautz.ideplugin.actions
 
 import com.github.diekautz.ideplugin.config.ParticipantConfigurable
 import com.github.diekautz.ideplugin.config.ParticipantState
-import com.github.diekautz.ideplugin.services.TobiiProService
-import com.github.diekautz.ideplugin.services.debug.MousePositionService
-import com.github.diekautz.ideplugin.services.recording.LookRecorderService
+import com.github.diekautz.ideplugin.services.DataCollectingService
 import com.github.diekautz.ideplugin.utils.openEyeTrackerManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -15,23 +13,24 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages.CANCEL
 import com.intellij.openapi.ui.Messages.YES
 
-class SetupNewParticipantAction : AnAction() {
+class SetupNewRecordingAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
         e.presentation.isEnabled = currentProject != null
     }
 
     override fun actionPerformed(e: AnActionEvent) {
+        val dataCollectingService = e.project?.service<DataCollectingService>()
+
         // stop recordings
-        e.project?.service<TobiiProService>()?.stopRecording()
-        e.project?.service<MousePositionService>()?.stopTrackMouse()
+        dataCollectingService?.stopRecording()
 
         // clear data
         when (MessageDialogBuilder
             .yesNoCancel("New Participant Setup", "Clear all recorded data?")
             .asWarning()
             .show(e.project)) {
-            YES -> e.project?.service<LookRecorderService>()?.clearData()
+            YES -> dataCollectingService?.clearData()
             CANCEL -> return
         }
 
@@ -63,7 +62,7 @@ class SetupNewParticipantAction : AnAction() {
             .yesNoCancel("New Participant Setup", "Start new recording now?")
             .show(e.project)
         ) {
-            YES -> e.project?.service<TobiiProService>()?.startRecording()
+            YES -> dataCollectingService?.startRecording()
             CANCEL -> return
         }
     }

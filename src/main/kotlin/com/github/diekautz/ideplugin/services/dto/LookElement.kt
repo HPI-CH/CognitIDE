@@ -7,4 +7,7 @@ data class LookElement(
     val text: String,
     val filePath: String,
     val startOffset: Int
-)
+) {
+    val endOffset: Int
+        get() = startOffset + text.length
+}

@@ -35,51 +35,62 @@
                icon="AllIcons.Actions.ShowCode">
             <add-to-group group-id="MainMenu" anchor="last"/>
 
-            <action id="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
-                    class="com.github.diekautz.ideplugin.actions.SetupNewParticipantAction"
+            <action id="com.github.diekautz.ideplugin.actions.SetupNewRecordingAction"
+                    class="com.github.diekautz.ideplugin.actions.SetupNewRecordingAction"
                     text="Setup New Participant"
-                    description="Clears all data and opens questioner for new participant"
+                    description="Clears all data and opens questioner for new participant."
                     icon="AllIcons.Actions.AddFile"/>
+            <action id="com.github.diekautz.ideplugin.actions.recording.ClearDataAction"
+                    class="com.github.diekautz.ideplugin.actions.recording.ClearDataAction" text="Clear Recording"
+                    description="Clears all recorded data."
+                    icon="AllIcons.Actions.GC"/>
 
             <separator/>
 
             <action id="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
                     class="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
                     text="Visualize Recorded Gaze"
-                    description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at"
+                    description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
             <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
                     class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
                     text="Clear Highlights"
-                    description="Clears all previously highlighted elements"
+                    description="Clears all previously highlighted elements."
                     icon="AllIcons.General.Reset"/>
+            <separator/>
+
             <action id="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
                     text="Start Tobii Pro Recording"
-                    description="Starts or continuous a Tobii Pro recording via LSL"
-                    icon="AllIcons.Actions.Execute">
+                    description="Starts or continuous a Tobii Pro recording via LSL."
+                    icon="AllIcons.Actions.RunAll">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
             <action id="com.github.diekautz.ideplugin.actions.recording.StopRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.recording.StopRecordingAction"
-                    text="Stop OpenEye Recording"
-                    description="Stops an ongoing recording"
-                    icon="AllIcons.Actions.Pause">
+                    text="Stop Recording"
+                    description="Stops an ongoing recording."
+                    icon="AllIcons.Actions.Suspend">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
 
-            <separator/>
-
-            <action id="com.github.diekautz.ideplugin.actions.recording.SaveAllRunDataAction"
-                    class="com.github.diekautz.ideplugin.actions.recording.SaveAllRunDataAction"
-                    text="Save OpenEye Run"
-                    description="Saves element gazes and raw recorded data"
+            <action id="com.github.diekautz.ideplugin.actions.recording.SaveAllRecordingDataAction"
+                    class="com.github.diekautz.ideplugin.actions.recording.SaveAllRecordingDataAction"
+                    text="Save Recording"
+                    description="Saves element gazes and raw recorded data."
                     icon="AllIcons.Actions.MenuSaveall"/>
 
-            <separator/>
+        </group>
+        <group id="com.github.diekautz.ideplugin.actions.OpenEyeDebugGroup"
+               text="[Debug OpenEye]"
+               popup="true">
+            <add-to-group group-id="MainMenu" anchor="last"/>
 
-            <separator text="Debug"/>
-
+            <action id="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
+                    class="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
+                    text="Start Mouse Gaze Recording"
+                    description="Debug action to use the mouse location as simulated center of eye coordinates."
+                    icon="AllIcons.Actions.RunToCursor"/>
             <action id="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction"
                     class="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction" text="Open All Files"
                     description="Opens all files contained in the current recording."
@@ -90,8 +101,7 @@
                     icon="AllIcons.Actions.Show"/>
             <action id="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
                     class="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
-                    text="Resolve LSL Streams"
-                    description="Refreshes resolved lab streaming layer stream infos"/>
+                    text="Resolve LSL Streams"/>
         </group>
     </actions>
 </idea-plugin>

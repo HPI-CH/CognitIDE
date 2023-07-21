@@ -1,13 +1,7 @@
 package com.github.diekautz.ideplugin.config
 
 import com.intellij.openapi.options.BoundConfigurable
-import com.intellij.ui.dsl.builder.RowLayout
-import com.intellij.ui.dsl.builder.bindIntText
-import com.intellij.ui.dsl.builder.bindItem
-import com.intellij.ui.dsl.builder.bindItemNullable
-import com.intellij.ui.dsl.builder.bindText
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.builder.toNullableProperty
+import com.intellij.ui.dsl.builder.*
 import java.time.Year
 
 class ParticipantConfigurable : BoundConfigurable(
@@ -18,7 +12,7 @@ class ParticipantConfigurable : BoundConfigurable(
     override fun createPanel() = panel {
         collapsibleGroup("Participant") {
             row("Id:") {
-                intTextField().bindIntText(model::id)
+                spinner(0..Int.MAX_VALUE).bindIntValue(model::id)
             }
         }
         group("Traits") {
@@ -34,7 +28,7 @@ class ParticipantConfigurable : BoundConfigurable(
                     .bindItem(model::handedness.toNullableProperty())
             }
         }
-        group("How do you estimate") {
+        group("Please estimate (higher is better)") {
             row("Your programming experience:") {
                 comboBox((1..10).toList())
                     .bindItemNullable(model::experience10)
@@ -101,32 +95,32 @@ class ParticipantConfigurable : BoundConfigurable(
         }
         group("For how many years have you been...") {
             row {
-                intTextField(0..100)
+                spinner(0..100)
                     .label("programming in general?")
-                    .bindIntText(model::yearsProgramming)
+                    .bindIntValue(model::yearsProgramming)
             }.layout(RowLayout.PARENT_GRID)
             row {
-                intTextField(0..100)
+                spinner(0..100)
                     .label("for larger software projects, e.g., in a company?")
-                    .bindIntText(model::yearsProgrammingCompany)
+                    .bindIntValue(model::yearsProgrammingCompany)
             }.layout(RowLayout.PARENT_GRID)
         }
         group("University") {
             row {
-                intTextField(1950.rangeTo(Year.now().value))
+                spinner(1950.rangeTo(Year.now().value))
                     .label("Enrollment year")
-                    .bindIntText(model::enrollYear)
+                    .bindIntValue(model::enrollYear)
             }
             row {
-                intTextField(0..100)
+                spinner(0..100)
                     .label("How many courses did you take in which you had to implement source code?")
-                    .bindIntText(model::coursesCoding)
+                    .bindIntValue(model::coursesCoding)
             }
         }
         group("How old are you?") {
             row {
-                intTextField(1..100)
-                    .bindIntText(model::age)
+                spinner(1..100)
+                    .bindIntValue(model::age)
             }
         }
 

@@ -1,31 +1,30 @@
 package com.github.diekautz.ideplugin.services.recording
 
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.services.DataCollectingService
 import com.github.diekautz.ideplugin.services.TobiiProService
 import com.github.diekautz.ideplugin.utils.infoMsg
 import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import kotlinx.coroutines.*
 import java.util.*
 import kotlin.concurrent.timerTask
 
-@Service(Service.Level.PROJECT)
-class InterruptService(val project: Project) {
+class InterruptService(
+    private val project: Project,
+    private val dataCollectingService: DataCollectingService
+) {
     private val tobiiProService = project.service<TobiiProService>()
     private val settings = OpenEyeSettingsState.instance
 
-    var recordedInterrupts = mutableListOf<UserInterrupt>()
-
     private var timer: Timer = Timer("InterruptUserTimer")
+    private val numInterrupted: Int
+        get() = dataCollectingService.userInterruptCount
 
     fun startInterrupting() {
         if (!settings.interruptUser) return
-        recordedInterrupts.clear()
-        stopInterrupting()
 
         newTimer()
         thisLogger().info("Started interrupt timer!")
@@ -44,7 +43,7 @@ class InterruptService(val project: Project) {
         val response = Messages.showInputDialog(
             project,
             "Please pause your workings and answer the verbal questions.",
-            "Interrupt ${recordedInterrupts.size + 1}/${settings.interruptCount}",
+            "Interrupt ${numInterrupted + 1}/${settings.interruptCount}",
             null
         )
         val interruptEnd = System.currentTimeMillis()
@@ -53,19 +52,13 @@ class InterruptService(val project: Project) {
             tobiiProService.stopRecording()
             return@invokeLater
         }
-        val userInterrupt = UserInterrupt(
-            interruptStart,
-            interruptEnd,
-            response
-        )
-        recordedInterrupts += userInterrupt
-        thisLogger().info("Interrupt ${recordedInterrupts.size} recorded $userInterrupt")
+        dataCollectingService.addUserInterrupt(interruptStart, interruptEnd, response)
 
-        if (settings.interruptStopRecordingAfterLast && recordedInterrupts.size >= settings.interruptCount) {
+        if (settings.interruptStopRecordingAfterLast && numInterrupted >= settings.interruptCount) {
             thisLogger().info("All interrupts recorded. Stopping recording.")
             tobiiProService.stopRecording()
         }
-        if (settings.interruptUser && recordedInterrupts.size < settings.interruptCount) {
+        if (settings.interruptUser && numInterrupted < settings.interruptCount) {
             newTimer()
         } else {
             thisLogger().info("All interrupts recorded. Purging timer.")

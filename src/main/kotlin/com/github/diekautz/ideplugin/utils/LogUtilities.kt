@@ -12,3 +12,15 @@ fun Project.infoMsg(message: String, logger: Logger? = null, title: String = "Op
         Messages.showInfoMessage(this, message, title)
     }
 }
+
+fun Project.errorMsg(
+    message: String,
+    logger: Logger? = null,
+    throwable: Exception? = null,
+    title: String = "OpenEye Error"
+) {
+    logger?.error(message, throwable)
+    invokeLater {
+        Messages.showInfoMessage(this, message, title)
+    }
+}

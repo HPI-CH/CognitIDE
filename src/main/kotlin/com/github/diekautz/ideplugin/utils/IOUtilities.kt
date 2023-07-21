@@ -14,7 +14,8 @@ import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.fileChooser.FileChooserFactory
+import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
@@ -86,11 +87,7 @@ fun saveRecordingToDisk(
             notifyFileSaved(project, imageFile)
         }
     } catch (ex: Exception) {
-        OpenEyeSettingsState.thisLogger().error(ex)
-        requestSettingsChange(
-            project,
-            "${ex.localizedMessage}: Please specify a valid location for recording to be saved!"
-        )
+        project.errorMsg("An unknown error occurred whilst saving data!", logger, ex)
     }
 }
 
@@ -113,19 +110,48 @@ fun screenshotFilesInEditor(project: Project, filePaths: List<String>): Map<Stri
 
 inline fun <reified T> saveToDisk(data: T, file: File) {
     val encoded = json.encodeToString(data)
-    runWriteAction {
-        logger.info("Saving ${file.path}")
-        file.createNewFile()
-        file.writeText(encoded)
+    try {
+        runWriteAction {
+            logger.info("Saving ${file.path}")
+            file.createNewFile()
+            file.writeText(encoded)
+        }
+    } catch (ex: Exception) {
+        if (MessageDialogBuilder
+                .yesNo("Saving Error!", "The file could not be saved to ${file.path}.\nChoose directory?")
+                .guessWindowAndAsk()
+        ) {
+            backupSaveData()?.let { saveToDisk2(data, it) }
+        }
     }
 }
 
+inline fun <reified T> saveToDisk2(data: T, file: File) {
+    saveToDisk(data, file)
+}
+
 fun saveToDisk(data: BufferedImage, file: File) {
-    runWriteAction {
-        logger.info("Saving image ${file.path}")
-        file.createNewFile()
-        ImageIO.write(data, "png", file)
+    try {
+        runWriteAction {
+            logger.info("Saving image ${file.path}")
+            file.createNewFile()
+            ImageIO.write(data, "png", file)
+        }
+    } catch (ex: Exception) {
+        if (MessageDialogBuilder
+                .yesNo("Saving Error!", "The file could not be saved to ${file.path}.\nChoose directory?")
+                .guessWindowAndAsk()
+        ) {
+            backupSaveData()?.let { saveToDisk(data, it) }
+        }
     }
+}
+
+fun backupSaveData(): File? {
+    val saveFileDialog = FileChooserFactory.getInstance()
+        .createSaveFileDialog(FileSaverDescriptor("Please choose a location", "", ".json"), null)
+
+    return saveFileDialog.save("")?.file
 }
 
 fun requestSettingsChange(project: Project, notFoundMessage: String) {

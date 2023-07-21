@@ -9,9 +9,6 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.diekautz.ideplugin.toolWindow.OpenEyeToolWindowFactory"
-                    id="OpenEyeToolWindow"/>
-
         <applicationConfigurable
                 parentId="root"
                 instance="com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable"

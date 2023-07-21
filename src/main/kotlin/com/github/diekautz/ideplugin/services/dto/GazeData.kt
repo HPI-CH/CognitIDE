@@ -1,4 +1,4 @@
-package com.github.diekautz.ideplugin.services.recording
+package com.github.diekautz.ideplugin.services.dto
 
 import kotlinx.serialization.Serializable
 import java.awt.Point
@@ -21,7 +21,7 @@ data class GazeData(
         rightPupil
     )
 
-    fun correctMissingOne(): GazeData? {
+    fun correctMissingEye(): GazeData? {
         if (leftPupil.isNaN() && rightPupil.isNaN()) {
             return null
         }

@@ -1,6 +1,10 @@
 package com.github.diekautz.ideplugin.services.recording
 
 import com.github.diekautz.ideplugin.extensions.*
+import com.github.diekautz.ideplugin.services.dto.GazeData
+import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
+import com.github.diekautz.ideplugin.services.dto.LookElement
+import com.github.diekautz.ideplugin.services.dto.LookElementGaze
 import com.github.diekautz.ideplugin.utils.*
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.Service
@@ -49,7 +53,7 @@ class LookRecorderService(val project: Project) {
         askAndSaveToDisk(
             project,
             elementGazePoints.map { (psiElement, gazeWeight) ->
-                SerializableElementGaze(psiElement, gazeWeight)
+                LookElementGaze(psiElement, gazeWeight)
             },
             "Element Gaze Points Save Location",
             "element-gaze"
@@ -59,7 +63,12 @@ class LookRecorderService(val project: Project) {
     fun askAndSaveBoth() {
         if (couldSave()) {
             val date = Date.from(Instant.now())
-            saveRecordingToDisk(project, date, elementGazePoints, gazeSnapshots)
+            saveRecordingToDisk(
+                project, date,
+                elementGazePoints.map { (psiElement, gazeWeight) ->
+                    LookElementGaze(psiElement, gazeWeight)
+                }, gazeSnapshots
+            )
         } else {
             project.infoMsg("No data to be saved!")
         }
@@ -75,8 +84,7 @@ class LookRecorderService(val project: Project) {
     ): Int {
         val gazeSnapshot = GazeSnapshot(
             epochMillis,
-            virtualFile.path,
-            psiElement.startOffset,
+            LookElement(psiElement.text, virtualFile.path, psiElement.startOffset),
             rawGazeData
         )
         gazeSnapshots.add(gazeSnapshot)
@@ -140,7 +148,7 @@ class LookRecorderService(val project: Project) {
     fun openAllFiles() = runReadAction {
         val fileEditorManager = FileEditorManager.getInstance(project)
         mutableListOf<BufferedImage>()
-        gazeSnapshots.map { it.filePath }.forEach { filePath ->
+        gazeSnapshots.map { it.lookElement.filePath }.forEach { filePath ->
             val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
             if (vFile == null) {
                 thisLogger().error("Could not find recorded file in my $filePath")

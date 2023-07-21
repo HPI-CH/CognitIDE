@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
-import com.github.diekautz.ideplugin.services.recording.GazeData
+import com.github.diekautz.ideplugin.services.dto.GazeData
 import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.github.diekautz.ideplugin.utils.openTobiiProConnector
@@ -103,7 +103,7 @@ class TobiiProService(val project: Project) {
                             Point((buffer[3] * screenRect.width).toInt(), (buffer[4] * screenRect.height).toInt()),
                             buffer[2].toDouble(),
                             buffer[5].toDouble(),
-                        ).correctMissingOne() ?: continue
+                        ).correctMissingEye() ?: continue
 
                         invokeLater {
                             var eyeCenter = Point(0, 0)

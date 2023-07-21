@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.services.debug
 
-import com.github.diekautz.ideplugin.services.recording.GazeData
+import com.github.diekautz.ideplugin.services.dto.GazeData
 import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.LookRecorderService
 import com.intellij.openapi.application.invokeLater

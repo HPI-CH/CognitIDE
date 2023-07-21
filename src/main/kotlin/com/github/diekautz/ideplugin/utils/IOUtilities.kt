@@ -4,9 +4,9 @@ import com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.screenshot
-import com.github.diekautz.ideplugin.services.recording.GazeSnapshot
+import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
+import com.github.diekautz.ideplugin.services.dto.LookElementGaze
 import com.github.diekautz.ideplugin.services.recording.InterruptService
-import com.github.diekautz.ideplugin.services.recording.SerializableElementGaze
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
@@ -23,7 +23,6 @@ import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.psi.PsiElement
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.awt.Desktop
@@ -40,7 +39,7 @@ val json = Json {
 fun saveRecordingToDisk(
     project: Project,
     date: Date,
-    elementGazePoints: Map<PsiElement, Double>,
+    lookElementGazeList: List<LookElementGaze>,
     gazeSnapshots: List<GazeSnapshot>
 ) {
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
@@ -62,13 +61,9 @@ fun saveRecordingToDisk(
             saveToDisk(gazeSnapshots, file)
             notifyFileSaved(project, file)
         }
-        if (elementGazePoints.isNotEmpty()) {
+        if (lookElementGazeList.isNotEmpty()) {
             val file = File(saveFolder, "elements.json")
-            saveToDisk(
-                elementGazePoints.map { (psiElement, gazeWeight) ->
-                    SerializableElementGaze(psiElement, gazeWeight)
-                }, file
-            )
+            saveToDisk(lookElementGazeList, file)
             notifyFileSaved(project, file)
         }
         if (interruptService.recordedInterrupts.isNotEmpty()) {
@@ -83,7 +78,7 @@ fun saveRecordingToDisk(
         // highlight, open editors and save screenshots
         val images = screenshotFilesInEditor(
             project,
-            gazeSnapshots.map { it.filePath }.distinct()
+            gazeSnapshots.map { it.lookElement.filePath }.distinct()
         )
         val imageFolder = File(saveFolder, "files")
         imageFolder.mkdirs()

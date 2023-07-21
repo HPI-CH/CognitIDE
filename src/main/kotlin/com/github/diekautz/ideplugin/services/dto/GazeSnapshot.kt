@@ -1,11 +1,10 @@
-package com.github.diekautz.ideplugin.services.recording
+package com.github.diekautz.ideplugin.services.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GazeSnapshot(
     val epochMillis: Long,
-    val filePath: String,
-    val elementStartOffset: Int,
+    val lookElement: LookElement,
     val rawGazeData: GazeData
 )

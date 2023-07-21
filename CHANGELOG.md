@@ -24,6 +24,11 @@
 - Calls to deprecated api
 - Elements being highlighted in wrong editor
 
+### Removed
+
+- Removed deprecated debug actions
+- Remove unused tool window
+
 ## [1.0.0-rc.2] - 2023-07-18
 
 ### Added

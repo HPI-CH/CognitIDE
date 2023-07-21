@@ -96,9 +96,6 @@
                     class="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
-            <action id="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
-                    class="com.github.diekautz.ideplugin.actions.debug.ScanLSLStreamsAction"
-                    text="Resolve LSL Streams"/>
         </group>
     </actions>
 </idea-plugin>

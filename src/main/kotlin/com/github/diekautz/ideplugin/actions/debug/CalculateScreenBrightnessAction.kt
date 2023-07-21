@@ -14,9 +14,6 @@ class CalculateScreenBrightnessAction: AnAction() {
         val rect = Rectangle(Toolkit.getDefaultToolkit().screenSize)
         val capture = Robot().createScreenCapture(rect)
 
-//        val imageFile = File("single-screen.bmp")
-//        ImageIO.write(capture, "bmp", imageFile)
-//        thisLogger().info("Saved picture to ${imageFile.absolutePath}")
         val lum = lum(capture)
         Messages.showInfoMessage("Average Luminance is $lum", "Luminance")
     }

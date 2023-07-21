@@ -26,8 +26,9 @@
 
 ### Removed
 
+- Wizard no longer starts recording in last step
 - Removed deprecated debug actions
-- Remove unused tool window
+- Removed unused tool window
 
 ## [1.0.0-rc.2] - 2023-07-18
 

@@ -35,7 +35,7 @@ class LookRecorderService(val project: Project) {
             project.infoMsg("No gaze snapshots to be saved.", thisLogger())
             return
         }
-        val recordingStart = Date(gazeSnapshots.first().editorGazeSnapshot.epochMillis)
+        val recordingStart = Date(gazeSnapshots.first().epochMillis)
         val filename = "gaze-${timestampFormat.format(recordingStart)}"
         askAndSaveToDisk(project, gazeSnapshots, "Gaze Snapshot Save Location", filename)
     }
@@ -73,12 +73,12 @@ class LookRecorderService(val project: Project) {
         psiElement: PsiElement,
         rawGazeData: GazeData
     ): Int {
-        val editorGazeSnapshot = EditorGazeSnapshot(
+        val gazeSnapshot = GazeSnapshot(
             epochMillis,
             virtualFile.path,
-            psiElement.startOffset
+            psiElement.startOffset,
+            rawGazeData
         )
-        val gazeSnapshot = GazeSnapshot(rawGazeData, editorGazeSnapshot)
         gazeSnapshots.add(gazeSnapshot)
         return gazeSnapshots.size
     }
@@ -140,7 +140,7 @@ class LookRecorderService(val project: Project) {
     fun openAllFiles() = runReadAction {
         val fileEditorManager = FileEditorManager.getInstance(project)
         mutableListOf<BufferedImage>()
-        gazeSnapshots.map { it.editorGazeSnapshot.filePath }.forEach { filePath ->
+        gazeSnapshots.map { it.filePath }.forEach { filePath ->
             val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
             if (vFile == null) {
                 thisLogger().error("Could not find recorded file in my $filePath")

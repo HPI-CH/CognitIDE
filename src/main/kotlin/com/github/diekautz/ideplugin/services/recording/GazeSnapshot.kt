@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GazeSnapshot(
-    val rawGazeData: GazeData,
-    val editorGazeSnapshot: EditorGazeSnapshot,
+    val epochMillis: Long,
+    val filePath: String,
+    val elementStartOffset: Int,
+    val rawGazeData: GazeData
 )

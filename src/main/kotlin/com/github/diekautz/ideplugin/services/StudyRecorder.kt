@@ -26,7 +26,7 @@ abstract class StudyRecorder(
         shouldRun = false
     }
 
-    var shouldRun = false
+    private var shouldRun = false
     final override fun run(indicator: ProgressIndicator) {
         runBlocking {
             indicator.isIndeterminate = true

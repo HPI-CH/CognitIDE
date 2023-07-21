@@ -6,21 +6,17 @@ import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.services.dto.LookElementGaze
 import com.github.diekautz.ideplugin.utils.*
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
-import java.awt.image.BufferedImage
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
@@ -142,24 +138,4 @@ class LookRecorderService(val project: Project) {
         elementGazePoints.clear()
         EditorFactory.getInstance().removeAllHighlighters()
     }
-
-    fun couldHighlight() = elementGazePoints.isNotEmpty()
-
-    fun openAllFiles() = runReadAction {
-        val fileEditorManager = FileEditorManager.getInstance(project)
-        mutableListOf<BufferedImage>()
-        gazeSnapshots.map { it.lookElement.filePath }.forEach { filePath ->
-            val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
-            if (vFile == null) {
-                thisLogger().error("Could not find recorded file in my $filePath")
-                return@forEach
-            }
-            val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
-            if (editor == null) {
-                thisLogger().error("Could not open an editor for $filePath")
-                return@forEach
-            }
-        }
-    }
-
 }

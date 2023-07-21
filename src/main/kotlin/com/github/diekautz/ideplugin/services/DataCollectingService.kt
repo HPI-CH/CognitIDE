@@ -31,7 +31,7 @@ class DataCollectingService(val project: Project) {
     private var interruptService = InterruptService(project, this)
 
     val isRecording: Boolean
-        get() = currentRecorder?.shouldRun ?: false
+        get() = currentRecorder?.isRunning ?: false
 
     var wasHighlighted = false
     val isHighlightAvailable: Boolean

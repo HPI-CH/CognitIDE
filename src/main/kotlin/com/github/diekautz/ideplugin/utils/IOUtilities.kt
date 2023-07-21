@@ -164,6 +164,6 @@ private fun notifyFileSaved(project: Project, file: File) {
             .getNotificationGroup("Recording File Saved")
             .createNotification("Successfully saved ${file.path}", NotificationType.INFORMATION)
             .addAction(openFileAction(file))
-            .notify(project);
+            .notify(project)
     }
 }

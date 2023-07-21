@@ -82,7 +82,7 @@ fun saveRecordingToDisk(
         imageFolder.mkdirs()
         images.forEach { (fileName, image) ->
             if (image == null) return@forEach
-            val imageFile = File(imageFolder, fileName.replace(File.separatorChar, '_') + ".png")
+            val imageFile = File(imageFolder, fileName.replace(Regex("[^a-zA-Z0-9\\-]"), "_") + ".png")
             saveToDisk(image, imageFile)
             notifyFileSaved(project, imageFile)
         }
@@ -120,7 +120,7 @@ fun saveToDisk(encoded: String, file: File) {
                 .yesNo("Saving Error!", "The file could not be saved to ${file.path}.\nChoose directory?")
                 .guessWindowAndAsk()
         ) {
-            backupSaveData()?.let { saveToDisk(encoded, file) }
+            backupSaveData(file)?.let { saveToDisk(encoded, file) }
         }
     }
 }
@@ -134,17 +134,23 @@ fun saveToDisk(data: BufferedImage, file: File) {
         }
     } catch (ex: Exception) {
         if (MessageDialogBuilder
-                .yesNo("Saving Error!", "The file could not be saved to ${file.path}.\nChoose directory?")
+                .yesNo("Saving Error! Choose new directory?", "\"The file could not be saved to ${file.path}\"")
                 .guessWindowAndAsk()
         ) {
-            backupSaveData()?.let { saveToDisk(data, it) }
+            backupSaveData(file)?.let { saveToDisk(data, it) }
         }
     }
 }
 
-fun backupSaveData(): File? {
+fun backupSaveData(file: File): File? {
     val saveFileDialog = FileChooserFactory.getInstance()
-        .createSaveFileDialog(FileSaverDescriptor("Please choose a location", "", ".json"), null)
+        .createSaveFileDialog(
+            FileSaverDescriptor(
+                "Please choose a location (old was: ${file.path}",
+                "",
+                ".${file.extension}"
+            ), null
+        )
 
     return saveFileDialog.save("")?.file
 }

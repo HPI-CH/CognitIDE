@@ -9,6 +9,7 @@ class ParticipantConfigurable : BoundConfigurable(
 ) {
     private val model = ParticipantState.instance
 
+    @Suppress("DialogTitleCapitalization")
     override fun createPanel() = panel {
         collapsibleGroup("Participant") {
             row("Id:") {

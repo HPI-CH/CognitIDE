@@ -2,10 +2,8 @@ package com.github.diekautz.ideplugin.services.recording
 
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
 import com.github.diekautz.ideplugin.services.DataCollectingService
-import com.github.diekautz.ideplugin.services.TobiiProService
 import com.github.diekautz.ideplugin.utils.infoMsg
 import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -16,7 +14,6 @@ class InterruptService(
     private val project: Project,
     private val dataCollectingService: DataCollectingService
 ) {
-    private val tobiiProService = project.service<TobiiProService>()
     private val settings = OpenEyeSettingsState.instance
 
     private var timer: Timer = Timer("InterruptUserTimer")
@@ -49,14 +46,14 @@ class InterruptService(
         val interruptEnd = System.currentTimeMillis()
         if (response == null) {
             project.infoMsg("Stopping recording, user cancelled interrupt!")
-            tobiiProService.stopRecording()
+            dataCollectingService.stopRecording()
             return@invokeLater
         }
         dataCollectingService.addUserInterrupt(interruptStart, interruptEnd, response)
 
         if (settings.interruptStopRecordingAfterLast && numInterrupted >= settings.interruptCount) {
             thisLogger().info("All interrupts recorded. Stopping recording.")
-            tobiiProService.stopRecording()
+            dataCollectingService.stopRecording()
         }
         if (settings.interruptUser && numInterrupted < settings.interruptCount) {
             newTimer()

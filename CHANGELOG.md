@@ -4,8 +4,9 @@
 
 ## [Unreleased]
 
-### Added
+## [1.0.0-rc.3] - 2023-07-22
 
+### Added
 - Added How-To section in plugin description
 - Added second menu entry for debug actions
 - Added saving of an image of all editors when saving recording data (must open them before and highlight)
@@ -19,15 +20,27 @@
 - Added open file action after save
 - Added correction if one eye was not recognised
 - Improve highlight colors readability
+- Ask if recording and participant data should be cleared
+- Added Add global setting for recordings save location
+- Save participant information alongside data
+- Added SetupNewParticipantAction
+- Added participant questioner
+- Suggest starting tobii connector when no streams are found
+- Introduce settings menu for external applications
+- Added action for saving all data
+- Added actions for starting and stopping recordings
+- Added action for clearing highlights
+- Clear all highlights on new recording or clear
+- Improve interoperability of element gaze json
+- Fix serialization of invalid pupil diameters
+- Fix coordinate typo in Tobii recording service
 
 ### Fixed
-
 - Default save location is now user.home/openeye-recordings instead of fs root
 - Calls to deprecated api
 - Elements being highlighted in wrong editor
 
 ### Removed
-
 - Wizard no longer starts recording in last step
 - Removed deprecated debug actions
 - Removed unused tool window
@@ -35,7 +48,6 @@
 ## [1.0.0-rc.2] - 2023-07-18
 
 ### Added
-
 - Ask if recording and participant data should be cleared
 - Added Add global setting for recordings save location
 - Save participant information alongside data
@@ -67,7 +79,8 @@
 - Initial scaffold created
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/DieKautz/ide-plugin/compare/v1.0.0-rc.2...HEAD
+[Unreleased]: https://github.com/DieKautz/ide-plugin/compare/v1.0.0-rc.3...HEAD
+[1.0.0-rc.3]: https://github.com/DieKautz/ide-plugin/compare/v1.0.0-rc.2...v1.0.0-rc.3
 [1.0.0-rc.2]: https://github.com/DieKautz/ide-plugin/compare/v0.0.2...v1.0.0-rc.2
 [0.0.2]: https://github.com/DieKautz/ide-plugin/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/DieKautz/ide-plugin/commits/v0.0.1

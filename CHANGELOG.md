@@ -6,6 +6,7 @@
 
 ### Added
 
+- Added How-To section in plugin description
 - Added second menu entry for debug actions
 - Added saving of an image of all editors when saving recording data (must open them before and highlight)
 - Interrupt user and prompt for answer/code while recording

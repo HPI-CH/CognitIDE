@@ -21,6 +21,7 @@
 
 ### Fixed
 
+- Default save location is now user.home/openeye-recordings instead of fs root
 - Calls to deprecated api
 - Elements being highlighted in wrong editor
 

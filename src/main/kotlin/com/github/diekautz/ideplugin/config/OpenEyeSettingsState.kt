@@ -5,11 +5,12 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
+import java.io.File
 
 @State(name = "com.github.diekautz.ideplugin.config.OpenEyeSettingsState", storages = [Storage("OpenEyePlugin.xml")])
 class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
     // recording save location
-    var recordingsSaveLocation = ""
+    var recordingsSaveLocation: String = File(System.getProperty("user.home"), "openeye-recordings").path
 
     // interrupt
     var interruptUser = false

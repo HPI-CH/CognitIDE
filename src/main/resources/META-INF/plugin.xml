@@ -54,6 +54,7 @@
                     text="Clear Highlights"
                     description="Clears all previously highlighted elements."
                     icon="AllIcons.General.Reset"/>
+
             <separator/>
 
             <action id="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
@@ -77,25 +78,25 @@
                     description="Saves element gazes and raw recorded data."
                     icon="AllIcons.Actions.MenuSaveall"/>
 
-        </group>
-        <group id="com.github.diekautz.ideplugin.actions.OpenEyeDebugGroup"
-               text="[Debug OpenEye]"
-               popup="true">
-            <add-to-group group-id="MainMenu" anchor="last"/>
+            <separator/>
 
-            <action id="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
+            <group id="com.github.diekautz.ideplugin.actions.OpenEyeDebugGroup"
+                text="Debug"
+                popup="true">
+                <action id="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
                     class="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
                     text="Start Mouse Gaze Recording"
                     description="Debug action to use the mouse location as simulated center of eye coordinates."
                     icon="AllIcons.Actions.RunToCursor"/>
-            <action id="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction"
+                <action id="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction"
                     class="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction" text="Open All Files"
                     description="Opens all files contained in the current recording."
                     icon="AllIcons.Actions.MenuOpen"/>
-            <action id="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
+                <action id="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
                     class="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
+            </group>
         </group>
     </actions>
 </idea-plugin>

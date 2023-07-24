@@ -4,9 +4,15 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed interrupts appearing after recording was stopped
+- Fixed mouse location on windows when multiple files are opened simultaneously
+
 ## [1.0.0-rc.3] - 2023-07-22
 
 ### Added
+
 - Added How-To section in plugin description
 - Added second menu entry for debug actions
 - Added saving of an image of all editors when saving recording data (must open them before and highlight)

@@ -32,7 +32,10 @@ class InterruptService(
     }
 
     fun stopInterrupting() {
+        timer.cancel()
         timer.purge()
+        timer = Timer("InterruptUserTimer")
+        thisLogger().info("Canceled interrupt timer!")
     }
 
     private fun interruptUser() = invokeLater {

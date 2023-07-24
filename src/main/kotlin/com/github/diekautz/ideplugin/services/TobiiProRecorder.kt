@@ -74,7 +74,7 @@ class TobiiProRecorder(
             dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenter)
             indicator.text = dataCollectingService.stats()
             indicator.text2 = "eye: ${eyeCenter.x},${eyeCenter.y} " +
-                    "${logicalPosition.line}:${logicalPosition.column} ${element?.text}"
+                    "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
 
         }
     }

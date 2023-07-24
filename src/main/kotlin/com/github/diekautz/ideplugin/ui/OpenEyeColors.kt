@@ -1,6 +1,5 @@
 package com.github.diekautz.ideplugin.ui
 
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.markup.EffectType
@@ -18,8 +17,8 @@ object OpenEyeColors {
         0.02,
     )
 
-    val baseColor = JBColor(0xFF4000, 0xFF4000)
-    val colors = Array(percentiles.size + 1) { baseColor }
+    private val baseColor = JBColor(0xFF4000, 0xFF4000)
+    private val colors = Array(percentiles.size + 1) { baseColor }
 
     init {
         val alphaStep = 0xFF / (percentiles.size + 1)
@@ -47,18 +46,6 @@ object OpenEyeColors {
             }
             assignedColors[percentileIndex]?.add(psiElement)
         }
-
-        thisLogger().info(
-            "Assigned colors! Percentiles were: \n"
-                    + percentiles.withIndex().joinToString("\n") { percentile ->
-                "(${percentile.value}) ${percentile.value * size} -> ${
-                    colors[percentile.index].let {
-                        "0x${
-                            it.rgb.toUInt().toString(16).uppercase()
-                        } ${it.alpha}"
-                    }
-                }"
-            })
         return assignedColors
     }
 

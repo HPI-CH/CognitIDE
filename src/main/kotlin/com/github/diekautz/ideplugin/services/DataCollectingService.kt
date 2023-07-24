@@ -80,7 +80,6 @@ class DataCollectingService(val project: Project) {
 
     private fun incrementLookElement(lookElement: LookElement, increment: Double) {
         val value = lookElementGazeMap.getOrDefault(lookElement, 0.0)
-        thisLogger().debug("Incremented by $increment: $lookElement")
         lookElementGazeMap[lookElement] = value + increment
     }
 

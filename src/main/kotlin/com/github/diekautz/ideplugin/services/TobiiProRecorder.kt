@@ -114,4 +114,8 @@ class TobiiProRecorder(
         }
         return false
     }
+
+    override fun dispose() {
+        inlet.close_stream()
+    }
 }

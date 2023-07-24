@@ -32,7 +32,10 @@ abstract class StudyRecorder(
     final override fun run(indicator: ProgressIndicator) {
         runBlocking {
             indicator.isIndeterminate = true
-            if (!setup(indicator)) return@runBlocking
+            if (!setup(indicator)) {
+                dataCollectingService.stopRecording()
+                return@runBlocking
+            }
             while (shouldRun) {
                 if (indicator.isCanceled) {
                     dataCollectingService.stopRecording()

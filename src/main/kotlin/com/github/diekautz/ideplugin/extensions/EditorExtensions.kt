@@ -16,7 +16,7 @@ fun Editor.xyScreenToLogical(point: Point): LogicalPosition {
 }
 
 fun FileEditor.screenshot(): BufferedImage {
-    val bufferedImage = ImageUtil.createImage(component.height, component.width, BufferedImage.TYPE_INT_RGB)
+    val bufferedImage = ImageUtil.createImage(component.width, component.height, BufferedImage.TYPE_INT_RGB)
     component.paintAll(bufferedImage.graphics)
     return bufferedImage
 }

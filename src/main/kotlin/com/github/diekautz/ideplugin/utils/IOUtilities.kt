@@ -34,7 +34,7 @@ val json = Json {
     allowSpecialFloatingPointValues = true
 }
 
-val logger = Logger.getInstance("IOUtilities")
+private val logger = Logger.getInstance("com.github.diekautz.ideplugin.utils.IOUtilities")
 
 fun saveRecordingToDisk(
     project: Project,

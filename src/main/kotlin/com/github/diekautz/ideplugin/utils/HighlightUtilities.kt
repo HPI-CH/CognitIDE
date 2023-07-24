@@ -3,9 +3,12 @@ package com.github.diekautz.ideplugin.utils
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.ui.OpenEyeColors
 import com.intellij.codeInsight.highlighting.HighlightManager
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
+
+private val logger = Logger.getInstance("com.github.diekautz.ideplugin.utils.HighlightUtilities")
 
 private fun highlightElements(editor: Editor, project: Project, index: Int, elements: List<LookElement>) {
     val editorVirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
@@ -14,6 +17,7 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
         .filter {
             it.filePath == editorVirtualFile?.path
         }.forEach { lookElement ->
+            logger.debug("Highlighting $index: $lookElement")
             highlightManager.addOccurrenceHighlight(
                 editor,
                 lookElement.startOffset,

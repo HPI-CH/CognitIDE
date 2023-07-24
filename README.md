@@ -39,6 +39,8 @@ Basic information provided by the participant questioner in json format.
 ```
 {
   "id": <4-digit random integer>,
+  "horizontalSpread": <horizontal inaccuracy margin in px>,
+  "verticalSpread": <vertical inaccuracy margin in px>,
   ...
 }
 ```

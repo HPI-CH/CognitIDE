@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
 import com.github.diekautz.ideplugin.services.dto.GazeData
@@ -24,6 +25,7 @@ import com.intellij.refactoring.suggested.startOffset
 import java.awt.Point
 import java.time.Instant
 import java.util.*
+import kotlin.math.roundToInt
 
 @Service(Service.Level.PROJECT)
 class DataCollectingService(val project: Project) {
@@ -86,11 +88,15 @@ class DataCollectingService(val project: Project) {
     fun incrementLookElementsAround(psiFile: PsiFile, editor: Editor, eyeCenter: Point) {
         // distribute look onto surrounding elements evenly
         val errorPos = Point(eyeCenter)
+        val horizontalSpread = ParticipantState.instance.horizontalSpread
+        val verticalSpread = ParticipantState.instance.verticalSpread
         errorMatrix.forEachIndexed { i, rows ->
             rows.forEachIndexed { j, error ->
+                val addHorizontalSpread = (((i / errorMatrix.size.toDouble()) - 0.5) * horizontalSpread).roundToInt()
+                val addVerticalSpread = (((j / errorMatrix.size.toDouble()) - 0.5) * verticalSpread).roundToInt()
                 errorPos.move(
-                    eyeCenter.x + (i - errorMatrix.size / 2) * 2,
-                    eyeCenter.y + (j - errorMatrix.size / 2)
+                    eyeCenter.x + addHorizontalSpread,
+                    eyeCenter.y + addVerticalSpread
                 )
 
                 val logicalPosition = editor.xyScreenToLogical(errorPos)

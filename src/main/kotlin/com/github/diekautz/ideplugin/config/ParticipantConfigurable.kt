@@ -15,6 +15,16 @@ class ParticipantConfigurable : BoundConfigurable(
             row("Id:") {
                 spinner(0..Int.MAX_VALUE).bindIntValue(model::id)
             }
+            row("Device/Setup Inaccuracy") {
+                spinner(2..1000, 2)
+                    .comment("Horizontal inaccuracy margin diameter in px")
+                    .bindIntValue(model::horizontalSpread)
+            }
+            row(EMPTY_LABEL) {
+                spinner(2..1000, 2)
+                    .comment("Vertical inaccuracy margin diameter in px")
+                    .bindIntValue(model::verticalSpread)
+            }
         }
         group("Traits") {
             row("Gender:") {

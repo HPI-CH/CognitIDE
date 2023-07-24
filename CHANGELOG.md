@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added option to adjust inaccuracy margin of a specific setup
+
 ### Fixed
 
 - Fixed conversion of screen-space coordinates to editor-space when using eye tracker

@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 )
 class ParticipantState : PersistentStateComponent<ParticipantState> {
     var id: Int = (1..10000).random()
+    var horizontalSpread = 16
+    var verticalSpread = 16
 
     // traits
     var gender: String? = null

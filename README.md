@@ -1,8 +1,8 @@
 # OpenEye - Eye-Tracking Studies
 
-![Build](https://github.com/DieKautz/ide-plugin/workflows/Build/badge.svg?style=flat-square)
-[![Version](https://img.shields.io/jetbrains/plugin/v/22291.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22291)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/22291.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/22291)
+![Build](https://github.com/DieKautz/ide-plugin/workflows/Build/badge.svg)
+[![Version](https://img.shields.io/jetbrains/plugin/v/22291.svg)](https://plugins.jetbrains.com/plugin/22291)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/22291.svg)](https://plugins.jetbrains.com/plugin/22291)
 
 <!-- Plugin description -->
 OpenEye integrates eye tracking hardware to record gaze data while reviewing code and generate heatmaps for assessment.

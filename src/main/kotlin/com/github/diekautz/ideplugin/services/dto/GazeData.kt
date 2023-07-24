@@ -21,6 +21,12 @@ data class GazeData(
         rightPupil
     )
 
+    val eyeCenter: Point
+        get() = Point(
+            (leftEyeX + rightEyeX) / 2,
+            (leftEyeY + rightEyeY) / 2,
+        )
+
     fun correctMissingEye(): GazeData? {
         if (leftPupil.isNaN() && rightPupil.isNaN()) {
             return null

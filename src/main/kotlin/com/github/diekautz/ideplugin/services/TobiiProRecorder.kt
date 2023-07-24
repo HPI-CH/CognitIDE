@@ -1,5 +1,6 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
 import com.github.diekautz.ideplugin.services.dto.GazeData
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.utils.errorMsg
@@ -43,20 +44,16 @@ class TobiiProRecorder(
         ).correctMissingEye() ?: return
 
         invokeLater {
-            var eyeCenter = Point(0, 0)
             val editor = EditorFactory.getInstance().allEditors.firstOrNull {
-                eyeCenter = Point(
-                    (data.leftEyeX + data.rightEyeX) / 2,
-                    (data.leftEyeY + data.rightEyeY) / 2,
-                )
-                SwingUtilities.convertPointFromScreen(eyeCenter, it.contentComponent)
-                it.contentComponent.contains(eyeCenter)
+                val eyeLocal = Point(data.eyeCenter)
+                SwingUtilities.convertPointFromScreen(eyeLocal, it.contentComponent)
+                it.contentComponent.contains(eyeLocal)
             } ?: return@invokeLater
-
             val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
                 ?: return@invokeLater
+            val eyeCenterGlobal = data.eyeCenter
 
-            val logicalPosition = editor.xyToLogicalPosition(eyeCenter)
+            val logicalPosition = editor.xyScreenToLogical(eyeCenterGlobal)
             val offset = editor.logicalPositionToOffset(logicalPosition)
 
             val element = psiFile.findElementAt(offset)
@@ -71,9 +68,9 @@ class TobiiProRecorder(
                     data
                 )
             }
-            dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenter)
+            dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
             indicator.text = dataCollectingService.stats()
-            indicator.text2 = "eye: ${eyeCenter.x},${eyeCenter.y} " +
+            indicator.text2 = "eye: ${eyeCenterGlobal.x},${eyeCenterGlobal.y} " +
                     "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
 
         }

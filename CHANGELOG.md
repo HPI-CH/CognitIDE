@@ -6,6 +6,7 @@
 
 ### Fixed
 
+- Fixed conversion of screen-space coordinates to editor-space when using eye tracker
 - Fixed recorder still running after failed setup
 - Fixed interrupts appearing after recording was stopped
 - Fixed mouse location on windows when multiple files are opened simultaneously

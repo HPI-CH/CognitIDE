@@ -120,14 +120,14 @@ class DataCollectingService(val project: Project) {
         EditorFactory.getInstance().removeAllHighlighters()
         wasHighlighted = false
 
-        gazeSnapshotList.clear()
-        lookElementGazeMap.clear()
-        userInterruptList.clear()
-
         currentRecorder?.stopRecording()
         currentRecorder = null
         interruptService.stopInterrupting()
         interruptService = InterruptService(project, this)
+
+        gazeSnapshotList.clear()
+        lookElementGazeMap.clear()
+        userInterruptList.clear()
     }
 
     fun saveToDisk() {

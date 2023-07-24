@@ -147,5 +147,5 @@ class DataCollectingService(val project: Project) {
         }
     }
 
-    fun getRecordedFiles() = lookElementGazeMap.keys.map { it.filePath }
+    fun getRecordedFiles() = lookElementGazeMap.keys.map { it.filePath }.distinct()
 }

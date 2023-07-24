@@ -18,6 +18,7 @@ class OpenAllFilesAction : AnAction() {
         val fileEditorManager = FileEditorManager.getInstance(e.project!!)
         e.project?.service<DataCollectingService>()?.getRecordedFiles()?.forEach { filePath ->
             val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
+            thisLogger().debug("Trying to open file: $filePath")
             if (vFile == null) {
                 thisLogger().error("Could not find recorded file in my $filePath")
                 return@forEach

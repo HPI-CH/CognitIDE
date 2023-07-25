@@ -41,6 +41,7 @@ class ParticipantState : PersistentStateComponent<ParticipantState> {
     var yearsProgrammingCompany = 0
     var enrollYear = 0
     var coursesCoding = 0
+    var projectSize: String? = null
     var age: Int = 0
 
     override fun getState(): ParticipantState = this

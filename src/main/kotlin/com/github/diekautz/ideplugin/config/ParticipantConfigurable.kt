@@ -41,95 +41,70 @@ class ParticipantConfigurable : BoundConfigurable(
         }
         group("Please estimate (higher is better)") {
             row("Your programming experience:") {
-                comboBox((1..10).toList())
-                    .bindItemNullable(model::experience10)
+                comboBox((1..10).toList()).bindItemNullable(model::experience10)
             }
             row("Your programming experience compared to experts\nwith 20 years of practical experience?") {
-                comboBox((1..5).toList())
-                    .bindItemNullable(model::compareExpert5)
+                comboBox((1..5).toList()).bindItemNullable(model::compareExpert5)
             }
             row("Your programming experience compared to \nyour class mates?") {
-                comboBox((1..5).toList())
-                    .bindItemNullable(model::compareClassmates5)
+                comboBox((1..5).toList()).bindItemNullable(model::compareClassmates5)
             }
         }
 
         group("How experienced are you with the following languages:") {
-            row {
-                comboBox((1..5).toList())
-                    .label("Java")
-                    .bindItemNullable(model::experienceJava5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-
-                comboBox((1..5).toList())
-                    .label("C")
-                    .bindItemNullable(model::experienceC5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                comboBox((1..5).toList())
-                    .label("Haskell")
-                    .bindItemNullable(model::experienceHaskell5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                comboBox((1..5).toList())
-                    .label("Prolog")
-                    .bindItemNullable(model::experienceProlog5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                textField()
-                    .label("Other laguages")
-                    .bindText(model::additionalLanguages)
-            }.layout(RowLayout.PARENT_GRID)
+            row("Java") {
+                comboBox((1..5).toList()).bindItemNullable(model::experienceJava5)
+            }
+            row("C") {
+                comboBox((1..5).toList()).bindItemNullable(model::experienceC5)
+            }
+            row("Haskell") {
+                comboBox((1..5).toList()).bindItemNullable(model::experienceHaskell5)
+            }
+            row("Prolog") {
+                comboBox((1..5).toList()).bindItemNullable(model::experienceProlog5)
+            }
+            row("Other languages") {
+                textField().bindText(model::additionalLanguages)
+            }
         }
         group("How experienced are you with the following programming paradigms:") {
-            row {
-                comboBox((1..5).toList())
-                    .label("Functional programming")
-                    .bindItemNullable(model::paradigmFunctional5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                comboBox((1..5).toList())
-                    .label("Imperative programming")
-                    .bindItemNullable(model::paradigmImperative5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                comboBox((1..5).toList())
-                    .label("Logical programming")
-                    .bindItemNullable(model::paradigmLogical5)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                comboBox((1..5).toList())
-                    .label("Object-oriented programming")
-                    .bindItemNullable(model::paradigmOOP5)
-            }.layout(RowLayout.PARENT_GRID)
+            row("Functional programming") {
+                comboBox((1..5).toList()).bindItemNullable(model::paradigmFunctional5)
+            }
+            row("Imperative programming") {
+                comboBox((1..5).toList()).bindItemNullable(model::paradigmImperative5)
+            }
+            row("Logical programming") {
+                comboBox((1..5).toList()).bindItemNullable(model::paradigmLogical5)
+            }
+            row("Object-oriented programming") {
+                comboBox((1..5).toList()).bindItemNullable(model::paradigmOOP5)
+            }
         }
         group("For how many years have you been...") {
-            row {
-                spinner(0..100)
-                    .label("programming in general?")
-                    .bindIntValue(model::yearsProgramming)
-            }.layout(RowLayout.PARENT_GRID)
-            row {
-                spinner(0..100)
-                    .label("for larger software projects, e.g., in a company?")
-                    .bindIntValue(model::yearsProgrammingCompany)
-            }.layout(RowLayout.PARENT_GRID)
+            row("programming in general?") {
+                spinner(0..100).bindIntValue(model::yearsProgramming)
+            }
+            row("for larger software projects, e.g.,\nin a company?") {
+                spinner(0..100).bindIntValue(model::yearsProgrammingCompany)
+            }
         }
         group("University") {
-            row {
-                spinner(1950.rangeTo(Year.now().value))
-                    .label("Enrollment year")
-                    .bindIntValue(model::enrollYear)
+            row("Enrollment year") {
+                spinner(1950.rangeTo(Year.now().value)).bindIntValue(model::enrollYear)
             }
-            row {
-                spinner(0..100)
-                    .label("How many courses did you take in which you had to implement source code?")
-                    .bindIntValue(model::coursesCoding)
+            row("How many courses did you take in which\nyou had to implement source code?") {
+                spinner(0..100).bindIntValue(model::coursesCoding)
+            }
+            row("How large were the professional projects typically?") {
+                comboBox(listOf("NA", "<900", "900-40000", ">40000"))
+                    .bindItem(model::projectSize.toNullableProperty())
+                rowComment("(measured in lines of code)")
             }
         }
-        group("How old are you?") {
-            row {
+        group {
+            row("How old are you?") {
                 spinner(1..100)
                     .bindIntValue(model::age)
             }

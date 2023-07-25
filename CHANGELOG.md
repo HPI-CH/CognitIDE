@@ -4,9 +4,18 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added missing questioner for project size
+
+### Fixed
+
+- Fixed label alignment in questioner
+
 ## [1.0.0-rc.4] - 2023-07-24
 
 ### Added
+
 - Added option to adjust inaccuracy margin of a specific setup
 - Added How-To section in plugin description
 - Added second menu entry for debug actions

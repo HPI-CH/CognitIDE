@@ -10,6 +10,7 @@
 
 ### Fixed
 
+- Fixed not all files opening when trying to open all recorded files at once
 - Fixed label alignment in questioner
 
 ## [1.0.0-rc.4] - 2023-07-24

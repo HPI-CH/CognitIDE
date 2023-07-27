@@ -70,7 +70,7 @@ Array of recorded gaze elements in json format.
 ]
 ```
 
-### gaze.json
+### elements.json
 Array of how many times an element was hit by gaze data in json format.
 
 ```
@@ -85,6 +85,21 @@ Array of how many times an element was hit by gaze data in json format.
   },
   ...
 ]
+```
+
+### interrupts.json
+If enabled, contains an array of each interaction when the user was interrupted by the modal window:
+
+```
+[
+  {
+    "epochMillisStart": <timestamp the window appeared>,
+    "epochMillisEnd": <timestamp the window was closed>,
+    "answer": <optional if the user input something>
+  },
+  ...
+]
+
 ```
 
 ### /files

@@ -88,6 +88,7 @@ class TobiiProRecorder(
                 val info = inletCandidate.info(1.0)
                 if (info.type() == "Gaze"
                     && info.channel_format() == LSL.ChannelFormat.float32
+                    && info.channel_count() == buffer.size
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
                     inlet = inletCandidate

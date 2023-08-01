@@ -1,8 +1,11 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# ide-plugin Changelog
+# OpenEye Changelog
 
 ## [Unreleased]
+
+### Fixed
+- Ensure tobii correct stream channel count
 
 ## [1.0.0] - 2023-07-25
 

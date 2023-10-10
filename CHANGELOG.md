@@ -6,6 +6,7 @@
 
 ### Fixed
 - Ensure tobii correct stream channel count
+- Fixed lsl library in sub-folder not being found in marketplace version
 
 ## [1.0.0] - 2023-07-25
 

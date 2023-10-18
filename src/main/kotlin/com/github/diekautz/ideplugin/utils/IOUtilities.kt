@@ -76,7 +76,7 @@ fun saveRecordingToDisk(
         // highlight, open editors and save screenshots
         val images = screenshotFilesInEditor(
             project,
-            gazeSnapshots.map { it.lookElement.filePath }.distinct()
+            gazeSnapshots.map { it.lookElement!!.filePath }.distinct()
         )
         val imageFolder = File(saveFolder, "files")
         imageFolder.mkdirs()

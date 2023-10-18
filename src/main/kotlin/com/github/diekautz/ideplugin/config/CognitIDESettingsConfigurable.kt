@@ -54,6 +54,19 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                 }
             }
 
+            group("Shimmer Connector") {
+                row("Path:") {
+                    textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                        .bindText(model::shimmerConnectorExecutable)
+                        .comment(
+                            "Please <a href='https://github.com/labstreaminglayer/App-TobiiPro'>build the TobiiPro Connector</a>. " + //TODO
+                                    "It is used to create an LSL stream of the eye tracker. " +
+                                    "It will be used by the plugin to get the required data.\n" +
+                                    "Provide the application path <i>optionally</i> so the application can be opened when needed."
+                        )
+                }
+            }
+
             group("Eye Tracker Manager") {
                 row("Path:") {
                     textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())

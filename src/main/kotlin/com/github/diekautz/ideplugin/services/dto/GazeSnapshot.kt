@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GazeSnapshot(
     val epochMillis: Long,
-    val lookElement: LookElement,
-    val rawGazeData: GazeData
+    val lookElement: LookElement?,
+    val rawGazeData: GazeData?,
+    val rawShimmerData: ShimmerData?
 )

@@ -4,10 +4,7 @@ import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
-import com.github.diekautz.ideplugin.services.dto.GazeData
-import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
-import com.github.diekautz.ideplugin.services.dto.LookElement
-import com.github.diekautz.ideplugin.services.dto.LookElementGaze
+import com.github.diekautz.ideplugin.services.dto.*
 import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.UserInterrupt
 import com.github.diekautz.ideplugin.utils.errorMatrix
@@ -73,8 +70,8 @@ class DataCollectingService(val project: Project) {
     fun stats() = "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount} " +
             "received: ${gazeSnapshotList.size} elements: ${lookElementGazeMap.size}"
 
-    fun addGazeSnapshot(lookElement: LookElement, gazeData: GazeData) {
-        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData).let {
+    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, shimmerData: ShimmerData?) {
+        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, shimmerData).let {
             gazeSnapshotList.add(it)
             thisLogger().debug("GazeSnapshot added: $it")
         }

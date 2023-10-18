@@ -65,7 +65,8 @@ class TobiiProRecorder(
                         element.containingFile.virtualFile.path,
                         element.startOffset
                     ),
-                    data
+                    data,
+                    null
                 )
             }
             dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)

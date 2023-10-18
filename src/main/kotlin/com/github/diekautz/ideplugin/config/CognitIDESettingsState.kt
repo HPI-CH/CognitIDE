@@ -20,6 +20,7 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
 
     // external applications
     var tobiiProConnectorExecutable = ""
+    var shimmerConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
     var eyeTrackerSerial = ""
 

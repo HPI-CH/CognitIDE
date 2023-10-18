@@ -12,6 +12,14 @@ fun openTobiiProConnector(project: Project) {
     )
 }
 
+fun openShimmerConnector(project: Project) {
+    execExternalUtility(
+        project,
+        CognitIDESettingsState.instance.shimmerConnectorExecutable,
+        "Please provide a valid path to the Shimmer Connector executable."
+    )
+}
+
 fun cognitIDETrackerManager(project: Project) {
     var command = CognitIDESettingsState.instance.eyeTrackerManagerExecutable
     val deviceSerial = CognitIDESettingsState.instance.eyeTrackerSerial

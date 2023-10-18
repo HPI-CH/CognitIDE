@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.services.recording
 
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.services.DataCollectingService
 import com.github.diekautz.ideplugin.utils.infoMsg
 import com.intellij.openapi.application.invokeLater
@@ -14,7 +14,7 @@ class InterruptService(
     private val project: Project,
     private val dataCollectingService: DataCollectingService
 ) {
-    private val settings = OpenEyeSettingsState.instance
+    private val settings = CognitIDESettingsState.instance
 
     private var timer: Timer = Timer("InterruptUserTimer")
     private val numInterrupted: Int

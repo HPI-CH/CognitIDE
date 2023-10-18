@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @State(
     name = "com.github.diekautz.ideplugin.config.ParticipantState",
-    storages = [Storage("OpenEyePlugin_participant.xml")]
+    storages = [Storage("CognitIDEPlugin_participant.xml")]
 )
 class ParticipantState : PersistentStateComponent<ParticipantState> {
     var id: Int = (1..10000).random()

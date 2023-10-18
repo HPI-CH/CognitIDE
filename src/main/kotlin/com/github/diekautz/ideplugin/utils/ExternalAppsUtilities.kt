@@ -1,20 +1,20 @@
 package com.github.diekautz.ideplugin.utils
 
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.intellij.openapi.project.Project
 import java.io.File
 
 fun openTobiiProConnector(project: Project) {
     execExternalUtility(
         project,
-        OpenEyeSettingsState.instance.tobiiProConnectorExecutable,
+        CognitIDESettingsState.instance.tobiiProConnectorExecutable,
         "Please provide a valid path to the TobiiPro Connector executable."
     )
 }
 
-fun openEyeTrackerManager(project: Project) {
-    var command = OpenEyeSettingsState.instance.eyeTrackerManagerExecutable
-    val deviceSerial = OpenEyeSettingsState.instance.eyeTrackerSerial
+fun cognitIDETrackerManager(project: Project) {
+    var command = CognitIDESettingsState.instance.eyeTrackerManagerExecutable
+    val deviceSerial = CognitIDESettingsState.instance.eyeTrackerSerial
     if (deviceSerial.isNotBlank()) {
         command += " --mode=usercalibration --device-sn=$deviceSerial"
     }

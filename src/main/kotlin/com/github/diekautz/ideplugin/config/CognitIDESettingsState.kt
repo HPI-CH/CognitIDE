@@ -7,10 +7,10 @@ import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 import java.io.File
 
-@State(name = "com.github.diekautz.ideplugin.config.OpenEyeSettingsState", storages = [Storage("OpenEyePlugin.xml")])
-class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
+@State(name = "com.github.diekautz.ideplugin.config.CognitIDESettingsState", storages = [Storage("CognitIDEPlugin.xml")])
+class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> {
     // recording save location
-    var recordingsSaveLocation: String = File(System.getProperty("user.home"), "openeye-recordings").path
+    var recordingsSaveLocation: String = File(System.getProperty("user.home"), "cognitide-recordings").path
 
     // interrupt
     var interruptUser = false
@@ -23,14 +23,14 @@ class OpenEyeSettingsState : PersistentStateComponent<OpenEyeSettingsState> {
     var eyeTrackerManagerExecutable = ""
     var eyeTrackerSerial = ""
 
-    override fun getState(): OpenEyeSettingsState = this
+    override fun getState(): CognitIDESettingsState = this
 
-    override fun loadState(state: OpenEyeSettingsState) {
+    override fun loadState(state: CognitIDESettingsState) {
         XmlSerializerUtil.copyBean(state, this)
     }
 
     companion object {
-        val instance: OpenEyeSettingsState
-            get() = ApplicationManager.getApplication().getService(OpenEyeSettingsState::class.java)
+        val instance: CognitIDESettingsState
+            get() = ApplicationManager.getApplication().getService(CognitIDESettingsState::class.java)
     }
 }

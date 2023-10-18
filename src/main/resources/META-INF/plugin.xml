@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.diekautz.ideplugin</id>
-    <name>OpenEye - Eye-Tracking Studies</name>
+    <name>CognitIDE - Eye-Tracking Studies</name>
     <vendor>Malte Stellmacher</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -11,13 +11,13 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
                 parentId="root"
-                instance="com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable"
-                id="plugin.openeye"
-                displayName="OpenEye Settings"/>
-        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.OpenEyeSettingsState"/>
-        <applicationConfigurable parentId="plugin.openeye"
+                instance="com.github.diekautz.ideplugin.config.CognitIDESettingsConfigurable"
+                id="plugin.cognitide"
+                displayName="CognitIDE Settings"/>
+        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.CognitIDESettingsState"/>
+        <applicationConfigurable parentId="plugin.cognitide"
                                  instance="com.github.diekautz.ideplugin.config.ParticipantConfigurable"
-                                 id="plugin.openeye.participant"
+                                 id="plugin.cognitide.participant"
                                  displayName="Participant Configuration"/>
         <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.ParticipantState"/>
 
@@ -26,8 +26,8 @@
     </extensions>
 
     <actions>
-        <group id="com.github.diekautz.ideplugin.actions.OpenEyeGroup"
-               text="OpenEye"
+        <group id="com.github.diekautz.ideplugin.actions.CognitIDEGroup"
+               text="CognitIDE"
                popup="true"
                icon="AllIcons.Actions.ShowCode">
             <add-to-group group-id="MainMenu" anchor="last"/>
@@ -80,7 +80,7 @@
 
             <separator/>
 
-            <group id="com.github.diekautz.ideplugin.actions.OpenEyeDebugGroup"
+            <group id="com.github.diekautz.ideplugin.actions.CognitIDEDebugGroup"
                 text="Debug"
                 popup="true">
                 <action id="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"

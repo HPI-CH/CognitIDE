@@ -5,10 +5,10 @@ import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 
-class OpenEyeSettingsConfigurable : BoundConfigurable(
-    "OpenEyeSettingsConfigurable"
+class CognitIDESettingsConfigurable : BoundConfigurable(
+    "CognitIDESettingsConfigurable"
 ) {
-    private val model = OpenEyeSettingsState.instance
+    private val model = CognitIDESettingsState.instance
 
     override fun createPanel() = panel {
         group("Recordings") {

@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.markup.EffectType
 import com.intellij.ui.JBColor
 
 
-object OpenEyeColors {
+object CognitIDEColors {
 
     private val percentiles = arrayOf(
         1.0,

@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.utils
 
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsConfigurable
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.config.CognitIDESettingsConfigurable
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.screenshot
 import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
@@ -49,7 +49,7 @@ fun saveRecordingToDisk(
     val participantState = ParticipantState.instance
     val participantId = participantState.id
 
-    val settingsState = OpenEyeSettingsState.instance
+    val settingsState = CognitIDESettingsState.instance
     val saveFolder = File(settingsState.recordingsSaveLocation, "${participantId}_${timestamp}")
 
     saveFolder.mkdirs()
@@ -160,7 +160,7 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
             .okCancel("Invalid settings", notFoundMessage)
             .ask(project)
     ) {
-        ShowSettingsUtil.getInstance().showSettingsDialog(project, OpenEyeSettingsConfigurable::class.java)
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, CognitIDESettingsConfigurable::class.java)
     }
 }
 

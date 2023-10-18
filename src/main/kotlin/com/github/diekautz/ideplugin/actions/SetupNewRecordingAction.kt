@@ -3,7 +3,7 @@ package com.github.diekautz.ideplugin.actions
 import com.github.diekautz.ideplugin.config.ParticipantConfigurable
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.DataCollectingService
-import com.github.diekautz.ideplugin.utils.openEyeTrackerManager
+import com.github.diekautz.ideplugin.utils.cognitIDETrackerManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
@@ -54,7 +54,7 @@ class SetupNewRecordingAction : AnAction() {
             .yesNoCancel(dialogTitle, "Redo calibration?")
             .show(e.project)
         ) {
-            YES -> openEyeTrackerManager(e.project!!)
+            YES -> cognitIDETrackerManager(e.project!!)
             CANCEL -> return
         }
 

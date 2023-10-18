@@ -1,7 +1,7 @@
 package com.github.diekautz.ideplugin.utils
 
 import com.github.diekautz.ideplugin.services.dto.LookElement
-import com.github.diekautz.ideplugin.ui.OpenEyeColors
+import com.github.diekautz.ideplugin.ui.CognitIDEColors
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
@@ -22,7 +22,7 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
                 editor,
                 lookElement.startOffset,
                 lookElement.endOffset,
-                OpenEyeColors.LOOKED_ATTRIBUTES[index],
+                CognitIDEColors.LOOKED_ATTRIBUTES[index],
                 HighlightManager.HIDE_BY_TEXT_CHANGE or HighlightManager.HIDE_BY_ESCAPE,
                 null
             )
@@ -30,7 +30,7 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
 }
 
 fun highlightLookElements(editor: Editor, project: Project, lookElementGazeMap: Map<LookElement, Double>) {
-    val assignedColors = OpenEyeColors.assignColors(lookElementGazeMap)
+    val assignedColors = CognitIDEColors.assignColors(lookElementGazeMap)
 
     assignedColors.forEach { (colorIndex, entries) ->
         highlightElements(

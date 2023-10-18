@@ -1,6 +1,6 @@
 package com.github.diekautz.ideplugin.services
 
-import com.github.diekautz.ideplugin.config.OpenEyeSettingsState
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
@@ -70,7 +70,7 @@ class DataCollectingService(val project: Project) {
     private val lookElementGazeMap = mutableMapOf<LookElement, Double>()
     private val userInterruptList = mutableListOf<UserInterrupt>()
 
-    fun stats() = "interrupts: $userInterruptCount/${OpenEyeSettingsState.instance.interruptCount} " +
+    fun stats() = "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount} " +
             "received: ${gazeSnapshotList.size} elements: ${lookElementGazeMap.size}"
 
     fun addGazeSnapshot(lookElement: LookElement, gazeData: GazeData) {

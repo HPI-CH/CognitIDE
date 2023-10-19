@@ -5,6 +5,7 @@ import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
 import com.github.diekautz.ideplugin.services.dto.*
+import com.github.diekautz.ideplugin.services.dto.emotiv.EmotivPerformanceData
 import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.UserInterrupt
 import com.github.diekautz.ideplugin.utils.errorMatrix
@@ -70,8 +71,8 @@ class DataCollectingService(val project: Project) {
     fun stats() = "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount} " +
             "received: ${gazeSnapshotList.size} elements: ${lookElementGazeMap.size}"
 
-    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, shimmerData: ShimmerData?) {
-        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, shimmerData).let {
+    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, shimmerData: ShimmerData?, emotivPerformanceData: EmotivPerformanceData?) {
+        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, shimmerData, emotivPerformanceData).let {
             gazeSnapshotList.add(it)
             thisLogger().debug("GazeSnapshot added: $it")
         }

@@ -1,27 +1,17 @@
-package com.github.diekautz.ideplugin.services.dto
+package com.github.diekautz.ideplugin.services.dto.emotiv
 
 import kotlinx.serialization.Serializable
 import java.awt.Point
 
 @Serializable
-data class ShimmerData(
-    val LOW_NOISE_ACCELEROMETER_X: Double,
-    val LOW_NOISE_ACCELEROMETER_Y: Double,
-    val LOW_NOISE_ACCELEROMETER_Z: Double,
-    val WIDE_RANGE_ACCELEROMETER_X: Double,
-    val WIDE_RANGE_ACCELEROMETER_Y: Double,
-    val WIDE_RANGE_ACCELEROMETER_Z: Double,
-    val MAGNETOMETER_X: Double,
-    val MAGNETOMETER_Y: Double,
-    val MAGNETOMETER_Z: Double,
-    val GYROSCOPE_X: Double,
-    val GYROSCOPE_Y: Double,
-    val GYROSCOPE_Z: Double,
-    val GSR: Double,
-    val GSR_CONDUCTANCE: Double,
-    val INTERNAL_ADC_A13: Double,
-    val PRESSURE: Double,
-    val TEMPERATURE: Double
+data class EmotivPerformanceData(
+    val idk: Double,
+    val attention: Double,
+    val engagement: Double,
+    val excitement: Double,
+    val interest: Double,
+    val relaxation: Double,
+    val stress: Double
 ) {
     /*constructor(
         LOW_NOISE_ACCELEROMETER_X: Double,

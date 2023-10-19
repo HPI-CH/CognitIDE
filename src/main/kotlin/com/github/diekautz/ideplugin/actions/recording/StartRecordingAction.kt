@@ -2,7 +2,7 @@ package com.github.diekautz.ideplugin.actions.recording
 
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.services.DataCollectingService
-import com.github.diekautz.ideplugin.services.TobiiProRecorder
+import com.github.diekautz.ideplugin.services.LSLRecorder
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
@@ -18,7 +18,7 @@ class StartRecordingAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         e.project?.service<DataCollectingService>()?.apply {
-            setRecorder(TobiiProRecorder(e.project!!))
+            setRecorder(LSLRecorder(e.project!!))
             startRecording()
         }
     }

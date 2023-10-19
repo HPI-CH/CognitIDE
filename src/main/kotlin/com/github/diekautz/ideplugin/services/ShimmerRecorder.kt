@@ -26,7 +26,7 @@ class ShimmerRecorder(
 ) : StudyRecorder(project, "Recording Shimmer Data") {
     private lateinit var inlet: StreamInlet
 
-    private val buffer = FloatArray(24)
+    private val buffer = FloatArray(17)
 
     override val delay = 0L
     override fun loop(indicator: ProgressIndicator) {
@@ -38,32 +38,31 @@ class ShimmerRecorder(
             buffer[4].toDouble(), buffer[5].toDouble(), buffer[6].toDouble(), buffer[7].toDouble(),
             buffer[8].toDouble(), buffer[9].toDouble(), buffer[10].toDouble(), buffer[11].toDouble(),
             buffer[12].toDouble(), buffer[13].toDouble(), buffer[14].toDouble(), buffer[15].toDouble(),
-            buffer[16].toDouble(), buffer[17].toDouble()
+            buffer[16].toDouble()
         )
 
         invokeLater {
-            dataCollectingService.addGazeSnapshot(null, null, data)
+            dataCollectingService.addGazeSnapshot(null, null, data, null)
 
             indicator.text = dataCollectingService.stats()
             indicator.text2 = "???"
 
         }
     }
-
     override fun setup(indicator: ProgressIndicator): Boolean {
         indicator.text = "Searching for Shimmer inlet"
         try {
             LSL.resolve_stream(
-                "type='Shimmer Data'",
+                "name='SendData'",
                 1,
                 5.0
             ).forEach {
                 val inletCandidate = StreamInlet(it)
                 val info = inletCandidate.info(1.0)
-                if (info.type() == "Shimmer Data"
+                if (info.name() == "SendData"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == buffer.size
-                    && info.desc().child("acquisition").child_value("manufacturer") == "Shimmer"
+                    //&& info.desc().child("acquisition").child_value("manufacturer") == "Shimmer"
                 ) {
                     inlet = inletCandidate
                     indicator.text = "Opening inlet"

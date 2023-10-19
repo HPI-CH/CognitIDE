@@ -20,6 +20,14 @@ fun openShimmerConnector(project: Project) {
     )
 }
 
+fun openEmotivConnector(project: Project) {
+    execExternalUtility(
+        project,
+        CognitIDESettingsState.instance.emotivConnectorExecutable,
+        "Please provide a valid path to the Emotiv Connector executable."
+    )
+}
+
 fun cognitIDETrackerManager(project: Project) {
     var command = CognitIDESettingsState.instance.eyeTrackerManagerExecutable
     val deviceSerial = CognitIDESettingsState.instance.eyeTrackerSerial

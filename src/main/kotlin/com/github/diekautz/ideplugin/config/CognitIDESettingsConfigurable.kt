@@ -42,6 +42,10 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
         }
         group("External Applications") {
             group("TobiiPro Connector") {
+                row("Include:"){
+                    checkBox("Include").bindSelected(model::includeTobii)
+                        .comment("Should the device be included?")
+                }
                 row("Path:") {
                     textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                         .bindText(model::tobiiProConnectorExecutable)
@@ -55,9 +59,30 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
             }
 
             group("Shimmer Connector") {
+                row("Include:"){
+                    checkBox("Include").bindSelected(model::includeShimmer)
+                        .comment("Should the device be included?")
+                }
                 row("Path:") {
                     textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                         .bindText(model::shimmerConnectorExecutable)
+                        .comment(
+                            "Please <a href='https://github.com/labstreaminglayer/App-TobiiPro'>build the TobiiPro Connector</a>. " + //TODO
+                                    "It is used to create an LSL stream of the eye tracker. " +
+                                    "It will be used by the plugin to get the required data.\n" +
+                                    "Provide the application path <i>optionally</i> so the application can be opened when needed."
+                        )
+                }
+            }
+
+            group("Emotiv Connector") {
+                row("Include:"){
+                    checkBox("Include").bindSelected(model::includeEmotiv)
+                        .comment("Should the device be included?")
+                }
+                row("Path:") {
+                    textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                        .bindText(model::emotivConnectorExecutable)
                         .comment(
                             "Please <a href='https://github.com/labstreaminglayer/App-TobiiPro'>build the TobiiPro Connector</a>. " + //TODO
                                     "It is used to create an LSL stream of the eye tracker. " +

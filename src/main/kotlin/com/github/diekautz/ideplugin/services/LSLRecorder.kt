@@ -1,11 +1,15 @@
 package com.github.diekautz.ideplugin.services
 
+import com.github.diekautz.ideplugin.config.CognitIDESettingsConfigurable
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
 import com.github.diekautz.ideplugin.services.dto.emotiv.EmotivPerformanceData
 import com.github.diekautz.ideplugin.services.dto.GazeData
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.services.dto.ShimmerData
 import com.github.diekautz.ideplugin.utils.errorMsg
+import com.github.diekautz.ideplugin.utils.openEmotivConnector
+import com.github.diekautz.ideplugin.utils.openShimmerConnector
 import com.github.diekautz.ideplugin.utils.openTobiiProConnector
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.thisLogger
@@ -26,9 +30,9 @@ import javax.swing.SwingUtilities
 class LSLRecorder(
     private val project: Project
 ) : StudyRecorder(project, "Recording Gaze") {
-    private lateinit var inlet: StreamInlet
-    private lateinit var shimmerInlet: StreamInlet
-    private lateinit var emotivPerformanceInlet: StreamInlet
+    private var inlet: StreamInlet? = null
+    private var shimmerInlet: StreamInlet? = null
+    private var emotivPerformanceInlet: StreamInlet? = null
 
     private val buffer = FloatArray(6)
     private val shimmerBuffer = FloatArray(17)
@@ -36,11 +40,13 @@ class LSLRecorder(
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
 
     override val delay = 0L
+
+    fun Boolean.toInt() = if (this) 1 else 0 //TODO
     override fun loop(indicator: ProgressIndicator) {
-        var timestampSeconds = inlet.pull_sample(buffer, 0.0)
+        var timestampSeconds = inlet?.pull_sample(buffer, 0.0)
         val data : GazeData?
-        if (timestampSeconds != 0.0) {
-            timestampSeconds += inlet.time_correction()
+        if (timestampSeconds != null && timestampSeconds != 0.0) {
+            timestampSeconds += inlet!!.time_correction() //todo
             data = GazeData(
                 (buffer[0] * screenDimensions.width).toInt(),
                 (buffer[1] * screenDimensions.height).toInt(),
@@ -51,10 +57,10 @@ class LSLRecorder(
             ).correctMissingEye() ?: return
         } else data = null
 
-        var shimmerTimestampSeconds = shimmerInlet.pull_sample(shimmerBuffer, 0.0)
+        var shimmerTimestampSeconds = shimmerInlet?.pull_sample(shimmerBuffer, 0.0)
         val shimmerData : ShimmerData?
-        if (shimmerTimestampSeconds != 0.0) {
-            shimmerTimestampSeconds += shimmerInlet.time_correction()
+        if (shimmerTimestampSeconds != null && shimmerTimestampSeconds != 0.0) {
+            shimmerTimestampSeconds += shimmerInlet!!.time_correction()
             shimmerData = ShimmerData(
                 shimmerBuffer[0].toDouble(),
                 shimmerBuffer[1].toDouble(),
@@ -76,10 +82,10 @@ class LSLRecorder(
             )
         } else shimmerData = null
 
-        var emotivPerformanceTimestampSeconds = emotivPerformanceInlet.pull_sample(emotivPerformanceBuffer, 0.0)
+        var emotivPerformanceTimestampSeconds = emotivPerformanceInlet?.pull_sample(emotivPerformanceBuffer, 0.0)
         val emotivPerformaceData : EmotivPerformanceData?
-        if (emotivPerformanceTimestampSeconds != 0.0) {
-            emotivPerformanceTimestampSeconds += emotivPerformanceInlet.time_correction()
+        if (emotivPerformanceTimestampSeconds != null && emotivPerformanceTimestampSeconds != 0.0) {
+            emotivPerformanceTimestampSeconds += emotivPerformanceInlet!!.time_correction()
             emotivPerformaceData = EmotivPerformanceData(
                 emotivPerformanceBuffer[0].toDouble(),
                 emotivPerformanceBuffer[1].toDouble(),
@@ -145,7 +151,7 @@ class LSLRecorder(
                 all += 1
                 val inletCandidate = StreamInlet(it)
                 val info = inletCandidate.info(1.0)
-                if (info.type() == "Gaze"
+                if (CognitIDESettingsState.instance.includeTobii && info.type() == "Gaze"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == buffer.size
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
@@ -155,9 +161,10 @@ class LSLRecorder(
                     indicator.text = "Inlet Open. Waiting for data"
                     all_connected += 1
 
-
+                    inlet!!.open_stream()
+                    indicator.text = "Tobii open"
                 }
-                else if (info.name() == "SendData"
+                else if (CognitIDESettingsState.instance.includeShimmer && info.name() == "SendData"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == 17
                     //&& info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
@@ -168,21 +175,19 @@ class LSLRecorder(
                     indicator.text = "Inlet Open. Waiting for data"
                     all_connected += 1
 
+                    shimmerInlet!!.open_stream()
+                    indicator.text = "Shimmer open"
                 }
-                else if (info.name() == "EmotivDataStream-Performance-Metrics"){
+                else if (CognitIDESettingsState.instance.includeEmotiv && info.name() == "EmotivDataStream-Performance-Metrics"){
                     emotivPerformanceInlet = inletCandidate
 
                     indicator.text = "Inlet Open. Waiting for data"
                     all_connected += 1
+
+                    emotivPerformanceInlet!!.open_stream()
+                    indicator.text = "EmotivPerformance open"
                 }
-                if (all_connected == 3) {
-                    indicator.text = "Opening inlets"
-                    shimmerInlet.open_stream()
-                    indicator.text = "Shimmer open"
-                    inlet.open_stream()
-                    indicator.text = "Tobii open"
-                    emotivPerformanceInlet.open_stream()
-                    indicator.text = "emotivPerformance open"
+                if (all_connected == (CognitIDESettingsState.instance.includeShimmer.toInt() + CognitIDESettingsState.instance.includeEmotiv.toInt() + CognitIDESettingsState.instance.includeTobii.toInt())) {
                     return true
                 }
             }
@@ -191,18 +196,44 @@ class LSLRecorder(
             project.errorMsg("Error whilst opening LSL inlet: ${ex.localizedMessage}", logger = thisLogger(), ex)
             return false
         }
-        invokeLater {
-            if (MessageDialogBuilder
-                    .okCancel("No TobiiPro stream found!", "Open TobiiPro Connector?")
-                    .ask(project)
-            ) {
-                openTobiiProConnector(project)
+        invokeLater { //todo
+            if (CognitIDESettingsState.instance.includeTobii) {
+                if (MessageDialogBuilder
+                        .okCancel("No TobiiPro stream found!", "Open TobiiPro Connector?")
+                        .ask(project)
+                ) {
+                    openTobiiProConnector(project)
+                }
+            }
+            if (CognitIDESettingsState.instance.includeShimmer) {
+                if (MessageDialogBuilder
+                        .okCancel("No Shimmer stream found!", "Open Shimmer Connector?")
+                        .ask(project)
+                ) {
+                    openShimmerConnector(project)
+                }
+            }
+            if (CognitIDESettingsState.instance.includeEmotiv) {
+                if (MessageDialogBuilder
+                        .okCancel("No Emotiv stream found!", "Open Emotiv Connector?")
+                        .ask(project)
+                ) {
+                    openEmotivConnector(project)
+                }
             }
         }
         return false
     }
 
     override fun dispose() {
-        inlet.close_stream()
+        if (CognitIDESettingsState.instance.includeTobii) {
+            inlet!!.close_stream()
+        }
+        if (CognitIDESettingsState.instance.includeShimmer) {
+            shimmerInlet!!.close_stream()
+        }
+        if (CognitIDESettingsState.instance.includeEmotiv) {
+            emotivPerformanceInlet!!.close_stream()
+        }
     }
 }

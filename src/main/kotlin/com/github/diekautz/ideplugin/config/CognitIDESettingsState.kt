@@ -21,8 +21,12 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
     // external applications
     var tobiiProConnectorExecutable = ""
     var shimmerConnectorExecutable = ""
+    var emotivConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
     var eyeTrackerSerial = ""
+    var includeTobii = true
+    var includeShimmer = false
+    var includeEmotiv = false
 
     override fun getState(): CognitIDESettingsState = this
 

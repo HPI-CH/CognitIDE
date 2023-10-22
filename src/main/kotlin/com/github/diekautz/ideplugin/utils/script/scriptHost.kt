@@ -1,13 +1,8 @@
-package com.github.diekautz.ideplugin.hostNew //todo
+package com.github.diekautz.ideplugin.utils.script
 
-import com.github.diekautz.ideplugin.scriptdefinition.ScriptWithMavenDeps
 import java.io.File
-import java.net.URLClassLoader
-import java.nio.file.Paths
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvm.*
-import kotlin.script.experimental.jvm.util.scriptCompilationClasspathFromContextOrStdlib
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 
@@ -22,7 +17,7 @@ fun evalFile(scriptFile: File, scriptArgs: String): ResultWithDiagnostics<Evalua
     return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, evaluationContext)
 }
 
-fun main(args: Array<String>) { //todo varargs etc
+fun runScript(args: Array<String>) { //todo varargs etc
     if (args.size != 2) {
         println("usage: <app> <script file> <script args>")
     } else {

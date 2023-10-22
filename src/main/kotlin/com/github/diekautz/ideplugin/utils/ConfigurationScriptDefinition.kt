@@ -3,19 +3,15 @@ package com.github.diekautz.ideplugin.utils
 // https://kotlinlang.org/docs/custom-script-deps-tutorial.html#create-a-scripting-host
 //todo attribute
 
+import com.github.diekautz.ideplugin.utils.script.configureMavenDepsOnAnnotations
 import kotlinx.coroutines.runBlocking
-import java.io.File
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.*
 import kotlin.script.experimental.dependencies.maven.MavenDependenciesResolver
-import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvm.JvmDependency
 import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
 import kotlin.script.experimental.jvm.jvm
-import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
-import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
-import kotlin.reflect.*
 
 @KotlinScript(fileExtension = "config.kts", compilationConfiguration = ScriptConfiguration::class)
 abstract class ConfigurationScript

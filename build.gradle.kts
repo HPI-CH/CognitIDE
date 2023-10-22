@@ -35,8 +35,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable")
-    implementation(project(mapOf("path" to ":hostNew")))
-    implementation(project(mapOf("path" to ":script-definition")))
     runtimeOnly(kotlin("reflect"))
     implementation(kotlin("script-runtime"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib")

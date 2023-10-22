@@ -1,9 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.config.CognitIDESettingsState
-import com.github.diekautz.ideplugin.config.HighlightingState
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
-import com.github.diekautz.ideplugin.hostNew.main
 import com.github.diekautz.ideplugin.services.dto.GazeData
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.services.dto.ShimmerData

@@ -1,7 +1,6 @@
-package com.github.diekautz.ideplugin.scriptdefinition //todo
+package com.github.diekautz.ideplugin.utils.script
 
 import kotlinx.coroutines.runBlocking
-import java.io.File
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.*

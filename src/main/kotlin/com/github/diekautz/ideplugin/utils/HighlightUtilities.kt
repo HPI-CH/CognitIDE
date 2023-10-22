@@ -35,13 +35,9 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
         }
 }
 
-fun highlightLookElements(editor: Editor, project: Project, lookElementGazeMap: Map<LookElement, Double>) {
+fun highlightLookElements(editor: Editor, project: Project, lookElementGazeMap: Map<LookElement, Double>, pluginClassLoader: ClassLoader) {
     val settingsState = CognitIDESettingsState.instance
-    val saveFolderPath = File(settingsState.recordingsSaveLocation, "tmp").path
-    val saveFolder = File(saveFolderPath)
-    val highlightingState = HighlightingState.instance
-
-    runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()))
+    val saveFolder = File(settingsState.recordingsSaveLocation, "tmp").path
 
     val lookElementGazeMapAlteredByUser =
         json.decodeFromString<Map<String, Double>>(File(saveFolder, "lookElementGazeMapAlteredByUser.json").readText(Charsets.UTF_8)).mapKeys{ json.decodeFromString(LookElement.serializer(), it.key) }

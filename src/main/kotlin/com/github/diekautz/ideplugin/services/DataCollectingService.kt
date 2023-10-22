@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.services
 
 import com.github.diekautz.ideplugin.config.CognitIDESettingsState
+import com.github.diekautz.ideplugin.config.HighlightingState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.removeAllHighlighters
 import com.github.diekautz.ideplugin.extensions.xyScreenToLogical
@@ -12,6 +13,7 @@ import com.github.diekautz.ideplugin.utils.errorMatrix
 import com.github.diekautz.ideplugin.utils.highlightLookElements
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.utils.saveRecordingToDisk
+import com.github.diekautz.ideplugin.utils.script.runScript
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -151,11 +153,6 @@ class DataCollectingService(val project: Project) {
 
     fun highlightGazedElements() = invokeLater {
         wasHighlighted = true
-        val timestampFormat = SimpleDateFormat("yyyy-MM-dd") //todo
-        val timestamp = timestampFormat.format(Date.from(Instant.now()))
-
-        val participantState = ParticipantState.instance
-        val participantId = participantState.id
         val settingsState = CognitIDESettingsState.instance
         val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
         saveFolder.mkdirs()
@@ -175,18 +172,17 @@ class DataCollectingService(val project: Project) {
             print("EXCEPTION: " + ex)
         }
 
-        val currentThread = Thread.currentThread()
-        val originalClassLoader = currentThread.getContextClassLoader()
+
         val pluginClassLoader = this.javaClass.getClassLoader()
-        try {
-            currentThread.setContextClassLoader(pluginClassLoader)
+        val saveFolderPath = saveFolder.path
+        val highlightingState = HighlightingState.instance
+
+        runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()), pluginClassLoader)
 
             EditorFactory.getInstance().allEditors.forEach {
-                highlightLookElements(it, project, lookElementGazeMap)
+                highlightLookElements(it, project, lookElementGazeMap, pluginClassLoader)
             }
-        } finally {
-            currentThread.setContextClassLoader(originalClassLoader)
-        }
+
     }
 
     fun getRecordedFiles() = lookElementGazeMap.keys.map { it.filePath }.distinct()

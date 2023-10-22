@@ -1,9 +1,12 @@
 package com.github.diekautz.ideplugin.ui
 
+import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.markup.EffectType
 import com.intellij.ui.JBColor
+import java.awt.Color
+
 
 
 object CognitIDEColors {
@@ -35,8 +38,8 @@ object CognitIDEColors {
         )
     }
 
-    fun <T> assignColors(elements: Map<T, Double>): Map<Int, List<T>> {
-        val assignedColors = colors.indices.associateWith { mutableListOf<T>() }
+    fun assignColors(elements: Map<LookElement, Double>): Map<Int, List<LookElement>> {
+        val assignedColors = colors.indices.associateWith { mutableListOf<LookElement>() }
         val sortedElements = elements.entries.sortedByDescending { it.value }
         val size = elements.size
         var percentileIndex = percentiles.lastIndex
@@ -52,7 +55,7 @@ object CognitIDEColors {
     private fun backgroundAttributes(color: JBColor) =
         HighlighterColors.NO_HIGHLIGHTING.defaultAttributes.clone().apply {
             backgroundColor = color
-            effectColor = JBColor.WHITE
+            effectColor = Color.WHITE
             effectType = EffectType.BOXED
         }
 }

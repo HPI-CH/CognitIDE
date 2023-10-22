@@ -23,13 +23,8 @@ import edu.ucsd.sccn.LSL
 import edu.ucsd.sccn.LSL.StreamInlet
 import java.awt.Point
 import java.awt.Toolkit
-import java.io.File
 import javax.swing.SwingUtilities
-import kotlin.script.experimental.api.EvaluationResult
-import kotlin.script.experimental.api.ResultWithDiagnostics
-import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
-import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
+
 
 class LSLRecorder(
     private val project: Project
@@ -149,16 +144,7 @@ class LSLRecorder(
         indicator.text = "Searching for Tobii Pro inlet"
         var all_connected = 0
         var all = 0
-        val highlightingState = HighlightingState.instance
-        val currentThread = Thread.currentThread()
-        val originalClassLoader = currentThread.getContextClassLoader()
-        val pluginClassLoader = this.javaClass.getClassLoader()
-        try {
-            currentThread.setContextClassLoader(pluginClassLoader)
-            main(highlightingState.highlightingScript)
-        } finally {
-            currentThread.setContextClassLoader(originalClassLoader)
-        }
+
 
         try {
             LSL.resolve_streams(1.0).forEach {
@@ -249,10 +235,6 @@ class LSLRecorder(
         if (CognitIDESettingsState.instance.includeEmotiv) {
             emotivPerformanceInlet!!.close_stream()
         }
-    }
-    fun evalFile(scriptFile: File): ResultWithDiagnostics<EvaluationResult> {
-        val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<ConfigurationScript> ()
-        return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, null)
     }
 }
 

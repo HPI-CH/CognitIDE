@@ -1,5 +1,9 @@
 package com.github.diekautz.ideplugin.utils
 
+import com.github.diekautz.ideplugin.config.CognitIDESettingsState
+import com.github.diekautz.ideplugin.config.HighlightingState
+import com.github.diekautz.ideplugin.config.ParticipantState
+import com.github.diekautz.ideplugin.hostNew.main
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.ui.CognitIDEColors
 import com.intellij.codeInsight.highlighting.HighlightManager
@@ -7,12 +11,18 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
+import kotlinx.serialization.decodeFromString
+import java.io.File
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
 
 private val logger = Logger.getInstance("com.github.diekautz.ideplugin.utils.HighlightUtilities")
 
 private fun highlightElements(editor: Editor, project: Project, index: Int, elements: List<LookElement>) {
     val editorVirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
     val highlightManager = HighlightManager.getInstance(project)
+
     elements
         .filter {
             it.filePath == editorVirtualFile?.path
@@ -30,7 +40,17 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
 }
 
 fun highlightLookElements(editor: Editor, project: Project, lookElementGazeMap: Map<LookElement, Double>) {
-    val assignedColors = CognitIDEColors.assignColors(lookElementGazeMap)
+    val settingsState = CognitIDESettingsState.instance
+    val saveFolderPath = File(settingsState.recordingsSaveLocation, "tmp").path
+    val saveFolder = File(saveFolderPath)
+    val highlightingState = HighlightingState.instance
+
+    main(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()))
+
+    val lookElementGazeMapAlteredByUser =
+        json.decodeFromString<Map<String, Double>>(File(saveFolder, "lookElementGazeMapAlteredByUser.json").readText(Charsets.UTF_8)).mapKeys{ json.decodeFromString(LookElement.serializer(), it.key) }
+    val assignedColors = CognitIDEColors.assignColors(lookElementGazeMapAlteredByUser) //todo replace with main
+
 
     assignedColors.forEach { (colorIndex, entries) ->
         highlightElements(

@@ -1,6 +1,7 @@
 package com.github.diekautz.ideplugin.scriptdefinition //todo
 
 import kotlinx.coroutines.runBlocking
+import java.io.File
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.*
@@ -21,7 +22,7 @@ import kotlin.script.experimental.jvm.jvm
     compilationConfiguration = ScriptWithMavenDepsConfiguration::class
 )
 // the class is used as the script base class, therefore it should be open or abstract
-abstract class ScriptWithMavenDeps
+abstract class ScriptWithMavenDeps(val args: String)
 
 //todo: DependencyCollectionException: <get-repositorySystem>(...) must not be null
 object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(

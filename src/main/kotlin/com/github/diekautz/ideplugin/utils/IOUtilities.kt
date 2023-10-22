@@ -40,8 +40,8 @@ fun saveRecordingToDisk(
     project: Project,
     date: Date,
     lookElementGazeList: List<LookElementGaze>,
-    gazeSnapshots: List<GazeSnapshot>,
-    userInterrupts: List<UserInterrupt>
+    gazeSnapshots: List<GazeSnapshot>?,
+    userInterrupts: List<UserInterrupt>?
 ) {
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
     val timestamp = timestampFormat.format(date)
@@ -54,7 +54,7 @@ fun saveRecordingToDisk(
 
     saveFolder.mkdirs()
     try {
-        if (gazeSnapshots.isNotEmpty()) {
+        if (!gazeSnapshots.isNullOrEmpty()) {
             val file = File(saveFolder, "gaze.json")
             saveToDisk(json.encodeToString(gazeSnapshots), file)
             notifyFileSaved(project, file)
@@ -64,7 +64,7 @@ fun saveRecordingToDisk(
             saveToDisk(json.encodeToString(lookElementGazeList), file)
             notifyFileSaved(project, file)
         }
-        if (userInterrupts.isNotEmpty()) {
+        if (!userInterrupts.isNullOrEmpty()) {
             val file = File(saveFolder, "interrupts.json")
             saveToDisk(json.encodeToString(userInterrupts), file)
             notifyFileSaved(project, file)
@@ -73,18 +73,20 @@ fun saveRecordingToDisk(
         saveToDisk(json.encodeToString(participantState), file)
         notifyFileSaved(project, file)
 
-        // highlight, open editors and save screenshots
-        val images = screenshotFilesInEditor(
-            project,
-            gazeSnapshots.map { it.lookElement!!.filePath }.distinct()
-        )
-        val imageFolder = File(saveFolder, "files")
-        imageFolder.mkdirs()
-        images.forEach { (fileName, image) ->
-            if (image == null) return@forEach
-            val imageFile = File(imageFolder, fileName.replace(Regex("[^a-zA-Z0-9\\-]"), "_") + ".png")
-            saveToDisk(image, imageFile)
-            notifyFileSaved(project, imageFile)
+        if (gazeSnapshots != null){
+            // highlight, open editors and save screenshots
+            val images = screenshotFilesInEditor(
+                project,
+                gazeSnapshots.map { it.lookElement!!.filePath }.distinct()
+            )
+            val imageFolder = File(saveFolder, "files")
+            imageFolder.mkdirs()
+            images.forEach { (fileName, image) ->
+                if (image == null) return@forEach
+                val imageFile = File(imageFolder, fileName.replace(Regex("[^a-zA-Z0-9\\-]"), "_") + ".png")
+                saveToDisk(image, imageFile)
+                notifyFileSaved(project, imageFile)
+            }
         }
     } catch (ex: Exception) {
         project.errorMsg("An unknown error occurred whilst saving data!", logger, ex)

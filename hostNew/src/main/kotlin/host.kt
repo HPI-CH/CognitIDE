@@ -11,21 +11,26 @@ import kotlin.script.experimental.jvm.util.scriptCompilationClasspathFromContext
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 
-fun evalFile(scriptFile: File): ResultWithDiagnostics<EvaluationResult> {
+fun evalFile(scriptFile: File, scriptArgs: String): ResultWithDiagnostics<EvaluationResult> {
+
+    val evaluationContext = ScriptEvaluationConfiguration {
+        constructorArgs(scriptArgs)
+    }
 
     val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<ScriptWithMavenDeps>()
 
-    return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, null)
+    return BasicJvmScriptingHost().eval(scriptFile.toScriptSource(), compilationConfiguration, evaluationContext)
 }
 
-fun main(vararg args: String) {
-    if (args.size != 1) {
-        println("usage: <app> <script file>")
+fun main(args: Array<String>) { //todo varargs etc
+    if (args.size != 2) {
+        println("usage: <app> <script file> <script args>")
     } else {
         val scriptFile = File(args[0])
+        val scriptArgs = args[1]
         println("Executing script $scriptFile")
 
-        val res = evalFile(scriptFile)
+        val res = evalFile(scriptFile, scriptArgs)
 
         res.reports.forEach {
             if (it.severity > ScriptDiagnostic.Severity.DEBUG) {

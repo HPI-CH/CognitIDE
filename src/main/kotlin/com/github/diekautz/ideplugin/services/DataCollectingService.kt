@@ -10,6 +10,7 @@ import com.github.diekautz.ideplugin.services.recording.InterruptService
 import com.github.diekautz.ideplugin.services.recording.UserInterrupt
 import com.github.diekautz.ideplugin.utils.errorMatrix
 import com.github.diekautz.ideplugin.utils.highlightLookElements
+import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.utils.saveRecordingToDisk
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -20,7 +21,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.awt.Point
+import java.io.File
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 import kotlin.math.roundToInt
@@ -146,10 +151,44 @@ class DataCollectingService(val project: Project) {
 
     fun highlightGazedElements() = invokeLater {
         wasHighlighted = true
-        EditorFactory.getInstance().allEditors.forEach {
-            highlightLookElements(it, project, lookElementGazeMap)
+        val timestampFormat = SimpleDateFormat("yyyy-MM-dd") //todo
+        val timestamp = timestampFormat.format(Date.from(Instant.now()))
+
+        val participantState = ParticipantState.instance
+        val participantId = participantState.id
+        val settingsState = CognitIDESettingsState.instance
+        val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
+        saveFolder.mkdirs()
+        val json = Json {
+            allowSpecialFloatingPointValues = true
+        }
+        val elementFile = File(saveFolder, "lookElementGazeMap.json")
+        val measurementFile = File(saveFolder, "measurements.json")
+        try {
+
+            elementFile.createNewFile()
+            elementFile.writeText(json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()))
+            measurementFile.createNewFile()
+            measurementFile.writeText(json.encodeToString(gazeSnapshotList))
+
+        } catch (ex: Exception) {
+            print("EXCEPTION: " + ex)
+        }
+
+        val currentThread = Thread.currentThread()
+        val originalClassLoader = currentThread.getContextClassLoader()
+        val pluginClassLoader = this.javaClass.getClassLoader()
+        try {
+            currentThread.setContextClassLoader(pluginClassLoader)
+
+            EditorFactory.getInstance().allEditors.forEach {
+                highlightLookElements(it, project, lookElementGazeMap)
+            }
+        } finally {
+            currentThread.setContextClassLoader(originalClassLoader)
         }
     }
 
     fun getRecordedFiles() = lookElementGazeMap.keys.map { it.filePath }.distinct()
 }
+

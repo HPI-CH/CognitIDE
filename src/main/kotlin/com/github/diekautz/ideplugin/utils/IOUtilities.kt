@@ -5,6 +5,7 @@ import com.github.diekautz.ideplugin.config.CognitIDESettingsState
 import com.github.diekautz.ideplugin.config.ParticipantState
 import com.github.diekautz.ideplugin.extensions.screenshot
 import com.github.diekautz.ideplugin.services.dto.GazeSnapshot
+import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.services.dto.LookElementGaze
 import com.github.diekautz.ideplugin.services.recording.UserInterrupt
 import com.intellij.notification.NotificationAction
@@ -168,6 +169,25 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
 
 fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""
 
+fun saveTmpFiles(lookElementGazeMap: MutableMap<LookElement, Double>, gazeSnapshotList: MutableList<GazeSnapshot>){
+    val settingsState = CognitIDESettingsState.instance
+    val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
+    saveFolder.mkdirs()
+
+    val elementFile = File(saveFolder, "lookElementGazeMap.json")
+    val measurementFile = File(saveFolder, "measurements.json")
+    try {
+
+        elementFile.createNewFile()
+        elementFile.writeText(json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()))
+        measurementFile.createNewFile()
+        measurementFile.writeText(json.encodeToString(gazeSnapshotList))
+
+    } catch (ex: Exception) {
+        print("EXCEPTION: " + ex)
+    }
+}
+
 private fun openFileAction(file: File) = NotificationAction.createSimple("Open") {
     if (Desktop.isDesktopSupported()) {
         Desktop.getDesktop().open(file)
@@ -184,3 +204,5 @@ private fun notifyFileSaved(project: Project, file: File) {
             .notify(project)
     }
 }
+
+

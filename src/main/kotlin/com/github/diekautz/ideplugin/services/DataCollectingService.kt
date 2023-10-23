@@ -13,6 +13,7 @@ import com.github.diekautz.ideplugin.utils.errorMatrix
 import com.github.diekautz.ideplugin.utils.highlightLookElements
 import com.github.diekautz.ideplugin.services.dto.LookElement
 import com.github.diekautz.ideplugin.utils.saveRecordingToDisk
+import com.github.diekautz.ideplugin.utils.saveTmpFiles
 import com.github.diekautz.ideplugin.utils.script.runScript
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -69,6 +70,7 @@ class DataCollectingService(val project: Project) {
     fun stopRecording() {
         currentRecorder?.stopRecording()
         interruptService.stopInterrupting()
+        saveTmpFiles(lookElementGazeMap, gazeSnapshotList)
     }
 
     private val gazeSnapshotList = mutableListOf<GazeSnapshot>()
@@ -155,24 +157,6 @@ class DataCollectingService(val project: Project) {
         wasHighlighted = true
         val settingsState = CognitIDESettingsState.instance
         val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
-        saveFolder.mkdirs()
-        val json = Json {
-            allowSpecialFloatingPointValues = true
-        }
-        val elementFile = File(saveFolder, "lookElementGazeMap.json")
-        val measurementFile = File(saveFolder, "measurements.json")
-        try {
-
-            elementFile.createNewFile()
-            elementFile.writeText(json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()))
-            measurementFile.createNewFile()
-            measurementFile.writeText(json.encodeToString(gazeSnapshotList))
-
-        } catch (ex: Exception) {
-            print("EXCEPTION: " + ex)
-        }
-
-
         val pluginClassLoader = this.javaClass.getClassLoader()
         val saveFolderPath = saveFolder.path
         val highlightingState = HighlightingState.instance

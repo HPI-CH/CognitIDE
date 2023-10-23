@@ -10,13 +10,13 @@ class HighlightingConfigurable : BoundConfigurable(
     private val model = HighlightingState.instance
 
     override fun createPanel() = panel {
-        group("Formula for Highlighting") {
-            row("Available variables:") {
-
-            }
+        group("User Defined Script for Configuring the Highlighting") {
             row("Path:"){
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(model::highlightingScript)
+                    .comment(
+                        "Further information can be found <a href='https://github.com/HPI-CH/CognitIDE'>here</a>."
+                    )
             }
         }
     }

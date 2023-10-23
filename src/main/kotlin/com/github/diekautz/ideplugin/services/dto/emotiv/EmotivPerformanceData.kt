@@ -5,7 +5,7 @@ import java.awt.Point
 
 @Serializable
 data class EmotivPerformanceData(
-    val idk: Double,
+    val value: Double,
     val attention: Double,
     val engagement: Double,
     val excitement: Double,

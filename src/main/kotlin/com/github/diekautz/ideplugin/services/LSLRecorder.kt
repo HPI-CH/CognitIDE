@@ -139,7 +139,7 @@ class LSLRecorder(
     }
 
     override fun setup(indicator: ProgressIndicator): Boolean {
-        indicator.text = "Searching for Tobii Pro inlet"
+        indicator.text = "Searching for LSL inlets"
         var all_connected = 0
         var all = 0
 
@@ -154,27 +154,22 @@ class LSLRecorder(
                     && info.channel_count() == buffer.size
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
-
                     inlet = inletCandidate
-                    indicator.text = "Inlet Open. Waiting for data"
                     all_connected += 1
 
                     inlet!!.open_stream()
-                    indicator.text = "Tobii open"
+                    indicator.text = "TobiiPro inlet open. Waiting for data"
                 }
                 else if (CognitIDESettingsState.instance.includeShimmer && info.name() == "SendData"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == 17
                     //&& info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
-
                     shimmerInlet = inletCandidate
-
-                    indicator.text = "Inlet Open. Waiting for data"
                     all_connected += 1
 
                     shimmerInlet!!.open_stream()
-                    indicator.text = "Shimmer open"
+                    indicator.text = "Shimmer inlet open. Waiting for data"
                 }
                 else if (CognitIDESettingsState.instance.includeEmotiv && info.name() == "EmotivDataStream-Performance-Metrics"){
                     emotivPerformanceInlet = inletCandidate
@@ -183,7 +178,7 @@ class LSLRecorder(
                     all_connected += 1
 
                     emotivPerformanceInlet!!.open_stream()
-                    indicator.text = "EmotivPerformance open"
+                    indicator.text = "EmotivPerformance inlet open. Waiting for data"
                 }
                 if (all_connected == (CognitIDESettingsState.instance.includeShimmer.toInt() + CognitIDESettingsState.instance.includeEmotiv.toInt() + CognitIDESettingsState.instance.includeTobii.toInt())) {
                     return true
@@ -194,10 +189,10 @@ class LSLRecorder(
             project.errorMsg("Error whilst opening LSL inlet: ${ex.localizedMessage}", logger = thisLogger(), ex)
             return false
         }
-        invokeLater { //todo
+        invokeLater {
             if (CognitIDESettingsState.instance.includeTobii) {
                 if (MessageDialogBuilder
-                        .okCancel("No TobiiPro stream found!", "Open TobiiPro Connector?")
+                        .okCancel("Is TobiiPro Connector running?", "Open TobiiPro Connector?")
                         .ask(project)
                 ) {
                     openTobiiProConnector(project)
@@ -205,7 +200,7 @@ class LSLRecorder(
             }
             if (CognitIDESettingsState.instance.includeShimmer) {
                 if (MessageDialogBuilder
-                        .okCancel("No Shimmer stream found!", "Open Shimmer Connector?")
+                        .okCancel("Is Shimmer Connector running?", "Open Shimmer Connector?")
                         .ask(project)
                 ) {
                     openShimmerConnector(project)
@@ -213,7 +208,7 @@ class LSLRecorder(
             }
             if (CognitIDESettingsState.instance.includeEmotiv) {
                 if (MessageDialogBuilder
-                        .okCancel("No Emotiv stream found!", "Open Emotiv Connector?")
+                        .okCancel("Is EmotivPro running?", "Open EmotivPro?")
                         .ask(project)
                 ) {
                     openEmotivConnector(project)

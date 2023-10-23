@@ -64,7 +64,7 @@
 
             <action id="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     class="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
-                    text="Start Tobii Pro Recording"
+                    text="Start Recording"
                     description="Starts or continuous a Tobii Pro recording via LSL."
                     icon="AllIcons.Actions.RunAll">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>

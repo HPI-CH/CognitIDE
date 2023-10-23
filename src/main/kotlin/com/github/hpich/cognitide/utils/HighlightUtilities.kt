@@ -35,7 +35,7 @@ private fun highlightElements(editor: Editor, project: Project, index: Int, elem
         }
 }
 
-fun highlightLookElements(editor: Editor, project: Project, lookElementGazeMap: Map<LookElement, Double>, pluginClassLoader: ClassLoader) {
+fun highlightLookElements(editor: Editor, project: Project) {
     val settingsState = CognitIDESettingsState.instance
     val saveFolder = File(settingsState.recordingsSaveLocation, "tmp").path
 

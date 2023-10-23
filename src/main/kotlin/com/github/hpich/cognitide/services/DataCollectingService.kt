@@ -9,11 +9,8 @@ import com.github.hpich.cognitide.services.dto.*
 import com.github.hpich.cognitide.services.dto.emotiv.EmotivPerformanceData
 import com.github.hpich.cognitide.services.recording.InterruptService
 import com.github.hpich.cognitide.services.recording.UserInterrupt
-import com.github.hpich.cognitide.utils.errorMatrix
-import com.github.hpich.cognitide.utils.highlightLookElements
 import com.github.hpich.cognitide.services.dto.LookElement
-import com.github.hpich.cognitide.utils.saveRecordingToDisk
-import com.github.hpich.cognitide.utils.saveTmpFiles
+import com.github.hpich.cognitide.utils.*
 import com.github.hpich.cognitide.utils.script.runScript
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -160,13 +157,19 @@ class DataCollectingService(val project: Project) {
         val pluginClassLoader = this.javaClass.getClassLoader()
         val saveFolderPath = saveFolder.path
         val highlightingState = HighlightingState.instance
-
-        runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()), pluginClassLoader)
+        if (highlightingState.highlightingScript.isBlank()) {
+            execExternalUtility(
+                project, highlightingState.highlightingScript,
+                "Please provide a valid path to the highlighting script."
+            )
+        }
+        else {
+            runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()), pluginClassLoader)
 
             EditorFactory.getInstance().allEditors.forEach {
-                highlightLookElements(it, project, lookElementGazeMap, pluginClassLoader)
+                highlightLookElements(it, project)
             }
-
+        }
     }
 
     fun getRecordedFiles() = lookElementGazeMap.keys.map { it.filePath }.distinct()

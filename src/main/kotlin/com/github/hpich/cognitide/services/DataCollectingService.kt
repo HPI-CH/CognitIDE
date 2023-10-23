@@ -151,7 +151,6 @@ class DataCollectingService(val project: Project) {
     }
 
     fun highlightGazedElements() = invokeLater {
-        wasHighlighted = true
         val settingsState = CognitIDESettingsState.instance
         val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
         val pluginClassLoader = this.javaClass.getClassLoader()
@@ -165,7 +164,7 @@ class DataCollectingService(val project: Project) {
         }
         else {
             runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()), pluginClassLoader)
-
+            wasHighlighted = true
             EditorFactory.getInstance().allEditors.forEach {
                 highlightLookElements(it, project)
             }

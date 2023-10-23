@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.diekautz.ideplugin</id>
+    <id>com.github.hpich.cognitide</id>
     <name>CognitIDE - Physiological Studies</name>
     <vendor>Malte Stellmacher, Fabian Stolp</vendor>
 
@@ -11,94 +11,94 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable
                 parentId="root"
-                instance="com.github.diekautz.ideplugin.config.CognitIDESettingsConfigurable"
+                instance="com.github.hpich.cognitide.config.CognitIDESettingsConfigurable"
                 id="plugin.cognitide"
                 displayName="CognitIDE Settings"/>
-        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.CognitIDESettingsState"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.CognitIDESettingsState"/>
         <applicationConfigurable parentId="plugin.cognitide"
-                                 instance="com.github.diekautz.ideplugin.config.ParticipantConfigurable"
+                                 instance="com.github.hpich.cognitide.config.ParticipantConfigurable"
                                  id="plugin.cognitide.participant"
                                  displayName="Participant Configuration"/>
-        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.ParticipantState"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.ParticipantState"/>
         <applicationConfigurable parentId="plugin.cognitide"
-                                 instance="com.github.diekautz.ideplugin.config.HighlightingConfigurable"
+                                 instance="com.github.hpich.cognitide.config.HighlightingConfigurable"
                                  id="plugin.cognitide.highlighting"
                                  displayName="Highlighting Configuration"/>
-        <applicationService serviceImplementation="com.github.diekautz.ideplugin.config.HighlightingState"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.HighlightingState"/>
 
         <notificationGroup id="Recording File Saved"
                            displayType="BALLOON"/>
     </extensions>
 
     <actions>
-        <group id="com.github.diekautz.ideplugin.actions.CognitIDEGroup"
+        <group id="com.github.hpich.cognitide.actions.CognitIDEGroup"
                text="CognitIDE"
                popup="true"
                icon="AllIcons.Actions.ShowCode">
             <add-to-group group-id="MainMenu" anchor="last"/>
 
-            <action id="com.github.diekautz.ideplugin.actions.SetupNewRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.SetupNewRecordingAction"
+            <action id="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
+                    class="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
                     text="Setup New Participant"
                     description="Clears all data and opens questioner for new participant."
                     icon="AllIcons.Actions.AddFile"/>
-            <action id="com.github.diekautz.ideplugin.actions.recording.ClearDataAction"
-                    class="com.github.diekautz.ideplugin.actions.recording.ClearDataAction" text="Clear Recording"
+            <action id="com.github.hpich.cognitide.actions.recording.ClearDataAction"
+                    class="com.github.hpich.cognitide.actions.recording.ClearDataAction" text="Clear Recording"
                     description="Clears all recorded data."
                     icon="AllIcons.Actions.GC"/>
 
             <separator/>
 
-            <action id="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
-                    class="com.github.diekautz.ideplugin.actions.HighlightGazeElementAction"
+            <action id="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
+                    class="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
                     text="Visualize Recorded Gaze"
                     description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
-            <action id="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
-                    class="com.github.diekautz.ideplugin.actions.ClearHighlightersAction"
+            <action id="com.github.hpich.cognitide.actions.ClearHighlightersAction"
+                    class="com.github.hpich.cognitide.actions.ClearHighlightersAction"
                     text="Clear Highlights"
                     description="Clears all previously highlighted elements."
                     icon="AllIcons.General.Reset"/>
 
             <separator/>
 
-            <action id="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.recording.StartRecordingAction"
+            <action id="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+                    class="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     text="Start Tobii Pro Recording"
                     description="Starts or continuous a Tobii Pro recording via LSL."
                     icon="AllIcons.Actions.RunAll">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
-            <action id="com.github.diekautz.ideplugin.actions.recording.StopRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.recording.StopRecordingAction"
+            <action id="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+                    class="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
                     text="Stop Recording"
                     description="Stops an ongoing recording."
                     icon="AllIcons.Actions.Suspend">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
 
-            <action id="com.github.diekautz.ideplugin.actions.recording.SaveAllRecordingDataAction"
-                    class="com.github.diekautz.ideplugin.actions.recording.SaveAllRecordingDataAction"
+            <action id="com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+                    class="com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
                     text="Save Recording"
                     description="Saves element gazes and raw recorded data."
                     icon="AllIcons.Actions.MenuSaveall"/>
 
             <separator/>
 
-            <group id="com.github.diekautz.ideplugin.actions.CognitIDEDebugGroup"
+            <group id="com.github.hpich.cognitide.actions.CognitIDEDebugGroup"
                 text="Debug"
                 popup="true">
-                <action id="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
-                    class="com.github.diekautz.ideplugin.actions.debug.StartMouseRecordingAction"
+                <action id="com.github.hpich.cognitide.actions.debug.StartMouseRecordingAction"
+                    class="com.github.hpich.cognitide.actions.debug.StartMouseRecordingAction"
                     text="Start Mouse Gaze Recording"
                     description="Debug action to use the mouse location as simulated center of eye coordinates."
                     icon="AllIcons.Actions.RunToCursor"/>
-                <action id="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction"
-                    class="com.github.diekautz.ideplugin.actions.debug.OpenAllFilesAction" text="Open All Files"
+                <action id="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction"
+                    class="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction" text="Open All Files"
                     description="Opens all files contained in the current recording."
                     icon="AllIcons.Actions.MenuOpen"/>
-                <action id="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
-                    class="com.github.diekautz.ideplugin.actions.debug.CalculateScreenBrightnessAction"
+                <action id="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
+                    class="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
             </group>

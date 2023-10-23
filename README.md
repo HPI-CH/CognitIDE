@@ -1,18 +1,14 @@
-# OpenEye - Eye-Tracking Studies
-
-![Build](https://github.com/DieKautz/ide-plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/22291.svg)](https://plugins.jetbrains.com/plugin/22291)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/22291.svg)](https://plugins.jetbrains.com/plugin/22291)
+# CognitIDE - Physiological Studies
 
 <!-- Plugin description -->
-OpenEye integrates eye tracking hardware to record gaze data while reviewing code and generate heatmaps for assessment.
+CognitIDE integrates eye tracking hardware to record gaze data while reviewing code and generate heatmaps for assessment.
 
 ## How-To
-1. To start a basic study, select **OpenEye | Setup New Participant**.
+1. To start a basic study, select **CognitIDE | Setup New Participant**.
 
-2. After that is completed choose **OpenEye | Start Tobii Pro Recording**.
+2. After that is completed choose **CognitIDE | Start Tobii Pro Recording**.
 
-If needed, you can configure periodic interrupts: check **Settings/Preferences | OpenEye Settings |
+If needed, you can configure periodic interrupts: check **Settings/Preferences | CognitIDE Settings |
 Recording | Interrupt user**.
 
 ## Features
@@ -31,7 +27,7 @@ pinpointing gaze to specific [psi elements](https://plugins.jetbrains.com/docs/i
 <!-- Plugin description end -->
 
 ## Export
-When saving a recording, 4 types of data will be saved (to your home directory under openeye-recordings per default):
+When saving a recording, 4 types of data will be saved (to your home directory under cognitide-recordings per default):
 
 ### participant.json
 Basic information provided by the participant questioner in json format.
@@ -109,10 +105,10 @@ This folder contains a screenshot of the editor for each file contained in the r
 
 - Using IDE built-in plugin system:
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "OpenEye"</kbd> >
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "CognitIDE"</kbd> >
   <kbd>Install Plugin</kbd>
 
 - Manually:
 
-  Download the [latest release](https://github.com/DieKautz/ide-plugin/releases/latest) and install it manually using
+  Download the [latest release](https://github.com/HPI-CH/CognitIDE/releases) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>

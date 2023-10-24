@@ -1,12 +1,12 @@
 # CognitIDE - Physiological Studies
 
 <!-- Plugin description -->
-CognitIDE integrates eye tracking hardware to record gaze data while reviewing code and generate heatmaps for assessment.
+CognitIDE integrates body sensor hardware to record physiological data while reviewing code and generates heatmaps for assessment.
 
 ## How-To
 1. To start a basic study, select **CognitIDE | Setup New Participant**.
 
-2. After that is completed choose **CognitIDE | Start Tobii Pro Recording**.
+2. After that is completed choose **CognitIDE | Start Recording**.
 
 If needed, you can configure periodic interrupts: check **Settings/Preferences | CognitIDE Settings |
 Recording | Interrupt user**.
@@ -14,15 +14,15 @@ Recording | Interrupt user**.
 ## Features
 - record data from gaze and pupil diameter data from
 [Tobii Pro Nano](https://www.tobii.com/products/eye-trackers/screen-based/tobii-pro-nano).
-- gather basic questioner data of subject before recording
+- record physiological data from Shimmer and Emotiv devices (easily extensible for other devices supported by [LSL](https://labstreaminglayer.readthedocs.io/info/supported_devices.html))
+- gather questionnaire data of subject before recording
 - interrupt subject whilst recording to ask for input
 - export data
   - raw data
   - element gaze hits (how often each element has been hit by a gaze sample)
   - editor screenshots (how it was edited and with heatmap highlights if applied)
 
-It was build for my bachelors' thesis to assess code complexity using eye tracker gaze data and by that 
-pinpointing gaze to specific [psi elements](https://plugins.jetbrains.com/docs/intellij/psi-elements.html).
+It was implemented by Malte Stellmacher and Fabian Stolp.
 
 <!-- Plugin description end -->
 
@@ -41,8 +41,8 @@ Basic information provided by the participant questioner in json format.
 }
 ```
 
-### gaze.json
-Array of recorded gaze elements in json format.
+### measurements.json
+Array of recorded physiological data in json format.
 
 ```
 [
@@ -60,7 +60,8 @@ Array of recorded gaze elements in json format.
       "rightEyeY": <screen-space coordinate>,
       "leftPupil": <pupil diameter>,
       "rightPupil": <pupil diameter>
-    }
+    },
+    ...
   },
   ...
 ]

@@ -15,7 +15,7 @@ class HighlightingConfigurable : BoundConfigurable(
                 textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(model::highlightingScript)
                     .comment(
-                        "Further information can be found <a href='https://github.com/HPI-CH/CognitIDE'>here</a>."
+                        "Further information and an example script can be found <a href='https://github.com/HPI-CH/CognitIDE'>here</a>."
                     )
             }
         }

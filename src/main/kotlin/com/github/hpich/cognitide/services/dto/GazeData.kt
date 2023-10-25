@@ -1,9 +1,16 @@
 package com.github.hpich.cognitide.services.dto
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import java.awt.Point
 
-@Serializable
+@Serializable(with = GazeDataSerializer::class)
 data class GazeData(
     val leftEyeX: Int,
     val leftEyeY: Int,
@@ -38,5 +45,22 @@ data class GazeData(
             return GazeData(leftEyeX, leftEyeY, leftEyeX, leftEyeY, leftPupil, rightPupil)
         }
         return this
+    }
+}
+
+@Serializer(forClass = GazeData::class)
+object GazeDataSerializer : KSerializer<GazeData> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GazeData", PrimitiveKind.STRING)
+
+   override fun serialize(encoder: Encoder, value: GazeData) {
+       var uniqueRepresentation = "null"
+       if (value != null) {
+           uniqueRepresentation =
+               "${value.leftEyeX},;|${value.leftEyeY},;|${value.rightEyeX},;|${value.rightEyeY},;|${value.leftPupil},;|${value.rightPupil}"
+       }
+       else {
+           uniqueRepresentation = "null"
+       }
+       encoder.encodeString(uniqueRepresentation)
     }
 }

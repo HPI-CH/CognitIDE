@@ -15,20 +15,21 @@ data class LookElement(
 }
 
 @Serializer(forClass = LookElement::class)
-object LookElementSerializer : KSerializer<LookElement> {
+object LookElementSerializer : KSerializer<LookElement?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LookElement", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: LookElement) {
-        val uniqueRepresentation = "${value.text}|${value.filePath}|${value.startOffset}"
+    override fun serialize(encoder: Encoder, value: LookElement?) {
+        val uniqueRepresentation = "${value?.text},;|${value?.filePath},;|${value?.startOffset}"
         encoder.encodeString(uniqueRepresentation)
     }
 
-    override fun deserialize(decoder: Decoder): LookElement {
-        val parts = decoder.decodeString().split('|')
-        return LookElement(
-            text = parts[0],
-            filePath = parts[1],
-            startOffset = parts[2].toInt()
-        )
+    override fun deserialize(decoder: Decoder): LookElement? {
+        val parts = decoder.decodeString().split(",;|")
+        if (parts[0] == "null") return null
+            return LookElement(
+                text = parts[0],
+                filePath = parts[1],
+                startOffset = parts[2].toInt()
+            )
     }
 }

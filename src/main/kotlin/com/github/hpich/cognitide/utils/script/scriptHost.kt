@@ -10,6 +10,8 @@ import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 
+// taken from: https://kotlinlang.org/docs/custom-script-deps-tutorial.html
+
 fun evalFile(scriptFile: File, scriptArgs: String): ResultWithDiagnostics<EvaluationResult> {
 
     val evaluationContext = ScriptEvaluationConfiguration {

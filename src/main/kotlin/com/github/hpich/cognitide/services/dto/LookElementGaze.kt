@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LookElementGaze(
-    val lookElement: LookElement,
+    val lookElement: LookElement?,
     val gazeWeight: Double,
 )

@@ -1,9 +1,16 @@
 package com.github.hpich.cognitide.services.dto
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import java.awt.Point
 
-@Serializable
+@Serializable(with = ShimmerDataSerializer::class)
 data class ShimmerData(
     val LOW_NOISE_ACCELEROMETER_X: Double,
     val LOW_NOISE_ACCELEROMETER_Y: Double,
@@ -22,44 +29,32 @@ data class ShimmerData(
     val INTERNAL_ADC_A13: Double,
     val PRESSURE: Double,
     val TEMPERATURE: Double
-) {
-    /*constructor(
-        LOW_NOISE_ACCELEROMETER_X: Double,
-        LOW_NOISE_ACCELEROMETER_Y: Double,
-        LOW_NOISE_ACCELEROMETER_Z: Double,
-        WIDE_RANGE_ACCELEROMETER_X: Double,
-        WIDE_RANGE_ACCELEROMETER_Y: Double,
-        WIDE_RANGE_ACCELEROMETER_Z: Double,
-        MAGNETOMETER_X: Double,
-        MAGNETOMETER_Y: Double,
-        MAGNETOMETER_Z: Double,
-        GYROSCOPE_X: Double,
-        GYROSCOPE_Y: Double,
-        GYROSCOPE_Z: Double,
-        GSR: Double,
-        GSR_CONDUCTANCE: Double,
-        INTERNAL_ADC_A13: Double,
-        PRESSURE: Double,
-        TEMPERATURE: Double,
-        V_SENSE_BATT: Double
-    ) : this(
-        LOW_NOISE_ACCELEROMETER_X,
-        LOW_NOISE_ACCELEROMETER_Y,
-        LOW_NOISE_ACCELEROMETER_Z,
-        WIDE_RANGE_ACCELEROMETER_X,
-        WIDE_RANGE_ACCELEROMETER_Y,
-        WIDE_RANGE_ACCELEROMETER_Z,
-        MAGNETOMETER_X,
-        MAGNETOMETER_Y,
-        MAGNETOMETER_Z,
-        GYROSCOPE_X,
-        GYROSCOPE_Y,
-        GYROSCOPE_Z,
-        GSR,
-        GSR_CONDUCTANCE,
-        INTERNAL_ADC_A13,
-        PRESSURE,
-        TEMPERATURE,
-        V_SENSE_BATT
-    )*/
+)
+
+@Serializer(forClass = ShimmerData::class)
+object ShimmerDataSerializer : KSerializer<ShimmerData> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ShimmerData", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: ShimmerData) {
+        val uniqueRepresentation = "${value.LOW_NOISE_ACCELEROMETER_X},;|" +
+                "${value.LOW_NOISE_ACCELEROMETER_Y},;|" +
+                "${value.LOW_NOISE_ACCELEROMETER_Z},;|" +
+                "${value.WIDE_RANGE_ACCELEROMETER_X},;|" +
+                "${value.WIDE_RANGE_ACCELEROMETER_Y},;|" +
+                "${value.WIDE_RANGE_ACCELEROMETER_Z},;|" +
+                "${value.MAGNETOMETER_X},;|" +
+                "${value.MAGNETOMETER_Y},;|" +
+                "${value.MAGNETOMETER_Z},;|" +
+                "${value.GYROSCOPE_X},;|" +
+                "${value.GYROSCOPE_Y},;|" +
+                "${value.GYROSCOPE_Z},;|" +
+                "${value.GSR},;|" +
+                "${value.GSR_CONDUCTANCE},;|" +
+                "${value.INTERNAL_ADC_A13},;|" +
+                "${value.PRESSURE},;|" +
+                "${value.TEMPERATURE}"
+
+
+        encoder.encodeString(uniqueRepresentation)
+    }
 }

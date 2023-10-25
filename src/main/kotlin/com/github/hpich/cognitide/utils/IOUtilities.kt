@@ -56,7 +56,7 @@ fun saveRecordingToDisk(
     saveFolder.mkdirs()
     try {
         if (!gazeSnapshots.isNullOrEmpty()) {
-            val file = File(saveFolder, "gaze.json")
+            val file = File(saveFolder, "measurements.json")
             saveToDisk(json.encodeToString(gazeSnapshots), file)
             notifyFileSaved(project, file)
         }
@@ -181,7 +181,7 @@ fun saveTmpFiles(lookElementGazeMap: MutableMap<LookElement, Double>, gazeSnapsh
         elementFile.createNewFile()
         elementFile.writeText(json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()))
         measurementFile.createNewFile()
-        measurementFile.writeText(json.encodeToString(gazeSnapshotList))
+        measurementFile.writeText(json.encodeToString(gazeSnapshotList.map { json.encodeToString(GazeSnapshot.serializer(), it) }.toList() ))
 
     } catch (ex: Exception) {
         print("EXCEPTION: " + ex)

@@ -9,6 +9,8 @@ import kotlin.script.experimental.jvm.JvmDependency
 import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
 import kotlin.script.experimental.jvm.jvm
 
+// taken from: https://kotlinlang.org/docs/custom-script-deps-tutorial.html
+
 // The KotlinScript annotation marks a class that can serve as a reference to the script definition for
 // `createJvmCompilationConfigurationFromTemplate` call as well as for the discovery mechanism
 // The marked class also become the base class for defined script type (unless redefined in the configuration)

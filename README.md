@@ -3,6 +3,21 @@
 <!-- Plugin description -->
 CognitIDE integrates body sensor hardware to record physiological data while reviewing code and generates heatmaps for assessment.
 
+## Installation
+
+- Using IDE built-in plugin system:
+
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "CognitIDE"</kbd> >
+  <kbd>Install Plugin</kbd>
+
+- Manually:
+
+  Download the [latest release](https://github.com/HPI-CH/CognitIDE/releases) and install it manually using
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+
+## Highlighting script
+For an example for the highlighting script you could take a look at and/or download highlighting.scriptwithdeps.kts.
+
 ## How-To
 1. To start a basic study, select **CognitIDE | Setup New Participant**.
 
@@ -101,15 +116,3 @@ If enabled, contains an array of each interaction when the user was interrupted 
 
 ### /files
 This folder contains a screenshot of the editor for each file contained in the recording in png format.
-
-## Installation
-
-- Using IDE built-in plugin system:
-
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "CognitIDE"</kbd> >
-  <kbd>Install Plugin</kbd>
-
-- Manually:
-
-  Download the [latest release](https://github.com/HPI-CH/CognitIDE/releases) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>

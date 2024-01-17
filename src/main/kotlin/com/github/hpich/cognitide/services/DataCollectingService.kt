@@ -6,7 +6,6 @@ import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.extensions.removeAllHighlighters
 import com.github.hpich.cognitide.extensions.xyScreenToLogical
 import com.github.hpich.cognitide.services.dto.*
-import com.github.hpich.cognitide.services.dto.emotiv.EmotivPerformanceData
 import com.github.hpich.cognitide.services.recording.InterruptService
 import com.github.hpich.cognitide.services.recording.UserInterrupt
 import com.github.hpich.cognitide.services.dto.LookElement
@@ -21,11 +20,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.refactoring.suggested.startOffset
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.awt.Point
 import java.io.File
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 import kotlin.math.roundToInt
@@ -77,8 +73,8 @@ class DataCollectingService(val project: Project) {
     fun stats() = "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount} " +
             "received: ${gazeSnapshotList.size} elements: ${lookElementGazeMap.size}"
 
-    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, shimmerData: ShimmerData?, emotivPerformanceData: EmotivPerformanceData?) {
-        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, shimmerData, emotivPerformanceData).let {
+    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, otherLSLData: FloatArray?) {
+        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, otherLSLData).let {
             gazeSnapshotList.add(it)
             thisLogger().debug("GazeSnapshot added: $it")
         }

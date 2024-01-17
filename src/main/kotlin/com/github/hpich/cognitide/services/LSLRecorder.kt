@@ -26,14 +26,13 @@ import javax.swing.SwingUtilities
 
 class LSLRecorder(
     private val project: Project
-) : StudyRecorder(project, "Recording Gaze") {
+) : StudyRecorder(project, "Recording Data") {
     private var inlet: StreamInlet? = null
-    private var shimmerInlet: StreamInlet? = null
-    private var emotivPerformanceInlet: StreamInlet? = null
+    //private var otherLSLDataInlet: StreamInlet? = null
+    private val otherLSLDataInlet: MutableList<StreamInlet?> = mutableListOf()
 
     private val buffer = FloatArray(6)
-    private val shimmerBuffer = FloatArray(17)
-    private val emotivPerformanceBuffer = FloatArray(7)
+    private val otherBuffer = FloatArray(17) // TODO how to supply the needed info? (before 17 for shimmer)
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
 
     override val delay = 0L
@@ -54,49 +53,32 @@ class LSLRecorder(
             ).correctMissingEye() ?: return
         } else data = null
 
-        var shimmerTimestampSeconds = shimmerInlet?.pull_sample(shimmerBuffer, 0.0)
-        val shimmerData : ShimmerData?
-        if (shimmerTimestampSeconds != null && shimmerTimestampSeconds != 0.0) {
-            shimmerTimestampSeconds += shimmerInlet!!.time_correction()
-            shimmerData = ShimmerData(
-                shimmerBuffer[0].toDouble(),
-                shimmerBuffer[1].toDouble(),
-                shimmerBuffer[2].toDouble(),
-                shimmerBuffer[3].toDouble(),
-                shimmerBuffer[4].toDouble(),
-                shimmerBuffer[5].toDouble(),
-                shimmerBuffer[6].toDouble(),
-                shimmerBuffer[7].toDouble(),
-                shimmerBuffer[8].toDouble(),
-                shimmerBuffer[9].toDouble(),
-                shimmerBuffer[10].toDouble(),
-                shimmerBuffer[11].toDouble(),
-                shimmerBuffer[12].toDouble(),
-                shimmerBuffer[13].toDouble(),
-                shimmerBuffer[14].toDouble(),
-                shimmerBuffer[15].toDouble(),
-                shimmerBuffer[16].toDouble()
-            )
-        } else shimmerData = null
 
-        var emotivPerformanceTimestampSeconds = emotivPerformanceInlet?.pull_sample(emotivPerformanceBuffer, 0.0)
-        val emotivPerformaceData : EmotivPerformanceData?
-        if (emotivPerformanceTimestampSeconds != null && emotivPerformanceTimestampSeconds != 0.0) {
-            emotivPerformanceTimestampSeconds += emotivPerformanceInlet!!.time_correction()
-            emotivPerformaceData = EmotivPerformanceData(
-                emotivPerformanceBuffer[0].toDouble(),
-                emotivPerformanceBuffer[1].toDouble(),
-                emotivPerformanceBuffer[2].toDouble(),
-                emotivPerformanceBuffer[3].toDouble(),
-                emotivPerformanceBuffer[4].toDouble(),
-                emotivPerformanceBuffer[5].toDouble(),
-                emotivPerformanceBuffer[6].toDouble()
-            )
-        } else emotivPerformaceData = null
+        val otherLSLData : MutableList<FloatArray?>? = mutableListOf()
+        val otherTimestampSeconds : MutableList<Double?> = mutableListOf()
+        otherLSLDataInlet?.forEach{
+            if (it != null) {
+                otherTimestampSeconds.add(it.pull_sample(otherBuffer, 0.0))
 
-
+                if (otherTimestampSeconds.last() != null && otherTimestampSeconds.last() != 0.0) {
+                    otherTimestampSeconds += it.time_correction()
+                    otherLSLData?.add(otherBuffer)
+                }
+            }
+        }
 
         invokeLater {
+            var otherLSLDataJoined = floatArrayOf()
+            if (otherLSLData?.isNotEmpty() == true) {
+                otherLSLDataJoined = otherLSLData.first()!!
+                otherLSLData.removeFirst()
+                otherLSLData.forEach {
+                    if (it != null) {
+                        otherLSLDataJoined += it
+                    }
+                }
+            }
+
             if (data != null) {
                 val editor = EditorFactory.getInstance().allEditors.firstOrNull {
                     val eyeLocal = Point(data.eyeCenter)
@@ -113,7 +95,10 @@ class LSLRecorder(
                 val element = psiFile.findElementAt(offset)
                 val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
 
+                
+
                 if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
+
 
                     dataCollectingService.addGazeSnapshot(
                         LookElement(
@@ -121,17 +106,22 @@ class LSLRecorder(
                             element.containingFile.virtualFile.path,
                             element.startOffset
                         ),
-                        data, shimmerData, emotivPerformaceData
+                        data, otherLSLDataJoined
+                    )
+                }
+                else {
+                    dataCollectingService.addGazeSnapshot(null,
+                        data, otherLSLDataJoined
                     )
                 }
                 dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
                 indicator.text = dataCollectingService.stats()
                 indicator.text2 = "eye: ${eyeCenterGlobal.x},${eyeCenterGlobal.y} " +
                         "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
-            } else if (shimmerData != null || emotivPerformaceData != null) {
+            } else if (otherLSLDataJoined.isNotEmpty()) {
                 dataCollectingService.addGazeSnapshot(
                     null,
-                    data, shimmerData, emotivPerformaceData
+                    data, otherLSLDataJoined
                 )
                 indicator.text = dataCollectingService.stats()
             }
@@ -140,7 +130,7 @@ class LSLRecorder(
 
     override fun setup(indicator: ProgressIndicator): Boolean {
         indicator.text = "Searching for LSL inlets"
-        var all_connected = 0
+        var tobii_connected = false
         var all = 0
 
 
@@ -155,32 +145,21 @@ class LSLRecorder(
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
                     inlet = inletCandidate
-                    all_connected += 1
+                    tobii_connected = true
 
                     inlet!!.open_stream()
                     indicator.text = "TobiiPro inlet open. Waiting for data"
                 }
-                else if (CognitIDESettingsState.instance.includeShimmer && info.name() == "SendData"
-                    && info.channel_format() == LSL.ChannelFormat.float32
-                    && info.channel_count() == 17
+                else if (info.channel_format() == LSL.ChannelFormat.float32
                     //&& info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
-                    shimmerInlet = inletCandidate
-                    all_connected += 1
+                    otherLSLDataInlet?.add(inletCandidate)
 
-                    shimmerInlet!!.open_stream()
-                    indicator.text = "Shimmer inlet open. Waiting for data"
+
+                    otherLSLDataInlet?.last()?.open_stream()
+                    indicator.text = "${otherLSLDataInlet.size + tobii_connected.toInt()} inlets open. Waiting for data"
                 }
-                else if (CognitIDESettingsState.instance.includeEmotiv && info.name() == "EmotivDataStream-Performance-Metrics"){
-                    emotivPerformanceInlet = inletCandidate
-
-                    indicator.text = "Inlet Open. Waiting for data"
-                    all_connected += 1
-
-                    emotivPerformanceInlet!!.open_stream()
-                    indicator.text = "EmotivPerformance inlet open. Waiting for data"
-                }
-                if (all_connected == (CognitIDESettingsState.instance.includeShimmer.toInt() + CognitIDESettingsState.instance.includeEmotiv.toInt() + CognitIDESettingsState.instance.includeTobii.toInt())) {
+                if (otherLSLDataInlet.size + tobii_connected.toInt() == (CognitIDESettingsState.instance.includeShimmer.toInt() + CognitIDESettingsState.instance.includeEmotiv.toInt() + CognitIDESettingsState.instance.includeTobii.toInt())) {
                     return true
                 }
             }
@@ -222,11 +201,10 @@ class LSLRecorder(
         if (CognitIDESettingsState.instance.includeTobii) {
             inlet!!.close_stream()
         }
-        if (CognitIDESettingsState.instance.includeShimmer) {
-            shimmerInlet!!.close_stream()
-        }
-        if (CognitIDESettingsState.instance.includeEmotiv) {
-            emotivPerformanceInlet!!.close_stream()
+        otherLSLDataInlet?.forEach{
+            if (it != null) {
+                it.close_stream()
+            }
         }
     }
 }

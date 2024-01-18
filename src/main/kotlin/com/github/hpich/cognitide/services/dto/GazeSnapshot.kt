@@ -32,8 +32,7 @@ object GazeSnapshotSerializer : KSerializer<GazeSnapshot> {
             uniqueRepresentation = "${value.epochMillis}|;," +
                 "${json.encodeToString(LookElement.serializer(), value.lookElement ?: LookElement("null", "null", 0))}|;," +
                 "${json.encodeToString(GazeData.serializer(), value.rawGazeData ?: GazeData(-999,-999,-999,-999,-999.0,-999.0))}|;," +
-                "${json.encodeToString(FloatArraySerializer(), value.otherLSLData ?: FloatArray(12) { 1f })}|;," +
-                "${json.encodeToString(FloatArraySerializer(), value.otherLSLData ?: FloatArray(12) { 1f })}"
+                    json.encodeToString(FloatArraySerializer(), value.otherLSLData ?: FloatArray(12) { 1f })
         }
         encoder.encodeString(uniqueRepresentation)
     }

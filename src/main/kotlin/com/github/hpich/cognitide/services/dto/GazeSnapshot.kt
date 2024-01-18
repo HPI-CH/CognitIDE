@@ -19,7 +19,7 @@ data class GazeSnapshot(
     val epochMillis: Long,
     val lookElement: LookElement?,
     val rawGazeData: GazeData?,
-    val otherLSLData: FloatArray?
+    var otherLSLData: FloatArray?
 )
 
 @Serializer(forClass = GazeSnapshot::class)

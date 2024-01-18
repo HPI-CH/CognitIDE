@@ -75,7 +75,13 @@ class DataCollectingService(val project: Project) {
 
     fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, otherLSLData: FloatArray?) {
         GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, otherLSLData).let {
-            gazeSnapshotList.add(it)
+            if (gazeData == null && gazeSnapshotList.isNotEmpty()){
+                gazeSnapshotList.last().otherLSLData = it.otherLSLData?.let { newLSLData ->
+                    gazeSnapshotList.last().otherLSLData?.plus(
+                        newLSLData
+                    )
+                }
+            } else gazeSnapshotList.add(it)
             thisLogger().debug("GazeSnapshot added: $it")
         }
     }

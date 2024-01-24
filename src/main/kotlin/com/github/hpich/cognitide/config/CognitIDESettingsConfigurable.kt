@@ -40,9 +40,22 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                 }
             }.enabledIf(interruptCheckBox.selected)
         }
+        group("Device Streams"){
+            // Add a panel for each device spec in the model
+            model.devices.forEachIndexed { index, deviceSpec ->
+                deviceSpecPanel(this, deviceSpec, index)
+            }
+            row() {
+                // Button to add a new device spec
+                button("Add Stream") {
+                    model.devices.add(DeviceSpec("", "", ""))
+                    // Refresh the settings panel to show the new spec
+                }
+            }
+        }
         group("External Applications") {
             group("TobiiPro") {
-                row("Use devices:"){
+                row("Use devices:") {
                     checkBox("Yes").bindSelected(model::includeTobii)
                         .comment("Should data from devices of this type be recorded?")
                 }
@@ -76,38 +89,24 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                     }
                 }
             }
-
-            group("Shimmer") {
-                row("Use devices:"){
-                    checkBox("Yes").bindSelected(model::includeShimmer)
-                        .comment("Should data from devices of this type be recorded?")
-                }
-                row("Connector path:") {
-                    textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
-                        .bindText(model::shimmerConnectorExecutable)
-                        .comment(
-                            "Please <a href='https://labstreaminglayer.readthedocs.io/info/supported_devices.html'>build the Shimmer Connector</a>. " + //TODO
-                                    "It is used to create an LSL stream for Shimmer devices. " +
-                                    "It will be used by the plugin to get the required data.\n" +
-                                    "Provide the application path <i>optionally</i> so the application can be opened when needed."
-                        )
-                }
-            }
-
-            group("Emotiv") {
-                row("Use devices:"){
-                    checkBox("Yes").bindSelected(model::includeEmotiv)
-                        .comment("Should data from devices of this type be recorded?")
-                }
-                row("Connector path:") {
-                    textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
-                        .bindText(model::emotivConnectorExecutable)
-                        .comment(
-                            "Please <a href='https://www.emotiv.com/emotivpro/'>install EmotivPro</a>. " + //TODO
-                                    "It is used to create an LSL stream for Emotiv devices. " +
-                                    "It will be used by the plugin to get the required data.\n" +
-                                    "Provide the application path <i>optionally</i> so the application can be opened when needed."
-                        )
+        }
+    }
+    private fun deviceSpecPanel(panel: Panel, deviceSpec: DeviceSpec, index: Int) {
+        with(panel) {
+            row("Stream Name:") { textField().bindText(deviceSpec::name) }
+            row("Number of channels:") { textField().bindText(deviceSpec::channelCount) }
+            row("Connector application path:") {textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                    .bindText(deviceSpec::connectorPath)
+                    .comment(
+                            "The connector application is used to create an LSL stream for the given device. " +
+                            "It will be used by the plugin to get the required data.\n" +
+                            "Provide the application path <i>optionally</i> so the application can be opened when needed."
+                    ) }
+            // Button to remove this device spec
+            row() {
+                button("Remove") {
+                    model.devices.removeAt(index)
+                    // Refresh the settings panel to reflect the removal
                 }
             }
         }

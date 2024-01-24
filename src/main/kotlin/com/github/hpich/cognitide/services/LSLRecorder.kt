@@ -28,12 +28,13 @@ class LSLRecorder(
     private val project: Project
 ) : StudyRecorder(project, "Recording Data") {
     private var inlet: StreamInlet? = null
-    //private var otherLSLDataInlet: StreamInlet? = null
-    private val otherLSLDataInlet: MutableList<StreamInlet?> = mutableListOf()
+    private val otherLSLDataInlet = Array<StreamInlet?>(CognitIDESettingsState.instance.devices.size) { null }
 
     private val buffer = FloatArray(6)
-    private val otherBuffer = FloatArray(17) // TODO how to supply the needed info? (before 17 for shimmer)
+    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i -> FloatArray(CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()) } // TODO array; ensure no empty entries
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
+
+    private var openStreamsCount = 0
 
     override val delay = 0L
 
@@ -56,14 +57,12 @@ class LSLRecorder(
 
         val otherLSLData : MutableList<FloatArray?>? = mutableListOf()
         val otherTimestampSeconds : MutableList<Double?> = mutableListOf()
-        otherLSLDataInlet?.forEach{
-            if (it != null) {
-                otherTimestampSeconds.add(it.pull_sample(otherBuffer, 0.0))
+        otherLSLDataInlet.forEachIndexed { index, it -> // ordering ensured through name of device
+            otherTimestampSeconds.add(it?.pull_sample(otherBuffers.get(index), 0.0))
 
-                if (otherTimestampSeconds.last() != null && otherTimestampSeconds.last() != 0.0) {
-                    otherTimestampSeconds += it.time_correction()
-                    otherLSLData?.add(otherBuffer)
-                }
+            if (otherTimestampSeconds.last() != null && otherTimestampSeconds.last() != 0.0) {
+                otherTimestampSeconds += it?.time_correction()
+                otherLSLData?.add(otherBuffers.get(index))
             }
         }
 
@@ -139,6 +138,7 @@ class LSLRecorder(
                 all += 1
                 val inletCandidate = StreamInlet(it)
                 val info = inletCandidate.info(1.0)
+
                 if (CognitIDESettingsState.instance.includeTobii && info.type() == "Gaze"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == buffer.size
@@ -150,16 +150,18 @@ class LSLRecorder(
                     inlet!!.open_stream()
                     indicator.text = "TobiiPro inlet open. Waiting for data"
                 }
+
                 else if (info.channel_format() == LSL.ChannelFormat.float32
-                    //&& info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
+                    && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
                 ) {
-                    otherLSLDataInlet?.add(inletCandidate)
+                    val idx = CognitIDESettingsState.instance.devices.map { it.name }.indexOf(info.name())
+                    otherLSLDataInlet[idx] = inletCandidate
 
-
-                    otherLSLDataInlet?.last()?.open_stream()
-                    indicator.text = "${otherLSLDataInlet.size + tobii_connected.toInt()} inlets open. Waiting for data"
+                    otherLSLDataInlet[idx]?.open_stream()
+                    openStreamsCount++
+                    indicator.text = "${openStreamsCount + tobii_connected.toInt()} inlets open. Waiting for data"
                 }
-                if (otherLSLDataInlet.size + tobii_connected.toInt() == (CognitIDESettingsState.instance.includeShimmer.toInt() + CognitIDESettingsState.instance.includeEmotiv.toInt() + CognitIDESettingsState.instance.includeTobii.toInt())) {
+                if (openStreamsCount + tobii_connected.toInt() == (CognitIDESettingsState.instance.devices.size + CognitIDESettingsState.instance.includeTobii.toInt())) {
                     return true
                 }
             }
@@ -171,26 +173,18 @@ class LSLRecorder(
         invokeLater {
             if (CognitIDESettingsState.instance.includeTobii) {
                 if (MessageDialogBuilder
-                        .okCancel("Is TobiiPro Connector running?", "Open TobiiPro Connector?")
+                        .okCancel("Is TobiiPro connector application running?", "Open TobiiPro Connector?")
                         .ask(project)
                 ) {
                     openTobiiProConnector(project)
                 }
             }
-            if (CognitIDESettingsState.instance.includeShimmer) {
+            CognitIDESettingsState.instance.devices.forEach {
                 if (MessageDialogBuilder
-                        .okCancel("Is Shimmer Connector running?", "Open Shimmer Connector?")
-                        .ask(project)
-                ) {
-                    openShimmerConnector(project)
-                }
-            }
-            if (CognitIDESettingsState.instance.includeEmotiv) {
-                if (MessageDialogBuilder
-                        .okCancel("Is EmotivPro running?", "Open EmotivPro?")
-                        .ask(project)
-                ) {
-                    openEmotivConnector(project)
+                            .okCancel("Is " + it.name + " connector application running?", "Open " + it.name + " Connector?")
+                            .ask(project)
+                    ) {
+                        openConnector(project, it)
                 }
             }
         }
@@ -201,10 +195,8 @@ class LSLRecorder(
         if (CognitIDESettingsState.instance.includeTobii) {
             inlet!!.close_stream()
         }
-        otherLSLDataInlet?.forEach{
-            if (it != null) {
-                it.close_stream()
-            }
+        otherLSLDataInlet.forEach{
+            it?.close_stream()
         }
     }
 }

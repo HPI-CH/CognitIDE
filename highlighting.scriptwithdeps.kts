@@ -8,6 +8,7 @@ import java.util.*
 import kotlinx.serialization.Serializable
 import java.awt.Color
 import java.awt.Point
+import java.awt.geom.Arc2D
 import java.lang.Math.pow
 import kotlin.math.pow
 
@@ -82,8 +83,7 @@ data class GazeSnapshot(
     val epochMillis: Long,
     val lookElement: LookElement?,
     val rawGazeData: GazeData?,
-    val rawShimmerData: ShimmerData?,
-    val emotivPerformanceData: EmotivPerformanceData?
+    val otherLSLData: FloatArray
 )
 
 
@@ -125,41 +125,6 @@ data class GazeData(
     }
 }
 
-
-@Serializable
-data class ShimmerData(
-    val LOW_NOISE_ACCELEROMETER_X: Double,
-    val LOW_NOISE_ACCELEROMETER_Y: Double,
-    val LOW_NOISE_ACCELEROMETER_Z: Double,
-    val WIDE_RANGE_ACCELEROMETER_X: Double,
-    val WIDE_RANGE_ACCELEROMETER_Y: Double,
-    val WIDE_RANGE_ACCELEROMETER_Z: Double,
-    val MAGNETOMETER_X: Double,
-    val MAGNETOMETER_Y: Double,
-    val MAGNETOMETER_Z: Double,
-    val GYROSCOPE_X: Double,
-    val GYROSCOPE_Y: Double,
-    val GYROSCOPE_Z: Double,
-    val GSR: Double,
-    val GSR_CONDUCTANCE: Double,
-    val INTERNAL_ADC_A13: Double,
-    val PRESSURE: Double,
-    val TEMPERATURE: Double
-)
-
-
-@Serializable
-data class EmotivPerformanceData(
-    val value: Double,
-    val attention: Double,
-    val engagement: Double,
-    val excitement: Double,
-    val interest: Double,
-    val relaxation: Double,
-    val stress: Double
-)
-
-
 fun lookElementToString(value: LookElement): String {
     val uniqueRepresentation = "${value.text},;|${value.filePath},;|${value.startOffset}\""
     return uniqueRepresentation
@@ -180,8 +145,7 @@ fun stringToGazeSnapshot(gazeSnapshotString: String): GazeSnapshot {
         epochMillis = parts[0].replace("\\", "").trim('"').toLong(),
         lookElement = stringToLookElement(parts[1]),
         rawGazeData = stringToRawGazeData(parts[2]),
-        rawShimmerData = stringToShimmerData(parts[3]),
-        emotivPerformanceData = stringToEmotivPerformanceData(parts[4])
+        otherLSLData = stringToOtherLSLData(parts[3])
     )
 }
 
@@ -197,41 +161,12 @@ fun stringToRawGazeData(gazeDataString: String): GazeData? {
     )
 }
 
-fun stringToShimmerData(shimmerString: String): ShimmerData? {
-    val parts = shimmerString.split(",;|")
-    return ShimmerData(
-        LOW_NOISE_ACCELEROMETER_X = parts[0].replace("\\", "").trim('"').toDouble(),
-        LOW_NOISE_ACCELEROMETER_Y = parts[1].replace("\\", "").trim('"').toDouble(),
-        LOW_NOISE_ACCELEROMETER_Z = parts[2].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_X = parts[3].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_Y = parts[4].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_Z = parts[5].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_X = parts[6].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_Y = parts[7].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_Z = parts[8].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_X = parts[9].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_Y = parts[10].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_Z = parts[11].replace("\\", "").trim('"').toDouble(),
-        GSR = parts[12].replace("\\", "").trim('"').toDouble(),
-        GSR_CONDUCTANCE = parts[13].replace("\\", "").trim('"').toDouble(),
-        INTERNAL_ADC_A13 = parts[14].replace("\\", "").trim('"').toDouble(),
-        PRESSURE = parts[15].replace("\\", "").trim('"').toDouble(),
-        TEMPERATURE = parts[16].replace("\\", "").trim('"').toDouble()
-    )
-}
+fun stringToOtherLSLData(dataString: String): FloatArray {
+    val json = Json {
+        allowSpecialFloatingPointValues = true
+    }
 
-fun stringToEmotivPerformanceData(emotivPerformanceDataString: String): Highlighting_scriptwithdeps.EmotivPerformanceData? {
-    val parts = emotivPerformanceDataString.split(",;|")
-    return EmotivPerformanceData(
-        value = parts[0].replace("\\", "").trim('"').toDouble(),
-        attention = parts[1].replace("\\", "").trim('"').toDouble(),
-        engagement = parts[2].replace("\\", "").trim('"').toDouble(),
-        excitement = parts[3].replace("\\", "").trim('"').toDouble(),
-        interest = parts[4].replace("\\", "").trim('"').toDouble(),
-        relaxation = parts[5].replace("\\", "").trim('"').toDouble(),
-        stress = parts[6].replace("\\", "").trim('"').toDouble()
-    )
+    return json.decodeFromString<FloatArray>(dataString)
 }
-
 
 main()

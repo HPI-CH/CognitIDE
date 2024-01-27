@@ -21,13 +21,19 @@ fun changeWeights(elements: Map<LookElement, Double>, measurements: List<GazeSna
     // in the toy example below you can see how the highlighting value is altered by decreasing it the longer the
     // symbol string is (startOffset is dependent on the editor)
 
-    val elementsAltered = elements.toMutableMap()
+    var elementsAltered = elements.mapValues { 0.0 }.toMutableMap()
+    val elementsCounter = elements.mapValues { 0.0 }.toMutableMap()
     elements.forEach { element -> measurements.forEach { measurement ->
-        if (element.key.startOffset == measurement.lookElement?.startOffset)
-            elementsAltered[element.key] = element.value / (pow(measurement.lookElement.text.length.toDouble(), 5.0))
+        if (element.key.startOffset == measurement.lookElement?.startOffset) {
+                elementsAltered[element.key] = elementsAltered[element.key]!! + measurement.otherLSLData
+                    .filterIndexed { index, _ -> index % 2 != 0 }
+                    .mapNotNull { it?.getOrNull(2)?.takeIf { it != -999f } }
+                    .let { if (it.isEmpty()) 0.0 else it.average().also { elementsCounter[element.key] = elementsCounter[element.key]!! + 1.0 } }
+        }
     } }
+    elementsAltered = elementsAltered.mapValues { it.value / elementsCounter[it.key]!! } as MutableMap<LookElement, Double>
 
-    return elements // elementsAltered
+    return elementsAltered
 }
 
 
@@ -66,6 +72,9 @@ fun main() {
 
 
 // Utilities
+@Serializable
+data class FloatArrayContainer(val data: List<FloatArray?>)
+
 
 @Serializable
 data class LookElement(
@@ -83,7 +92,7 @@ data class GazeSnapshot(
     val epochMillis: Long,
     val lookElement: LookElement?,
     val rawGazeData: GazeData?,
-    val otherLSLData: FloatArray
+    val otherLSLData: List<FloatArray?>
 )
 
 
@@ -161,12 +170,15 @@ fun stringToRawGazeData(gazeDataString: String): GazeData? {
     )
 }
 
-fun stringToOtherLSLData(dataString: String): FloatArray {
-    val json = Json {
-        allowSpecialFloatingPointValues = true
+fun stringToOtherLSLData(dataString: String): List<FloatArray?> {
+    val floatListsString = dataString.split("\":")[1].trim('}', '"').split("],[")
+    if ("[]" in floatListsString) return emptyList()
+
+    val transformedList = floatListsString.map {
+        it.trim('[', ']').split(",").map { numStr -> numStr.trim().toFloat() }.toFloatArray()
     }
 
-    return json.decodeFromString<FloatArray>(dataString)
+    return transformedList
 }
 
 main()

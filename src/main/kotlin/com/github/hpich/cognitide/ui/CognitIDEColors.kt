@@ -11,45 +11,40 @@ import java.awt.Color
 
 object CognitIDEColors {
 
-    private val percentiles = arrayOf(
-        1.0,
-        0.4,
-        0.15,
-        0.08,
-        0.05,
-        0.02,
-    )
-
     private val baseColor = JBColor(0xFF4000, 0xFF4000)
-    private val colors = Array(percentiles.size + 1) { baseColor }
+    private var colors: Array<JBColor>? = null
 
-    init {
-        val alphaStep = 0xFF / (percentiles.size + 1)
-        percentiles.forEachIndexed { index, _ ->
-            val rgb = baseColor.rgb + (alphaStep * (index + 1)).shl(24)
-            colors[index] = JBColor(rgb, rgb)
-        }
-    }
-
-    val LOOKED_ATTRIBUTES = colors.map {
-        TextAttributesKey.createTextAttributesKey(
-            "LOOKED_${it.rgb}",
-            backgroundAttributes(it)
-        )
-    }
+    var LOOKED_ATTRIBUTES: List<TextAttributesKey> = emptyList()
 
     fun assignColors(elements: Map<LookElement, Double>): Map<Int, List<LookElement>> {
-        val assignedColors = colors.indices.associateWith { mutableListOf<LookElement>() }
-        val sortedElements = elements.entries.sortedByDescending { it.value }
-        val size = elements.size
-        var percentileIndex = percentiles.lastIndex
-        sortedElements.forEachIndexed { index, (psiElement, _) ->
-            while (percentileIndex > 0 && index + 1 > percentiles[percentileIndex] * size) {
-                percentileIndex--
+        colors = Array(elements.size) { baseColor }
+        val assignedColors = colors?.indices?.associateWith { mutableListOf<LookElement>() }
+        val normalizedElements = elements
+            .filterNot { it.value.isNaN() }
+            .let { filteredElements ->
+                val min = filteredElements.minOf { it.value }
+                val max = filteredElements.maxOf { it.value }
+
+                filteredElements.mapValues { (key, value) ->
+                    (value - min) / (max - min)
+                }
             }
-            assignedColors[percentileIndex]?.add(psiElement)
+        val minAlpha = 0.1
+        val transparencyElements = normalizedElements.mapValues {(key, value) -> ((value * (1 - minAlpha)) + minAlpha) * 0xFF}
+
+        transparencyElements.entries.forEachIndexed { index, entry -> colors?.set(index, JBColor(((entry.value.toInt() shl 24) or (baseColor.rgb and 0x00FFFFFF)),((entry.value.toInt() shl 24) or (baseColor.rgb and 0x00FFFFFF)))) }
+
+        transparencyElements.entries.forEachIndexed { index, (psiElement, _) ->
+            assignedColors?.get(index)?.add(psiElement)
         }
-        return assignedColors
+        LOOKED_ATTRIBUTES = colors!!.map {
+            TextAttributesKey.createTextAttributesKey(
+                "LOOKED_${it.rgb}",
+                backgroundAttributes(it)
+            )
+        }
+
+        return assignedColors!!
     }
 
     private fun backgroundAttributes(color: JBColor) =

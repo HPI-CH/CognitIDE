@@ -4,8 +4,6 @@ import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.extensions.xyScreenToLogical
 import com.github.hpich.cognitide.services.dto.GazeData
 import com.github.hpich.cognitide.services.dto.LookElement
-import com.github.hpich.cognitide.services.dto.ShimmerData
-import com.github.hpich.cognitide.services.dto.emotiv.EmotivPerformanceData
 import com.github.hpich.cognitide.utils.*
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.thisLogger
@@ -29,9 +27,10 @@ class LSLRecorder(
 ) : StudyRecorder(project, "Recording Data") {
     private var inlet: StreamInlet? = null
     private val otherLSLDataInlet = Array<StreamInlet?>(CognitIDESettingsState.instance.devices.size) { null }
+    private var otherLSLData = Array<FloatArray>(CognitIDESettingsState.instance.devices.size) { floatArrayOf(-999f) }
 
     private val buffer = FloatArray(6)
-    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i -> FloatArray(CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()) } // TODO array; ensure no empty entries
+    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i -> FloatArray(CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()) {-999f} } // TODO array; ensure no empty entries
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
 
     private var openStreamsCount = 0
@@ -55,28 +54,22 @@ class LSLRecorder(
         } else data = null
 
 
-        val otherLSLData : MutableList<FloatArray?>? = mutableListOf()
+
         val otherTimestampSeconds : MutableList<Double?> = mutableListOf()
         otherLSLDataInlet.forEachIndexed { index, it -> // ordering ensured through name of device
             otherTimestampSeconds.add(it?.pull_sample(otherBuffers.get(index), 0.0))
 
             if (otherTimestampSeconds.last() != null && otherTimestampSeconds.last() != 0.0) {
                 otherTimestampSeconds += it?.time_correction()
-                otherLSLData?.add(otherBuffers.get(index))
-            }
+
+                otherLSLData = otherBuffers
+            } else otherLSLData = emptyArray()
+
         }
 
+
+
         invokeLater {
-            var otherLSLDataJoined = floatArrayOf()
-            if (otherLSLData?.isNotEmpty() == true) {
-                otherLSLDataJoined = otherLSLData.first()!!
-                otherLSLData.removeFirst()
-                otherLSLData.forEach {
-                    if (it != null) {
-                        otherLSLDataJoined += it
-                    }
-                }
-            }
 
             if (data != null) {
                 val editor = EditorFactory.getInstance().allEditors.firstOrNull {
@@ -105,22 +98,22 @@ class LSLRecorder(
                             element.containingFile.virtualFile.path,
                             element.startOffset
                         ),
-                        data, otherLSLDataJoined
+                        data, otherLSLData
                     )
                 }
                 else {
                     dataCollectingService.addGazeSnapshot(null,
-                        data, otherLSLDataJoined
+                        data, otherLSLData
                     )
                 }
                 dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
                 indicator.text = dataCollectingService.stats()
                 indicator.text2 = "eye: ${eyeCenterGlobal.x},${eyeCenterGlobal.y} " +
                         "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
-            } else if (otherLSLDataJoined.isNotEmpty()) {
+            } else if (otherLSLData.isNotEmpty()) {
                 dataCollectingService.addGazeSnapshot(
                     null,
-                    data, otherLSLDataJoined
+                    null, otherLSLData
                 )
                 indicator.text = dataCollectingService.stats()
             }
@@ -148,12 +141,13 @@ class LSLRecorder(
                     tobii_connected = true
 
                     inlet!!.open_stream()
-                    indicator.text = "TobiiPro inlet open. Waiting for data"
+                    indicator.text = "${openStreamsCount + tobii_connected.toInt()} inlets open. Waiting for data"
                 }
 
                 else if (info.channel_format() == LSL.ChannelFormat.float32
                     && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
                 ) {
+                    //TODO could be useful for the used to have meta info saved in a file
                     val idx = CognitIDESettingsState.instance.devices.map { it.name }.indexOf(info.name())
                     otherLSLDataInlet[idx] = inletCandidate
 

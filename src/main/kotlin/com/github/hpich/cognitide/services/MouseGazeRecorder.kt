@@ -49,8 +49,7 @@ class MouseGazeRecorder(project: Project) : StudyRecorder(project, "Recording Mo
                         element.startOffset
                     ),
                     fakeData,
-                    null
-
+                    arrayOf(FloatArray(-999))
                 )
             }
             dataCollectingService.incrementLookElementsAround(psiFile, editor, mousePoint)

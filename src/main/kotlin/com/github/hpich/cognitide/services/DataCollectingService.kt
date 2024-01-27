@@ -73,17 +73,14 @@ class DataCollectingService(val project: Project) {
     fun stats() = "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount} " +
             "received: ${gazeSnapshotList.size} elements: ${lookElementGazeMap.size}"
 
-    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, otherLSLData: FloatArray?) {
-        GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, otherLSLData).let {
-            if (gazeData == null && gazeSnapshotList.isNotEmpty()){
-                gazeSnapshotList.last().otherLSLData = it.otherLSLData?.let { newLSLData ->
-                    gazeSnapshotList.last().otherLSLData?.plus(
-                        newLSLData
-                    )
-                }
-            } else gazeSnapshotList.add(it)
-            thisLogger().debug("GazeSnapshot added: $it")
-        }
+    fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, otherLSLData: Array<FloatArray>) {
+
+            GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, otherLSLData.map { it.clone() }.toTypedArray().toMutableList()).let {
+                if (gazeData == null && gazeSnapshotList.isNotEmpty()) {
+                    gazeSnapshotList.last().otherLSLData.addAll(it.otherLSLData) //TODO index
+                } else gazeSnapshotList.add(it)
+                thisLogger().debug("GazeSnapshot added: $it")
+            }
     }
 
     private fun incrementLookElement(lookElement: LookElement, increment: Double) {

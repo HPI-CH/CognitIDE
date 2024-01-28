@@ -100,7 +100,7 @@ fun main() {
         var elements = elementsStrings.mapKeys { stringToLookElement(it.key) }.toMap()
         val measurements = measurementsString.map { stringToGazeSnapshot(it) }.toList()
 
-        elements = changeWeights(elements, measurements)
+        elements = adjustLookElementWeights(elements, measurements)
 
         val file = File(saveFolder, "lookElementGazeMapAlteredByUser.json")
         file.createNewFile()

@@ -13,27 +13,71 @@ import java.lang.Math.pow
 import kotlin.math.pow
 
 
-fun changeWeights(elements: Map<LookElement, Double>, measurements: List<GazeSnapshot>): Map<LookElement, Double> {
+/**
+ * Adjusts the weights of look elements based on sensor measurements.
+ *
+ * This function modifies the highlighting values of each look element based on sensor measurements provided in the gaze
+ * snapshots. The function can be adjusted by the user depending on what data they would like the highlighting to depend
+ * on. In the example below, the highlighting has been set so that it depends on acceleration measurements.
+ *
+ * @param elements A map of LookElement to default weights (how long a position has been viewed).
+ * @param measurements A list of GazeSnapshot containing sensor measurements.
+ * @return A map of LookElement with updated weights.
+ */
+fun adjustLookElementWeights(
+    elements: Map<LookElement, Double>, measurements: List<GazeSnapshot>
+): Map<LookElement, Double> {
 
-    // add your code for influencing the highlighting here
-    // you can use the physiological measurements in "measurements" for that
-    //
-    // in the toy example below you can see how the highlighting value is altered by decreasing it the longer the
-    // symbol string is (startOffset is dependent on the editor)
+    val RETURN_DEFAULT_WEIGHTS = true
 
-    var elementsAltered = elements.mapValues { 0.0 }.toMutableMap()
-    val elementsCounter = elements.mapValues { 0.0 }.toMutableMap()
-    elements.forEach { element -> measurements.forEach { measurement ->
-        if (element.key.startOffset == measurement.lookElement?.startOffset) {
-                elementsAltered[element.key] = elementsAltered[element.key]!! + measurement.otherLSLData
-                    .filterIndexed { index, _ -> index % 2 != 0 }
-                    .mapNotNull { it?.getOrNull(2)?.takeIf { it != -999f } }
-                    .let { if (it.isEmpty()) 0.0 else it.average().also { elementsCounter[element.key] = elementsCounter[element.key]!! + 1.0 } }
+    val SHIMMER_ID = 2
+    val NUMBER_OF_STREAMS = 2
+    val Z_AXIS_ACCELERATION_ID = 2
+
+    if (RETURN_DEFAULT_WEIGHTS) return elements
+
+    val alteredElements = mutableMapOf<LookElement, Double>().apply { elements.forEach { put(it.key, 0.0) } }
+    val elementCounters = mutableMapOf<LookElement, Double>().apply { elements.forEach { put(it.key, 0.0) } }
+
+    elements.forEach { (element, _) ->
+        measurements.forEach { measurement ->
+            if (element.startOffset == measurement.lookElement?.startOffset) {
+                val averageSensorValues = calculateSensorValuesAverage(
+                    measurement,
+                    streamID = SHIMMER_ID,
+                    numberOfStreams = NUMBER_OF_STREAMS,
+                    channelID = Z_AXIS_ACCELERATION_ID
+                )
+                if (averageSensorValues != null) {
+                    alteredElements[element] = alteredElements[element]!! + averageSensorValues
+                    elementCounters[element] = elementCounters[element]!! + 1.0
+                }
+            }
         }
-    } }
-    elementsAltered = elementsAltered.mapValues { it.value / elementsCounter[it.key]!! } as MutableMap<LookElement, Double>
+    }
 
-    return elementsAltered
+    return alteredElements.mapValues {
+        if (elementCounters[it.key]!! > 0) it.value / elementCounters[it.key]!! else it.value
+    }
+}
+
+/**
+ * Calculates the average for a stream channel from a GazeSnapshot.
+ *
+ * @param measurement The GazeSnapshot containing sensor data.
+ * @param streamID The LSL stream of interest.
+ * @param numberOfStreams The overall number of recorded LSL streams.
+ * @param channelID The stream channel of interest.
+ * @return The average sensor value or null if no valid data is available.
+ */
+fun calculateSensorValuesAverage(
+    measurement: GazeSnapshot, streamID: Int, numberOfStreams: Int, channelID: Int
+): Double? {
+    val sensorValues =
+        measurement.otherLSLData.filterIndexed { index, _ -> ((index + 1) - streamID) % numberOfStreams == 0 }
+            .mapNotNull { it?.getOrNull(channelID) }
+
+    return if (sensorValues.isNotEmpty()) sensorValues.average() else null
 }
 
 
@@ -44,13 +88,11 @@ fun main() {
     val saveFolderPath: String = args.toString()
     val saveFolder = File(saveFolderPath)
     try {
-        val elementsStrings =
-            json.decodeFromString<Map<String, Double>>(
-                File(
-                    saveFolder,
-                    "lookElementGazeMap.json"
-                ).readText(Charsets.UTF_8)
-            )
+        val elementsStrings = json.decodeFromString<Map<String, Double>>(
+            File(
+                saveFolder, "lookElementGazeMap.json"
+            ).readText(Charsets.UTF_8)
+        )
 
         val measurementsString =
             json.decodeFromString<List<String>>(File(saveFolder, "measurements.json").readText(Charsets.UTF_8))
@@ -78,9 +120,7 @@ data class FloatArrayContainer(val data: List<FloatArray?>)
 
 @Serializable
 data class LookElement(
-    val text: String,
-    val filePath: String,
-    val startOffset: Int
+    val text: String, val filePath: String, val startOffset: Int
 ) {
     val endOffset: Int
         get() = startOffset + text.length
@@ -106,12 +146,7 @@ data class GazeData(
     val rightPupil: Double
 ) {
     constructor(leftEye: Point, rightEye: Point, leftPupil: Double, rightPupil: Double) : this(
-        leftEye.x,
-        leftEye.y,
-        rightEye.x,
-        rightEye.y,
-        leftPupil,
-        rightPupil
+        leftEye.x, leftEye.y, rightEye.x, rightEye.y, leftPupil, rightPupil
     )
 
     val eyeCenter: Point
@@ -142,9 +177,7 @@ fun lookElementToString(value: LookElement): String {
 fun stringToLookElement(lookElementString: String): LookElement {
     val parts = lookElementString.split(",;|")
     return LookElement(
-        text = parts[0],
-        filePath = parts[1],
-        startOffset = parts[2].replace("\\", "").trim('"').toInt()
+        text = parts[0], filePath = parts[1], startOffset = parts[2].replace("\\", "").trim('"').toInt()
     )
 }
 

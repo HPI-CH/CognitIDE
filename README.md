@@ -5,15 +5,8 @@ CognitIDE integrates body sensor hardware to record physiological data while rev
 
 ## Installation
 
-- Manually (most recent releases):
-
   Download the [latest release](https://github.com/HPI-CH/CognitIDE/releases) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-- Using IDE built-in plugin system:
-
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "CognitIDE"</kbd> >
-  <kbd>Install Plugin</kbd>
 
 ## Highlighting script
 For an example for the highlighting script you could take a look at and/or download highlighting.scriptwithdeps.kts.
@@ -115,4 +108,38 @@ If enabled, contains an array of each interaction when the user was interrupted 
 ```
 
 ### /files
-This folder contains a screenshot of the editor for each file contained in the recording in png format.
+This folder contains a screenshot of the editor for each file contained in the recording in PNG format.
+
+
+## DataCollectingService
+
+Defined in `plugin.xml` the `DataCollecting` service is a singleton instance of the central data holder.
+Notably, it contains three data fields:
+
+| Store                | Type                                                                                                                                                                                                              |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `gazeSnapshotList`   | A time-series list of snapshots taken during a recording. A gaze snapshot includes a timestamp of the arrival time and optionally data from connected devices. Also a `LookElement` might be saved if applicable. |
+| `lookElementGazeMap` | Map of code elements (`LookElement`, identified by their encapsulating file and offset inside is this file) to their highlight value.                                                                             |
+| `userInterruptList`  | A list of user-entered input when interrupted by the plugin during a recording. Configurable inside the the Settings configurable.                                                                                |
+### StudyRecorder
+
+Inside is also the `currentRecorder`. This is an instance of the current recorder used to record data from external devices. In its simplest form (like `MouseGazeRecorder`) a *recorder* records from a single device and writes the data to its parent *data collecting service*. It is however structured to also record from multiple devices simultaneously. A Subclass has to implement three methods:
+
+| Method    | Behaviour                                                                                                                                                                                                         |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `setup`   | Before starting a recording this function is called to optionally set up required data structures or establish a connection to external devices. Should return `true` when successful.                             |
+| `dispose` | When the recording is stopped this method is called to cleanup and close remaining connections                                                                                                                    |
+| `loop`    | Called periodically (with a configurable delay of `delay` milliseconds from the completion of the last loop. Here data should be retrieved from incoming buffers and stored in the parent `dataCollectingService` |
+
+
+## Recording new device types
+
+For a device to be supported, it has to have its
+own [StudyRecorder](https://github.com/HPI-CH/CognitIDE/blob/main/src/main/kotlin/com/github/hpich/cognitide/services/StudyRecorder.kt)
+subclass.
+A good starting point to look into is the `MouseGazeRecorder`.
+
+### Generic catch-all LSL recorder
+For the main eye-tracker, the recorder has to parse the data of the incoming LSL sample as its coordinates need to be interpreted in the correct way to map it to potential code elements while the program is running.
+
+For other devices that are recording e.g. vital data points this is not needed. The generic LSL recorder does not parse the samples it is receiving but just attaches it to the current gaze sample. A user can edit the corresponding [kotlin script for highlighting](https://github.com/HPI-CH/CognitIDE/blob/main/highlighting.scriptwithdeps.kts) on-the-fly to map these devices' data by index to real-valued values used for highlighting.

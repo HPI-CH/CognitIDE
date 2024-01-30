@@ -30,7 +30,7 @@ object CognitIDEColors {
                 }
             }
         val minAlpha = 0.1
-        val transparencyElements = normalizedElements.mapValues {(key, value) -> ((value * (1 - minAlpha)) + minAlpha) * 0xFF}
+        val transparencyElements = normalizedElements.mapValues {(_, value) -> ((value * (1 - minAlpha)) + minAlpha) * 0xFF}
 
         transparencyElements.entries.forEachIndexed { index, entry -> colors?.set(index, JBColor(((entry.value.toInt() shl 24) or (baseColor.rgb and 0x00FFFFFF)),((entry.value.toInt() shl 24) or (baseColor.rgb and 0x00FFFFFF)))) }
 

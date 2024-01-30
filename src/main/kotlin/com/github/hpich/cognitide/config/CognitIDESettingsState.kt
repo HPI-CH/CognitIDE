@@ -20,13 +20,12 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
 
     // external applications
     var tobiiProConnectorExecutable = ""
-    var shimmerConnectorExecutable = ""
-    var emotivConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""
     var eyeTrackerSerial = ""
     var includeTobii = true
-    var includeShimmer = false
-    var includeEmotiv = false
+
+    // devices //TODO refresh panel
+    val devices = mutableListOf(DeviceSpec("EmotivDataStream-EEG", "19", ""), DeviceSpec("SendData", "17", "")) // Todo ensure no empty entries
 
     override fun getState(): CognitIDESettingsState = this
 

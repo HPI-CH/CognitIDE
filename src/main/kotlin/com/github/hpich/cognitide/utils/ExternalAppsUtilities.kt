@@ -1,6 +1,7 @@
 package com.github.hpich.cognitide.utils
 
 import com.github.hpich.cognitide.config.CognitIDESettingsState
+import com.github.hpich.cognitide.config.DeviceSpec
 import com.intellij.openapi.project.Project
 import java.io.File
 
@@ -12,19 +13,11 @@ fun openTobiiProConnector(project: Project) {
     )
 }
 
-fun openShimmerConnector(project: Project) {
+fun openConnector(project: Project, device: DeviceSpec) {
     execExternalUtility(
         project,
-        CognitIDESettingsState.instance.shimmerConnectorExecutable,
-        "Please provide a valid path to the Shimmer Connector executable."
-    )
-}
-
-fun openEmotivConnector(project: Project) {
-    execExternalUtility(
-        project,
-        CognitIDESettingsState.instance.emotivConnectorExecutable,
-        "Please provide a valid path to the Emotiv Connector executable."
+        device.connectorPath,
+        "Please provide a valid path to the connector executable."
     )
 }
 

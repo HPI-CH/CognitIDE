@@ -8,25 +8,76 @@ import java.util.*
 import kotlinx.serialization.Serializable
 import java.awt.Color
 import java.awt.Point
+import java.awt.geom.Arc2D
 import java.lang.Math.pow
 import kotlin.math.pow
 
 
-fun changeWeights(elements: Map<LookElement, Double>, measurements: List<GazeSnapshot>): Map<LookElement, Double> {
+/**
+ * Adjusts the weights of look elements based on sensor measurements.
+ *
+ * This function modifies the highlighting values of each look element based on sensor measurements provided in the gaze
+ * snapshots. The function can be adjusted by the user depending on what data they would like the highlighting to depend
+ * on. In the example below, the highlighting has been set so that it depends on acceleration measurements.
+ *
+ * @param elements A map of LookElement to default weights (how long a position has been viewed).
+ * @param measurements A list of GazeSnapshot containing sensor measurements.
+ * @return A map of LookElement with updated weights.
+ */
+fun adjustLookElementWeights(
+    elements: Map<LookElement, Double>, measurements: List<GazeSnapshot>
+): Map<LookElement, Double> {
 
-    // add your code for influencing the highlighting here
-    // you can use the physiological measurements in "measurements" for that
-    //
-    // in the toy example below you can see how the highlighting value is altered by decreasing it the longer the
-    // symbol string is (startOffset is dependent on the editor)
+    val RETURN_DEFAULT_WEIGHTS = true
 
-    val elementsAltered = elements.toMutableMap()
-    elements.forEach { element -> measurements.forEach { measurement ->
-        if (element.key.startOffset == measurement.lookElement?.startOffset)
-            elementsAltered[element.key] = element.value / (pow(measurement.lookElement.text.length.toDouble(), 5.0))
-    } }
+    val SHIMMER_ID = 2
+    val NUMBER_OF_STREAMS = 2
+    val Z_AXIS_ACCELERATION_ID = 2
 
-    return elements // elementsAltered
+    if (RETURN_DEFAULT_WEIGHTS) return elements
+
+    val alteredElements = mutableMapOf<LookElement, Double>().apply { elements.forEach { put(it.key, 0.0) } }
+    val elementCounters = mutableMapOf<LookElement, Double>().apply { elements.forEach { put(it.key, 0.0) } }
+
+    elements.forEach { (element, _) ->
+        measurements.forEach { measurement ->
+            if (element.startOffset == measurement.lookElement?.startOffset) {
+                val averageSensorValues = calculateSensorValuesAverage(
+                    measurement,
+                    streamID = SHIMMER_ID,
+                    numberOfStreams = NUMBER_OF_STREAMS,
+                    channelID = Z_AXIS_ACCELERATION_ID
+                )
+                if (averageSensorValues != null) {
+                    alteredElements[element] = alteredElements[element]!! + averageSensorValues
+                    elementCounters[element] = elementCounters[element]!! + 1.0
+                }
+            }
+        }
+    }
+
+    return alteredElements.mapValues {
+        if (elementCounters[it.key]!! > 0) it.value / elementCounters[it.key]!! else it.value
+    }
+}
+
+/**
+ * Calculates the average for a stream channel from a GazeSnapshot.
+ *
+ * @param measurement The GazeSnapshot containing sensor data.
+ * @param streamID The LSL stream of interest.
+ * @param numberOfStreams The overall number of recorded LSL streams.
+ * @param channelID The stream channel of interest.
+ * @return The average sensor value or null if no valid data is available.
+ */
+fun calculateSensorValuesAverage(
+    measurement: GazeSnapshot, streamID: Int, numberOfStreams: Int, channelID: Int
+): Double? {
+    val sensorValues =
+        measurement.otherLSLData.filterIndexed { index, _ -> ((index + 1) - streamID) % numberOfStreams == 0 }
+            .mapNotNull { it?.getOrNull(channelID) }
+
+    return if (sensorValues.isNotEmpty()) sensorValues.average() else null
 }
 
 
@@ -37,13 +88,11 @@ fun main() {
     val saveFolderPath: String = args.toString()
     val saveFolder = File(saveFolderPath)
     try {
-        val elementsStrings =
-            json.decodeFromString<Map<String, Double>>(
-                File(
-                    saveFolder,
-                    "lookElementGazeMap.json"
-                ).readText(Charsets.UTF_8)
-            )
+        val elementsStrings = json.decodeFromString<Map<String, Double>>(
+            File(
+                saveFolder, "lookElementGazeMap.json"
+            ).readText(Charsets.UTF_8)
+        )
 
         val measurementsString =
             json.decodeFromString<List<String>>(File(saveFolder, "measurements.json").readText(Charsets.UTF_8))
@@ -51,7 +100,7 @@ fun main() {
         var elements = elementsStrings.mapKeys { stringToLookElement(it.key) }.toMap()
         val measurements = measurementsString.map { stringToGazeSnapshot(it) }.toList()
 
-        elements = changeWeights(elements, measurements)
+        elements = adjustLookElementWeights(elements, measurements)
 
         val file = File(saveFolder, "lookElementGazeMapAlteredByUser.json")
         file.createNewFile()
@@ -65,12 +114,13 @@ fun main() {
 
 
 // Utilities
+@Serializable
+data class FloatArrayContainer(val data: List<FloatArray?>)
+
 
 @Serializable
 data class LookElement(
-    val text: String,
-    val filePath: String,
-    val startOffset: Int
+    val text: String, val filePath: String, val startOffset: Int
 ) {
     val endOffset: Int
         get() = startOffset + text.length
@@ -82,8 +132,7 @@ data class GazeSnapshot(
     val epochMillis: Long,
     val lookElement: LookElement?,
     val rawGazeData: GazeData?,
-    val rawShimmerData: ShimmerData?,
-    val emotivPerformanceData: EmotivPerformanceData?
+    val otherLSLData: List<FloatArray?>
 )
 
 
@@ -97,12 +146,7 @@ data class GazeData(
     val rightPupil: Double
 ) {
     constructor(leftEye: Point, rightEye: Point, leftPupil: Double, rightPupil: Double) : this(
-        leftEye.x,
-        leftEye.y,
-        rightEye.x,
-        rightEye.y,
-        leftPupil,
-        rightPupil
+        leftEye.x, leftEye.y, rightEye.x, rightEye.y, leftPupil, rightPupil
     )
 
     val eyeCenter: Point
@@ -125,41 +169,6 @@ data class GazeData(
     }
 }
 
-
-@Serializable
-data class ShimmerData(
-    val LOW_NOISE_ACCELEROMETER_X: Double,
-    val LOW_NOISE_ACCELEROMETER_Y: Double,
-    val LOW_NOISE_ACCELEROMETER_Z: Double,
-    val WIDE_RANGE_ACCELEROMETER_X: Double,
-    val WIDE_RANGE_ACCELEROMETER_Y: Double,
-    val WIDE_RANGE_ACCELEROMETER_Z: Double,
-    val MAGNETOMETER_X: Double,
-    val MAGNETOMETER_Y: Double,
-    val MAGNETOMETER_Z: Double,
-    val GYROSCOPE_X: Double,
-    val GYROSCOPE_Y: Double,
-    val GYROSCOPE_Z: Double,
-    val GSR: Double,
-    val GSR_CONDUCTANCE: Double,
-    val INTERNAL_ADC_A13: Double,
-    val PRESSURE: Double,
-    val TEMPERATURE: Double
-)
-
-
-@Serializable
-data class EmotivPerformanceData(
-    val value: Double,
-    val attention: Double,
-    val engagement: Double,
-    val excitement: Double,
-    val interest: Double,
-    val relaxation: Double,
-    val stress: Double
-)
-
-
 fun lookElementToString(value: LookElement): String {
     val uniqueRepresentation = "${value.text},;|${value.filePath},;|${value.startOffset}\""
     return uniqueRepresentation
@@ -168,9 +177,7 @@ fun lookElementToString(value: LookElement): String {
 fun stringToLookElement(lookElementString: String): LookElement {
     val parts = lookElementString.split(",;|")
     return LookElement(
-        text = parts[0],
-        filePath = parts[1],
-        startOffset = parts[2].replace("\\", "").trim('"').toInt()
+        text = parts[0], filePath = parts[1], startOffset = parts[2].replace("\\", "").trim('"').toInt()
     )
 }
 
@@ -180,8 +187,7 @@ fun stringToGazeSnapshot(gazeSnapshotString: String): GazeSnapshot {
         epochMillis = parts[0].replace("\\", "").trim('"').toLong(),
         lookElement = stringToLookElement(parts[1]),
         rawGazeData = stringToRawGazeData(parts[2]),
-        rawShimmerData = stringToShimmerData(parts[3]),
-        emotivPerformanceData = stringToEmotivPerformanceData(parts[4])
+        otherLSLData = stringToOtherLSLData(parts[3])
     )
 }
 
@@ -197,41 +203,15 @@ fun stringToRawGazeData(gazeDataString: String): GazeData? {
     )
 }
 
-fun stringToShimmerData(shimmerString: String): ShimmerData? {
-    val parts = shimmerString.split(",;|")
-    return ShimmerData(
-        LOW_NOISE_ACCELEROMETER_X = parts[0].replace("\\", "").trim('"').toDouble(),
-        LOW_NOISE_ACCELEROMETER_Y = parts[1].replace("\\", "").trim('"').toDouble(),
-        LOW_NOISE_ACCELEROMETER_Z = parts[2].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_X = parts[3].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_Y = parts[4].replace("\\", "").trim('"').toDouble(),
-        WIDE_RANGE_ACCELEROMETER_Z = parts[5].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_X = parts[6].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_Y = parts[7].replace("\\", "").trim('"').toDouble(),
-        MAGNETOMETER_Z = parts[8].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_X = parts[9].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_Y = parts[10].replace("\\", "").trim('"').toDouble(),
-        GYROSCOPE_Z = parts[11].replace("\\", "").trim('"').toDouble(),
-        GSR = parts[12].replace("\\", "").trim('"').toDouble(),
-        GSR_CONDUCTANCE = parts[13].replace("\\", "").trim('"').toDouble(),
-        INTERNAL_ADC_A13 = parts[14].replace("\\", "").trim('"').toDouble(),
-        PRESSURE = parts[15].replace("\\", "").trim('"').toDouble(),
-        TEMPERATURE = parts[16].replace("\\", "").trim('"').toDouble()
-    )
-}
+fun stringToOtherLSLData(dataString: String): List<FloatArray?> {
+    val floatListsString = dataString.split("\":")[1].trim('}', '"').split("],[")
+    if ("[]" in floatListsString) return emptyList()
 
-fun stringToEmotivPerformanceData(emotivPerformanceDataString: String): Highlighting_scriptwithdeps.EmotivPerformanceData? {
-    val parts = emotivPerformanceDataString.split(",;|")
-    return EmotivPerformanceData(
-        value = parts[0].replace("\\", "").trim('"').toDouble(),
-        attention = parts[1].replace("\\", "").trim('"').toDouble(),
-        engagement = parts[2].replace("\\", "").trim('"').toDouble(),
-        excitement = parts[3].replace("\\", "").trim('"').toDouble(),
-        interest = parts[4].replace("\\", "").trim('"').toDouble(),
-        relaxation = parts[5].replace("\\", "").trim('"').toDouble(),
-        stress = parts[6].replace("\\", "").trim('"').toDouble()
-    )
-}
+    val transformedList = floatListsString.map {
+        it.trim('[', ']').split(",").map { numStr -> numStr.trim().toFloat() }.toFloatArray()
+    }
 
+    return transformedList
+}
 
 main()

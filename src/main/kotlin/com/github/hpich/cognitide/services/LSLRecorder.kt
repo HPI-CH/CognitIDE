@@ -43,7 +43,6 @@ class LSLRecorder(
 
     override val delay = 0L
 
-    fun Boolean.toInt() = if (this) 1 else 0 //TODO
     override fun loop(indicator: ProgressIndicator) {
         var timestampSeconds = inlet?.pull_sample(buffer, 0.0)
         val data: GazeData?
@@ -125,7 +124,7 @@ class LSLRecorder(
                     tobii_connected = true
 
                     inlet!!.open_stream()
-                    indicator.text = "${openStreamsCount + tobii_connected.toInt()} inlets open. Waiting for data"
+                    indicator.text = "${openStreamsCount + 1} inlets open. Waiting for data"
                 } else if (info.channel_format() == LSL.ChannelFormat.float32
                     && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
                 ) {
@@ -135,9 +134,12 @@ class LSLRecorder(
 
                     otherLSLDataInlet[idx]?.open_stream()
                     openStreamsCount++
-                    indicator.text = "${openStreamsCount + tobii_connected.toInt()} inlets open. Waiting for data"
+                    indicator.text = "${openStreamsCount + if(tobii_connected) 1 else 0} inlets open. Waiting for data"
                 }
-                if (openStreamsCount + tobii_connected.toInt() == (CognitIDESettingsState.instance.devices.size + CognitIDESettingsState.instance.includeTobii.toInt())) {
+
+
+                if (openStreamsCount == CognitIDESettingsState.instance.devices.size
+                    && tobii_connected == CognitIDESettingsState.instance.includeTobii) {
                     return true
                 }
             }

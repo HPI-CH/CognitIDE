@@ -1,6 +1,5 @@
 package com.github.hpich.cognitide.services
 
-import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.extensions.xyScreenToLogical
 import com.github.hpich.cognitide.services.dto.GazeData
 import com.github.hpich.cognitide.services.dto.LookElement
@@ -22,19 +21,20 @@ import edu.ucsd.sccn.LSL.StreamInlet
 import java.awt.Point
 import java.awt.Toolkit
 import javax.swing.SwingUtilities
+import com.github.hpich.cognitide.config.CognitIDESettingsState.Companion.instance as cognitIDESettings
 
 
 class LSLRecorder(
     private val project: Project
 ) : StudyRecorder(project, "Recording Data") {
     private var tobiiInlet: StreamInlet? = null
-    private val otherLSLDataInlet = Array<StreamInlet?>(CognitIDESettingsState.instance.devices.size) { null }
-    private var otherLSLData = Array<FloatArray>(CognitIDESettingsState.instance.devices.size) { floatArrayOf(-999f) }
+    private val otherLSLDataInlet = Array<StreamInlet?>(cognitIDESettings.devices.size) { null }
+    private var otherLSLData = Array<FloatArray>(cognitIDESettings.devices.size) { floatArrayOf(-999f) }
 
     private val buffer = FloatArray(6)
-    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i ->
+    private val otherBuffers = Array(cognitIDESettings.devices.size) { i ->
         FloatArray(
-            CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()
+            cognitIDESettings.devices.get(i).channelCount.toInt()
         ) { -999f }
     } // TODO array; ensure no empty entries
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
@@ -119,7 +119,7 @@ class LSLRecorder(
                 val inletCandidate = StreamInlet(it)
                 val info = inletCandidate.info(1.0)
 
-                if (CognitIDESettingsState.instance.includeTobii && info.type() == "Gaze"
+                if (cognitIDESettings.includeTobii && info.type() == "Gaze"
                     && info.channel_format() == LSL.ChannelFormat.float32
                     && info.channel_count() == buffer.size
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
@@ -130,10 +130,10 @@ class LSLRecorder(
                     tobiiInlet!!.open_stream()
                     indicator.text = "${openStreamsCount + 1} inlets open. Waiting for data"
                 } else if (info.channel_format() == LSL.ChannelFormat.float32
-                    && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
+                    && info.name() in cognitIDESettings.devices.map { it.name } //TODO ensure order in another way
                 ) {
                     //TODO could be useful for the used to have meta info saved in a file
-                    val idx = CognitIDESettingsState.instance.devices.map { it.name }.indexOf(info.name())
+                    val idx = cognitIDESettings.devices.map { it.name }.indexOf(info.name())
                     otherLSLDataInlet[idx] = inletCandidate
 
                     otherLSLDataInlet[idx]?.open_stream()
@@ -142,8 +142,8 @@ class LSLRecorder(
                 }
 
 
-                if (openStreamsCount == CognitIDESettingsState.instance.devices.size
-                    && tobiiConnected == CognitIDESettingsState.instance.includeTobii) {
+                if (openStreamsCount == cognitIDESettings.devices.size
+                    && tobiiConnected == cognitIDESettings.includeTobii) {
                     return true
                 }
             }
@@ -153,7 +153,7 @@ class LSLRecorder(
             return false
         }
         invokeLater {
-            if (CognitIDESettingsState.instance.includeTobii) {
+            if (cognitIDESettings.includeTobii) {
                 if (MessageDialogBuilder
                         .okCancel("Is TobiiPro connector application running?", "Open TobiiPro Connector?")
                         .ask(project)
@@ -161,7 +161,7 @@ class LSLRecorder(
                     openTobiiProConnector(project)
                 }
             }
-            CognitIDESettingsState.instance.devices.forEach {
+            cognitIDESettings.devices.forEach {
                 if (MessageDialogBuilder
                         .okCancel(
                             "Is " + it.name + " connector application running?",
@@ -177,7 +177,7 @@ class LSLRecorder(
     }
 
     override fun dispose() {
-        if (CognitIDESettingsState.instance.includeTobii) {
+        if (cognitIDESettings.includeTobii) {
             tobiiInlet!!.close_stream()
         }
         otherLSLDataInlet.forEach {

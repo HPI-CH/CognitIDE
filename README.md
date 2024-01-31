@@ -25,9 +25,9 @@ Recording | Interrupt user**.
 ## Features
 - record data from gaze and pupil diameter data from
 [Tobii Pro Nano](https://www.tobii.com/products/eye-trackers/screen-based/tobii-pro-nano).
-- record physiological data from Shimmer and Emotiv devices (easily extensible for other devices supported by [LSL](https://labstreaminglayer.readthedocs.io/info/supported_devices.html))
-- gather questionnaire data of subject before recording
-- interrupt subject whilst recording to ask for input
+- record physiological data from [LSL-supported devices](https://labstreaminglayer.readthedocs.io/info/supported_devices.html)
+- gather questionnaire data of the subject before recording
+- interrupt the subject whilst recording to ask for input
 - export data
   - raw data
   - element gaze hits (how often each element has been hit by a gaze sample)
@@ -38,7 +38,7 @@ It was implemented by Malte Stellmacher and Fabian Stolp.
 <!-- Plugin description end -->
 
 ## Export
-When saving a recording, 4 types of data will be saved (to your home directory under cognitide-recordings per default):
+When saving a recording, four types of data will be saved (to your home directory under cognitide-recordings per default):
 
 ### participant.json
 Basic information provided by the participant questioner in json format.

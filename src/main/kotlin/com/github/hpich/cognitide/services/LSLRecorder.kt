@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities
 class LSLRecorder(
     private val project: Project
 ) : StudyRecorder(project, "Recording Data") {
-    private var inlet: StreamInlet? = null
+    private var tobiiInlet: StreamInlet? = null
     private val otherLSLDataInlet = Array<StreamInlet?>(CognitIDESettingsState.instance.devices.size) { null }
     private var otherLSLData = Array<FloatArray>(CognitIDESettingsState.instance.devices.size) { floatArrayOf(-999f) }
 
@@ -44,19 +44,23 @@ class LSLRecorder(
     override val delay = 0L
 
     override fun loop(indicator: ProgressIndicator) {
-        var timestampSeconds = inlet?.pull_sample(buffer, 0.0)
-        val data: GazeData?
-        if (timestampSeconds != null && timestampSeconds != 0.0) {
-            timestampSeconds += inlet!!.time_correction() //todo
-            data = GazeData(
-                (buffer[0] * screenDimensions.width).toInt(),
-                (buffer[1] * screenDimensions.height).toInt(),
-                (buffer[3] * screenDimensions.width).toInt(),
-                (buffer[4] * screenDimensions.height).toInt(),
-                buffer[2].toDouble(),
-                buffer[5].toDouble(),
-            ).correctMissingEye()
-        } else data = null
+        var gazeData: GazeData? = null
+        if (tobiiInlet != null) {
+            var timestampSeconds = tobiiInlet!!.pull_sample(buffer, 0.0)
+            if (timestampSeconds != 0.0) {
+                timestampSeconds += tobiiInlet!!.time_correction() //todo
+                gazeData = GazeData(
+                    (buffer[0] * screenDimensions.width).toInt(),
+                    (buffer[1] * screenDimensions.height).toInt(),
+                    (buffer[3] * screenDimensions.width).toInt(),
+                    (buffer[4] * screenDimensions.height).toInt(),
+                    buffer[2].toDouble(),
+                    buffer[5].toDouble(),
+                ).correctMissingEye()
+            } else {
+                gazeData = null
+            }
+        }
 
         val otherTimestampSeconds: MutableList<Double?> = mutableListOf()
         otherLSLDataInlet.forEachIndexed { index, it -> // ordering ensured through name of device
@@ -70,15 +74,15 @@ class LSLRecorder(
         }
 
         invokeLater {
-            if (data != null) {
+            if (gazeData != null) {
                 val editor = EditorFactory.getInstance().allEditors.firstOrNull {
-                    val eyeLocal = Point(data.eyeCenter)
+                    val eyeLocal = Point(gazeData.eyeCenter)
                     SwingUtilities.convertPointFromScreen(eyeLocal, it.contentComponent)
                     it.contentComponent.contains(eyeLocal)
                 } ?: return@invokeLater
                 val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
                     ?: return@invokeLater
-                val eyeCenterGlobal = data.eyeCenter
+                val eyeCenterGlobal = gazeData.eyeCenter
 
                 val logicalPosition = editor.xyScreenToLogical(eyeCenterGlobal)
                 val offset = editor.logicalPositionToOffset(logicalPosition)
@@ -90,7 +94,7 @@ class LSLRecorder(
                     if (virtualFile == null || it is PsiWhiteSpace) return@let null
                     LookElement(it.text, it.containingFile.virtualFile.path, it.startOffset)
                 }
-                dataCollectingService.addGazeSnapshot(lookElement, data, otherLSLData)
+                dataCollectingService.addGazeSnapshot(lookElement, gazeData, otherLSLData)
                 dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
 
                 indicator.text = dataCollectingService.stats()
@@ -120,10 +124,10 @@ class LSLRecorder(
                     && info.channel_count() == buffer.size
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
-                    inlet = inletCandidate
+                    tobiiInlet = inletCandidate
                     tobiiConnected = true
 
-                    inlet!!.open_stream()
+                    tobiiInlet!!.open_stream()
                     indicator.text = "${openStreamsCount + 1} inlets open. Waiting for data"
                 } else if (info.channel_format() == LSL.ChannelFormat.float32
                     && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
@@ -174,7 +178,7 @@ class LSLRecorder(
 
     override fun dispose() {
         if (CognitIDESettingsState.instance.includeTobii) {
-            inlet!!.close_stream()
+            tobiiInlet!!.close_stream()
         }
         otherLSLDataInlet.forEach {
             it?.close_stream()

@@ -23,9 +23,9 @@ If needed, you can configure periodic interrupts: check **Settings/Preferences |
 Recording | Interrupt user**.
 
 ## Features
-- record data from gaze and pupil diameter data from
-[Tobii Pro Nano](https://www.tobii.com/products/eye-trackers/screen-based/tobii-pro-nano).
+- record gaze and pupil diameter data from [Tobii Pro Eye Trackers](https://www.tobii.com/products/eye-trackers/).
 - record physiological data from [LSL-supported devices](https://labstreaminglayer.readthedocs.io/info/supported_devices.html)
+- all gathered sensor data is mapped to code positions through the gaze information
 - gather questionnaire data of the subject before recording
 - interrupt the subject whilst recording to ask for input
 - export data

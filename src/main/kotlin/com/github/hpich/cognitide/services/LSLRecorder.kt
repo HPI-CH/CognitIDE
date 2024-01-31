@@ -73,6 +73,7 @@ class LSLRecorder(
 
         }
 
+        var lookElement: LookElement? = null
         invokeLater {
             if (gazeData != null) {
                 val editor = EditorFactory.getInstance().allEditors.firstOrNull {
@@ -90,24 +91,18 @@ class LSLRecorder(
                 val element = psiFile.findElementAt(offset)
                 val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
 
-                val lookElement = element?.let {
+                lookElement = element?.let {
                     if (virtualFile == null || it is PsiWhiteSpace) return@let null
                     LookElement(it.text, it.containingFile.virtualFile.path, it.startOffset)
                 }
-                dataCollectingService.addGazeSnapshot(lookElement, gazeData, otherLSLData)
                 dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
 
-                indicator.text = dataCollectingService.stats()
                 indicator.text2 = "eye: ${eyeCenterGlobal.x},${eyeCenterGlobal.y} " +
                         "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
-            } else if (otherLSLData.isNotEmpty()) {
-                dataCollectingService.addGazeSnapshot(
-                    null,
-                    null, otherLSLData
-                )
-                indicator.text = dataCollectingService.stats()
             }
         }
+        dataCollectingService.addGazeSnapshot(lookElement, gazeData, otherLSLData)
+        indicator.text = dataCollectingService.stats()
     }
 
     override fun setup(indicator: ProgressIndicator): Boolean {
@@ -138,12 +133,13 @@ class LSLRecorder(
 
                     otherLSLDataInlet[idx]?.open_stream()
                     openStreamsCount++
-                    indicator.text = "${openStreamsCount + if(tobiiConnected) 1 else 0} inlets open. Waiting for data"
+                    indicator.text = "${openStreamsCount + if (tobiiConnected) 1 else 0} inlets open. Waiting for data"
                 }
 
 
                 if (openStreamsCount == cognitIDESettings.devices.size
-                    && tobiiConnected == cognitIDESettings.includeTobii) {
+                    && tobiiConnected == cognitIDESettings.includeTobii
+                ) {
                     return true
                 }
             }

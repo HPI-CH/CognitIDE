@@ -1,4 +1,5 @@
-# CognitIDE - Facilitating Physiological Assessments in Software Engineering Studies
+# CognitIDE 
+# Facilitating Physiological Assessments in Software Engineering Studies
 
 <!-- Plugin description -->
 CognitIDE integrates body sensor hardware to record physiological data while reviewing code and generates heatmaps for assessment.

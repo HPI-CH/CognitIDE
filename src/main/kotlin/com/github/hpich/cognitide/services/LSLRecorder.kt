@@ -4,7 +4,9 @@ import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.extensions.xyScreenToLogical
 import com.github.hpich.cognitide.services.dto.GazeData
 import com.github.hpich.cognitide.services.dto.LookElement
-import com.github.hpich.cognitide.utils.*
+import com.github.hpich.cognitide.utils.errorMsg
+import com.github.hpich.cognitide.utils.openConnector
+import com.github.hpich.cognitide.utils.openTobiiProConnector
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.EditorFactory
@@ -30,7 +32,11 @@ class LSLRecorder(
     private var otherLSLData = Array<FloatArray>(CognitIDESettingsState.instance.devices.size) { floatArrayOf(-999f) }
 
     private val buffer = FloatArray(6)
-    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i -> FloatArray(CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()) {-999f} } // TODO array; ensure no empty entries
+    private val otherBuffers = Array(CognitIDESettingsState.instance.devices.size) { i ->
+        FloatArray(
+            CognitIDESettingsState.instance.devices.get(i).channelCount.toInt()
+        ) { -999f }
+    } // TODO array; ensure no empty entries
     private val screenDimensions = Toolkit.getDefaultToolkit().screenSize
 
     private var openStreamsCount = 0
@@ -40,7 +46,7 @@ class LSLRecorder(
     fun Boolean.toInt() = if (this) 1 else 0 //TODO
     override fun loop(indicator: ProgressIndicator) {
         var timestampSeconds = inlet?.pull_sample(buffer, 0.0)
-        val data : GazeData?
+        val data: GazeData?
         if (timestampSeconds != null && timestampSeconds != 0.0) {
             timestampSeconds += inlet!!.time_correction() //todo
             data = GazeData(
@@ -50,27 +56,21 @@ class LSLRecorder(
                 (buffer[4] * screenDimensions.height).toInt(),
                 buffer[2].toDouble(),
                 buffer[5].toDouble(),
-            ).correctMissingEye() ?: return
+            ).correctMissingEye()
         } else data = null
 
-
-
-        val otherTimestampSeconds : MutableList<Double?> = mutableListOf()
+        val otherTimestampSeconds: MutableList<Double?> = mutableListOf()
         otherLSLDataInlet.forEachIndexed { index, it -> // ordering ensured through name of device
             otherTimestampSeconds.add(it?.pull_sample(otherBuffers.get(index), 0.0))
 
             if (otherTimestampSeconds.last() != null && otherTimestampSeconds.last() != 0.0) {
                 otherTimestampSeconds += it?.time_correction()
-
                 otherLSLData = otherBuffers
             } else otherLSLData = emptyArray()
 
         }
 
-
-
         invokeLater {
-
             if (data != null) {
                 val editor = EditorFactory.getInstance().allEditors.firstOrNull {
                     val eyeLocal = Point(data.eyeCenter)
@@ -87,26 +87,13 @@ class LSLRecorder(
                 val element = psiFile.findElementAt(offset)
                 val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
 
-                
-
-                if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-
-
-                    dataCollectingService.addGazeSnapshot(
-                        LookElement(
-                            element.text,
-                            element.containingFile.virtualFile.path,
-                            element.startOffset
-                        ),
-                        data, otherLSLData
-                    )
+                val lookElement = element?.let {
+                    if (virtualFile == null || it is PsiWhiteSpace) return@let null
+                    LookElement(it.text, it.containingFile.virtualFile.path, it.startOffset)
                 }
-                else {
-                    dataCollectingService.addGazeSnapshot(null,
-                        data, otherLSLData
-                    )
-                }
+                dataCollectingService.addGazeSnapshot(lookElement, data, otherLSLData)
                 dataCollectingService.incrementLookElementsAround(psiFile, editor, eyeCenterGlobal)
+
                 indicator.text = dataCollectingService.stats()
                 indicator.text2 = "eye: ${eyeCenterGlobal.x},${eyeCenterGlobal.y} " +
                         "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${psiFile.name}"
@@ -142,9 +129,7 @@ class LSLRecorder(
 
                     inlet!!.open_stream()
                     indicator.text = "${openStreamsCount + tobii_connected.toInt()} inlets open. Waiting for data"
-                }
-
-                else if (info.channel_format() == LSL.ChannelFormat.float32
+                } else if (info.channel_format() == LSL.ChannelFormat.float32
                     && info.name() in CognitIDESettingsState.instance.devices.map { it.name } //TODO ensure order in another way
                 ) {
                     //TODO could be useful for the used to have meta info saved in a file
@@ -175,10 +160,13 @@ class LSLRecorder(
             }
             CognitIDESettingsState.instance.devices.forEach {
                 if (MessageDialogBuilder
-                            .okCancel("Is " + it.name + " connector application running?", "Open " + it.name + " Connector?")
-                            .ask(project)
-                    ) {
-                        openConnector(project, it)
+                        .okCancel(
+                            "Is " + it.name + " connector application running?",
+                            "Open " + it.name + " Connector?"
+                        )
+                        .ask(project)
+                ) {
+                    openConnector(project, it)
                 }
             }
         }
@@ -189,7 +177,7 @@ class LSLRecorder(
         if (CognitIDESettingsState.instance.includeTobii) {
             inlet!!.close_stream()
         }
-        otherLSLDataInlet.forEach{
+        otherLSLDataInlet.forEach {
             it?.close_stream()
         }
     }

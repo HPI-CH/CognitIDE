@@ -108,7 +108,7 @@ class LSLRecorder(
 
     override fun setup(indicator: ProgressIndicator): Boolean {
         indicator.text = "Searching for LSL inlets"
-        var tobii_connected = false
+        var tobiiConnected = false
 
         try {
             LSL.resolve_streams(1.0).forEach {
@@ -121,7 +121,7 @@ class LSLRecorder(
                     && info.desc().child("acquisition").child_value("manufacturer") == "TobiiPro"
                 ) {
                     inlet = inletCandidate
-                    tobii_connected = true
+                    tobiiConnected = true
 
                     inlet!!.open_stream()
                     indicator.text = "${openStreamsCount + 1} inlets open. Waiting for data"
@@ -134,12 +134,12 @@ class LSLRecorder(
 
                     otherLSLDataInlet[idx]?.open_stream()
                     openStreamsCount++
-                    indicator.text = "${openStreamsCount + if(tobii_connected) 1 else 0} inlets open. Waiting for data"
+                    indicator.text = "${openStreamsCount + if(tobiiConnected) 1 else 0} inlets open. Waiting for data"
                 }
 
 
                 if (openStreamsCount == CognitIDESettingsState.instance.devices.size
-                    && tobii_connected == CognitIDESettingsState.instance.includeTobii) {
+                    && tobiiConnected == CognitIDESettingsState.instance.includeTobii) {
                     return true
                 }
             }

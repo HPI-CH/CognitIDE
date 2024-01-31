@@ -110,12 +110,9 @@ class LSLRecorder(
     override fun setup(indicator: ProgressIndicator): Boolean {
         indicator.text = "Searching for LSL inlets"
         var tobii_connected = false
-        var all = 0
-
 
         try {
             LSL.resolve_streams(1.0).forEach {
-                all += 1
                 val inletCandidate = StreamInlet(it)
                 val info = inletCandidate.info(1.0)
 

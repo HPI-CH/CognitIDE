@@ -5,11 +5,17 @@ import com.github.hpich.cognitide.config.HighlightingState
 import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.extensions.removeAllHighlighters
 import com.github.hpich.cognitide.extensions.xyScreenToLogical
-import com.github.hpich.cognitide.services.dto.*
+import com.github.hpich.cognitide.services.dto.GazeData
+import com.github.hpich.cognitide.services.dto.GazeSnapshot
+import com.github.hpich.cognitide.services.dto.LookElement
+import com.github.hpich.cognitide.services.dto.LookElementGaze
 import com.github.hpich.cognitide.services.recording.InterruptService
 import com.github.hpich.cognitide.services.recording.UserInterrupt
-import com.github.hpich.cognitide.services.dto.LookElement
-import com.github.hpich.cognitide.utils.*
+import com.github.hpich.cognitide.utils.errorMatrix
+import com.github.hpich.cognitide.utils.highlightLookElements
+import com.github.hpich.cognitide.utils.requestSettingsChange
+import com.github.hpich.cognitide.utils.saveRecordingToDisk
+import com.github.hpich.cognitide.utils.saveTmpFiles
 import com.github.hpich.cognitide.utils.script.runScript
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
@@ -75,12 +81,17 @@ class DataCollectingService(val project: Project) {
 
     fun addGazeSnapshot(lookElement: LookElement?, gazeData: GazeData?, otherLSLData: Array<FloatArray>) {
 
-            GazeSnapshot(System.currentTimeMillis(), lookElement, gazeData, otherLSLData.map { it.clone() }.toTypedArray().toMutableList()).let {
-                if (gazeData == null && gazeSnapshotList.isNotEmpty()) {
-                    gazeSnapshotList.last().otherLSLData.addAll(it.otherLSLData) //TODO index
-                } else gazeSnapshotList.add(it)
-                thisLogger().debug("GazeSnapshot added: $it")
-            }
+        GazeSnapshot(
+            System.currentTimeMillis(),
+            lookElement,
+            gazeData,
+            otherLSLData.map { it.clone() }.toTypedArray().toMutableList()
+        ).let {
+            if (gazeData == null && gazeSnapshotList.isNotEmpty()) {
+                gazeSnapshotList.last().otherLSLData.addAll(it.otherLSLData) //TODO index
+            } else gazeSnapshotList.add(it)
+            thisLogger().debug("GazeSnapshot added: $it")
+        }
     }
 
     private fun incrementLookElement(lookElement: LookElement, increment: Double) {
@@ -156,12 +167,8 @@ class DataCollectingService(val project: Project) {
         val saveFolderPath = saveFolder.path
         val highlightingState = HighlightingState.instance
         if (highlightingState.highlightingScript.isBlank()) {
-            execExternalUtility(
-                project, highlightingState.highlightingScript,
-                "Please provide a valid path to the highlighting script."
-            )
-        }
-        else {
+            requestSettingsChange(project, "Please provide a valid path to the highlighting script.")
+        } else {
             runScript(arrayOf(highlightingState.highlightingScript, saveFolderPath.toString()), pluginClassLoader)
             wasHighlighted = true
             EditorFactory.getInstance().allEditors.forEach {

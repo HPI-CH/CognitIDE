@@ -2,7 +2,7 @@ package com.github.hpich.cognitide.actions.debug
 
 import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.services.DataCollectingService
-import com.github.hpich.cognitide.services.MouseGazeRecorder
+import com.github.hpich.cognitide.services.LSLRecorder
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
@@ -17,7 +17,7 @@ class StartMouseRecordingAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         e.project?.service<DataCollectingService>()?.apply {
-            setRecorder(MouseGazeRecorder(e.project!!))
+            setRecorder(LSLRecorder(e.project!!, debugMode = true))
             startRecording()
         }
     }

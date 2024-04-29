@@ -1,0 +1,62 @@
+stages:
+  - lint
+#   - test
+  - inspect
+  - build
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+ktlint:
+  stage: lint
+  only:
+    - main
+    - merge_requests
+  image: gradle:jdk11
+  script:
+    - ./gradlew ktlintCheck
+
+# test:
+#   stage: test
+#   only:
+#     - main
+#     - merge_requests
+#   image: gradle:jdk11
+#   script:
+#     - ./gradlew test
+
+qodana:
+  stage: inspect
+  only:
+    - main
+    - merge_requests
+  image:
+    name: jetbrains/qodana-jvm-community:2024.1
+    entrypoint: [""]
+  cache:
+    - key: qodana-2024.1-$CI_DEFAULT_BRANCH-$CI_COMMIT_REF_SLUG
+      fallback_keys:
+        - qodana-2024.1-$CI_DEFAULT_BRANCH-
+        - qodana-2024.1-
+      paths:
+        - .qodana/cache
+  script:
+    - qodana --results-dir=$CI_PROJECT_DIR/.qodana/results
+      --cache-dir=$CI_PROJECT_DIR/.qodana/cache
+  artifacts:
+    reports:
+      codequality: .qodana/results/gl-code-quality-report.json
+
+build:
+  stage: build
+  only:
+    - main
+  image: gradle:jdk11
+  script:
+    - ./gradlew buildPlugin
+

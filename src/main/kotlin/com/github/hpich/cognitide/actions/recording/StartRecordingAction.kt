@@ -8,12 +8,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 
 class StartRecordingAction : AnAction() {
-
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
-        e.presentation.isEnabled = currentProject != null
-                && ParticipantState.instance.id > 0
-                && currentProject.service<DataCollectingService>().isRecording == false
+        e.presentation.isEnabled = currentProject != null &&
+            ParticipantState.instance.id > 0 &&
+            currentProject.service<DataCollectingService>().isRecording == false
     }
 
     override fun actionPerformed(e: AnActionEvent) {

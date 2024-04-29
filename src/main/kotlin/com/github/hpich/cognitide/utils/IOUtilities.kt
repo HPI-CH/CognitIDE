@@ -31,9 +31,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.imageio.ImageIO
 
-val json = Json {
-    allowSpecialFloatingPointValues = true
-}
+val json =
+    Json {
+        allowSpecialFloatingPointValues = true
+    }
 
 private val logger = Logger.getInstance("com.github.hpich.cognitide.utils.IOUtilities")
 
@@ -42,7 +43,7 @@ fun saveRecordingToDisk(
     date: Date,
     lookElementGazeList: List<LookElementGaze>,
     gazeSnapshots: List<GazeSnapshot>?,
-    userInterrupts: List<UserInterrupt>?
+    userInterrupts: List<UserInterrupt>?,
 ) {
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
     val timestamp = timestampFormat.format(date)
@@ -51,7 +52,7 @@ fun saveRecordingToDisk(
     val participantId = participantState.id
 
     val settingsState = CognitIDESettingsState.instance
-    val saveFolder = File(settingsState.recordingsSaveLocation, "${participantId}_${timestamp}")
+    val saveFolder = File(settingsState.recordingsSaveLocation, "${participantId}_$timestamp")
 
     saveFolder.mkdirs()
     try {
@@ -74,12 +75,13 @@ fun saveRecordingToDisk(
         saveToDisk(json.encodeToString(participantState), file)
         notifyFileSaved(project, file)
 
-        if (gazeSnapshots != null){
+        if (gazeSnapshots != null) {
             // highlight, open editors and save screenshots
-            val images = screenshotFilesInEditor(
-                project,
-                gazeSnapshots.mapNotNull { it.lookElement }.map{it.filePath}.distinct()
-            )
+            val images =
+                screenshotFilesInEditor(
+                    project,
+                    gazeSnapshots.mapNotNull { it.lookElement }.map { it.filePath }.distinct(),
+                )
             val imageFolder = File(saveFolder, "files")
             imageFolder.mkdirs()
             images.forEach { (fileName, image) ->
@@ -94,24 +96,31 @@ fun saveRecordingToDisk(
     }
 }
 
-fun screenshotFilesInEditor(project: Project, filePaths: List<String>): Map<String, BufferedImage?> = runReadAction {
-    val fileEditorManager = FileEditorManager.getInstance(project)
-    return@runReadAction filePaths.associateWith { filePath ->
-        val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
-        if (vFile == null) {
-            logger.error("Could not find recorded file in my $filePath")
-            return@associateWith null
+fun screenshotFilesInEditor(
+    project: Project,
+    filePaths: List<String>,
+): Map<String, BufferedImage?> =
+    runReadAction {
+        val fileEditorManager = FileEditorManager.getInstance(project)
+        return@runReadAction filePaths.associateWith { filePath ->
+            val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
+            if (vFile == null) {
+                logger.error("Could not find recorded file in my $filePath")
+                return@associateWith null
+            }
+            val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
+            if (editor == null) {
+                logger.error("Could not open an editor for $filePath")
+                return@associateWith null
+            }
+            editor.screenshot()
         }
-        val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
-        if (editor == null) {
-            logger.error("Could not open an editor for $filePath")
-            return@associateWith null
-        }
-        editor.screenshot()
     }
-}
 
-fun saveToDisk(encoded: String, file: File) {
+fun saveToDisk(
+    encoded: String,
+    file: File,
+) {
     try {
         runWriteAction {
             logger.info("Saving ${file.path}")
@@ -128,7 +137,10 @@ fun saveToDisk(encoded: String, file: File) {
     }
 }
 
-fun saveToDisk(data: BufferedImage, file: File) {
+fun saveToDisk(
+    data: BufferedImage,
+    file: File,
+) {
     try {
         runWriteAction {
             logger.info("Saving image ${file.path}")
@@ -146,19 +158,24 @@ fun saveToDisk(data: BufferedImage, file: File) {
 }
 
 fun backupSaveData(file: File): File? {
-    val saveFileDialog = FileChooserFactory.getInstance()
-        .createSaveFileDialog(
-            FileSaverDescriptor(
-                "Please choose a location (old was: ${file.path}",
-                "",
-                ".${file.extension}"
-            ), null
-        )
+    val saveFileDialog =
+        FileChooserFactory.getInstance()
+            .createSaveFileDialog(
+                FileSaverDescriptor(
+                    "Please choose a location (old was: ${file.path}",
+                    "",
+                    ".${file.extension}",
+                ),
+                null,
+            )
 
     return saveFileDialog.save("")?.file
 }
 
-fun requestSettingsChange(project: Project, notFoundMessage: String) {
+fun requestSettingsChange(
+    project: Project,
+    notFoundMessage: String,
+) {
     if (MessageDialogBuilder
             .okCancel("Invalid settings", notFoundMessage)
             .ask(project)
@@ -169,7 +186,10 @@ fun requestSettingsChange(project: Project, notFoundMessage: String) {
 
 fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""
 
-fun saveTmpFiles(lookElementGazeMap: MutableMap<LookElement, Double>, gazeSnapshotList: MutableList<GazeSnapshot>){
+fun saveTmpFiles(
+    lookElementGazeMap: MutableMap<LookElement, Double>,
+    gazeSnapshotList: MutableList<GazeSnapshot>,
+) {
     val settingsState = CognitIDESettingsState.instance
     val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
     saveFolder.mkdirs()
@@ -177,24 +197,28 @@ fun saveTmpFiles(lookElementGazeMap: MutableMap<LookElement, Double>, gazeSnapsh
     val elementFile = File(saveFolder, "lookElementGazeMap.json")
     val measurementFile = File(saveFolder, "measurements.json")
     try {
-
         elementFile.createNewFile()
-        elementFile.writeText(json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()))
+        elementFile.writeText(
+            json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()),
+        )
         measurementFile.createNewFile()
-        measurementFile.writeText(json.encodeToString(gazeSnapshotList.map { json.encodeToString(GazeSnapshot.serializer(), it) }.toList() ))
-
+        measurementFile.writeText(json.encodeToString(gazeSnapshotList.map { json.encodeToString(GazeSnapshot.serializer(), it) }.toList()))
     } catch (ex: Exception) {
         print("EXCEPTION: " + ex)
     }
 }
 
-private fun openFileAction(file: File) = NotificationAction.createSimple("Open") {
-    if (Desktop.isDesktopSupported()) {
-        Desktop.getDesktop().open(file)
+private fun openFileAction(file: File) =
+    NotificationAction.createSimple("Open") {
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(file)
+        }
     }
-}
 
-private fun notifyFileSaved(project: Project, file: File) {
+private fun notifyFileSaved(
+    project: Project,
+    file: File,
+) {
     Logger.getInstance("IOUtilities").info("Successfully saved ${file.path}")
     invokeLater {
         NotificationGroupManager.getInstance()
@@ -204,5 +228,3 @@ private fun notifyFileSaved(project: Project, file: File) {
             .notify(project)
     }
 }
-
-

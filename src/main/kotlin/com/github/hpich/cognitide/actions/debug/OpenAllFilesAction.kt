@@ -24,15 +24,17 @@ class OpenAllFilesAction : AnAction() {
 
         // check if tab limit settings collides
         if (UISettings.getInstance().editorTabLimit < files.size) {
-            when (MessageDialogBuilder
-                .yesNoCancel(
-                    "Conflicting Settings",
-                    "The settings editorTabLimit " +
+            when (
+                MessageDialogBuilder
+                    .yesNoCancel(
+                        "Conflicting Settings",
+                        "The settings editorTabLimit " +
                             "(how many editor tabs can be open at once) is ${UISettings.getInstance().editorTabLimit} " +
-                            "but we would open ${files.size} tabs. Increase the limit?"
-                )
-                .icon(UIUtil.getWarningIcon())
-                .show(e.project!!)) {
+                            "but we would open ${files.size} tabs. Increase the limit?",
+                    )
+                    .icon(UIUtil.getWarningIcon())
+                    .show(e.project!!)
+            ) {
                 MessageConstants.CANCEL -> return
                 MessageConstants.YES -> UISettings.getInstance().editorTabLimit = files.size
             }

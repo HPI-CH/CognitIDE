@@ -11,6 +11,22 @@ It is available for IntelliJ-based IDEs with build numbers 221 to 222. Lab Strea
   Download the [latest release](https://github.com/HPI-CH/CognitIDE/releases) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Development
+
+### Linter
+
+Run ktlint to validate the style of all Kotlin files
+
+```sh
+./gradlew ktlintCheck
+```
+
+Format files to correct most style violations automatically
+
+```sh
+./gradlew ktlintFormat
+```
+
 ## Highlighting script
 For an example for the highlighting script you could take a look at and/or download highlighting.scriptwithdeps.kts.
 

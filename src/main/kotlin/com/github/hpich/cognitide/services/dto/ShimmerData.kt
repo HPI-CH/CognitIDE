@@ -6,9 +6,7 @@ import kotlinx.serialization.Serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.awt.Point
 
 @Serializable(with = ShimmerDataSerializer::class)
 data class ShimmerData(
@@ -28,15 +26,19 @@ data class ShimmerData(
     val GSR_CONDUCTANCE: Double,
     val INTERNAL_ADC_A13: Double,
     val PRESSURE: Double,
-    val TEMPERATURE: Double
+    val TEMPERATURE: Double,
 )
 
 @Serializer(forClass = ShimmerData::class)
 object ShimmerDataSerializer : KSerializer<ShimmerData> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ShimmerData", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: ShimmerData) {
-        val uniqueRepresentation = "${value.LOW_NOISE_ACCELEROMETER_X},;|" +
+    override fun serialize(
+        encoder: Encoder,
+        value: ShimmerData,
+    ) {
+        val uniqueRepresentation =
+            "${value.LOW_NOISE_ACCELEROMETER_X},;|" +
                 "${value.LOW_NOISE_ACCELEROMETER_Y},;|" +
                 "${value.LOW_NOISE_ACCELEROMETER_Z},;|" +
                 "${value.WIDE_RANGE_ACCELEROMETER_X},;|" +
@@ -53,7 +55,6 @@ object ShimmerDataSerializer : KSerializer<ShimmerData> {
                 "${value.INTERNAL_ADC_A13},;|" +
                 "${value.PRESSURE},;|" +
                 "${value.TEMPERATURE}"
-
 
         encoder.encodeString(uniqueRepresentation)
     }

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package com.github.hpich.cognitide.utils.script
 
 import kotlinx.coroutines.runBlocking
@@ -20,12 +22,12 @@ import kotlin.script.experimental.jvm.jvm
     // scripting support could be used, e.g. in IDE, if the specific support is not installed.
     fileExtension = "scriptwithdeps.kts",
     // the class or object that defines script compilation configuration for this type of scripts
-    compilationConfiguration = ScriptWithMavenDepsConfiguration::class
+    compilationConfiguration = ScriptWithMavenDepsConfiguration::class,
 )
 // the class is used as the script base class, therefore it should be open or abstract
 abstract class ScriptWithMavenDeps(val args: String)
 
-//todo: DependencyCollectionException: <get-repositorySystem>(...) must not be null
+// todo: DependencyCollectionException: <get-repositorySystem>(...) must not be null
 object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
     {
         // adds implicit import statements (in this case `import kotlin.script.experimental.dependencies.DependsOn`, etc.)
@@ -38,7 +40,7 @@ object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
             // to add the whole classpath for the classloader without check for jar presence, use
             // `dependenciesFromCurrentContext(wholeClasspath = true)`
             dependenciesFromCurrentContext(
-                wholeClasspath = true
+                wholeClasspath = true,
             )
         }
         // section that callbacks during compilation
@@ -47,15 +49,16 @@ object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
             // the processing is defined by the `handler`, that may return refined configuration depending on the annotations
             onAnnotations(DependsOn::class, Repository::class, handler = ::configureMavenDepsOnAnnotations)
         }
-    }
+    },
 )
 
 private val resolver = CompoundDependenciesResolver(FileSystemDependenciesResolver(), MavenDependenciesResolver())
 
 // The handler that is called during script compilation in order to reconfigure compilation on the fly
 fun configureMavenDepsOnAnnotations(context: ScriptConfigurationRefinementContext): ResultWithDiagnostics<ScriptCompilationConfiguration> {
-    val annotations = context.collectedData?.get(ScriptCollectedData.collectedAnnotations)?.takeIf { it.isNotEmpty() }
-        ?: return context.compilationConfiguration.asSuccess() // If no action is performed, the original configuration should be returned
+    val annotations =
+        context.collectedData?.get(ScriptCollectedData.collectedAnnotations)?.takeIf { it.isNotEmpty() }
+            ?: return context.compilationConfiguration.asSuccess() // If no action is performed, the original configuration should be returned
     return runBlocking {
         // resolving maven artifacts using annotation arguments
         resolver.resolveFromScriptSourceAnnotations(annotations)

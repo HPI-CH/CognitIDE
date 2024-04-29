@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 
 class HighlightGazeElementAction : AnAction() {
-
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
         e.presentation.isEnabled = currentProject?.service<DataCollectingService>()?.isHighlightAvailable ?: false

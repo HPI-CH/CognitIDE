@@ -16,8 +16,8 @@ import com.intellij.openapi.ui.Messages.YES
 class SetupNewRecordingAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val dataCollectingService = e.project?.service<DataCollectingService>()
-        e.presentation.isEnabled = dataCollectingService != null
-                && !dataCollectingService.isRecording
+        e.presentation.isEnabled = dataCollectingService != null &&
+            !dataCollectingService.isRecording
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -28,19 +28,23 @@ class SetupNewRecordingAction : AnAction() {
         dataCollectingService.stopRecording()
 
         // clear data
-        when (MessageDialogBuilder
-            .yesNoCancel(dialogTitle, "Clear all recorded data?")
-            .asWarning()
-            .show(e.project)) {
+        when (
+            MessageDialogBuilder
+                .yesNoCancel(dialogTitle, "Clear all recorded data?")
+                .asWarning()
+                .show(e.project)
+        ) {
             YES -> dataCollectingService.clearData()
             CANCEL -> return
         }
 
         // reset participant questioner, generate new id
-        when (MessageDialogBuilder
-            .yesNoCancel(dialogTitle, "Reset participant?")
-            .asWarning()
-            .show(e.project)) {
+        when (
+            MessageDialogBuilder
+                .yesNoCancel(dialogTitle, "Reset participant?")
+                .asWarning()
+                .show(e.project)
+        ) {
             YES -> {
                 ParticipantState.instance.loadState(ParticipantState())
                 ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
@@ -50,9 +54,10 @@ class SetupNewRecordingAction : AnAction() {
         }
 
         // calibrate user
-        when (MessageDialogBuilder
-            .yesNoCancel(dialogTitle, "Redo calibration?")
-            .show(e.project)
+        when (
+            MessageDialogBuilder
+                .yesNoCancel(dialogTitle, "Redo calibration?")
+                .show(e.project)
         ) {
             YES -> cognitIDETrackerManager(e.project!!)
             CANCEL -> return

@@ -8,7 +8,7 @@ import com.intellij.ui.components.panels.Wrapper
 import com.intellij.ui.dsl.builder.*
 
 class CognitIDESettingsConfigurable : BoundConfigurable(
-    "CognitIDESettingsConfigurable"
+    "CognitIDESettingsConfigurable",
 ) {
     private val model = CognitIDESettingsState.instance
     private val wrapper = Wrapper()
@@ -30,8 +30,9 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
 
                 lateinit var interruptCheckBox: Cell<JBCheckBox>
                 row {
-                    interruptCheckBox = checkBox("Interrupt user:")
-                        .bindSelected(model::interruptUser)
+                    interruptCheckBox =
+                        checkBox("Interrupt user:")
+                            .bindSelected(model::interruptUser)
                 }
                 panel {
                     indent {
@@ -55,24 +56,30 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                     checkBox("Yes").bindSelected(model::includeTobii)
                         .comment("Should data from devices of this type be recorded?")
                 }
+                @Suppress("ktlint")
                 row("Connector path:") {
-                    textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                    textFieldWithBrowseButton(
+                        fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
+                    )
                         .bindText(model::tobiiProConnectorExecutable)
                         .comment(
                             "Please <a href='https://labstreaminglayer.readthedocs.io/info/supported_devices.html'>build the TobiiPro Connector</a>. " +
-                                    "It is used to create an LSL stream for the eye tracker. " +
-                                    "It will be used by the plugin to get the required data.\n" +
-                                    "Provide the application path <i>optionally</i> so the application can be opened when needed."
+                                "It is used to create an LSL stream for the eye tracker. " +
+                                "It will be used by the plugin to get the required data.\n" +
+                                "Provide the application path <i>optionally</i> so the application can be opened when needed.",
                         )
                 }
                 group("Eye Tracker Manager") {
+                    @Suppress("ktlint")
                     row("Path:") {
-                        textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+                        textFieldWithBrowseButton(
+                            fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
+                        )
                             .bindText(model::eyeTrackerManagerExecutable)
                             .comment(
                                 "<i>optional:</i> Provide the path to your " +
-                                        "<a href='https://www.tobii.com/products/software/applications-and-developer-kits/tobii-pro-eye-tracker-manager'>Tobii Pro Eye Tracker Manager</a>. " +
-                                        "It will be called on the fly to setup the calibration of a new participant."
+                                    "<a href='https://www.tobii.com/products/software/applications-and-developer-kits/tobii-pro-eye-tracker-manager'>Tobii Pro Eye Tracker Manager</a>. " +
+                                    "It will be called on the fly to setup the calibration of a new participant.",
                             )
                     }
                     row("Serial number:") {
@@ -80,7 +87,7 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                             .bindText(model::eyeTrackerSerial)
                             .comment(
                                 "<i>optional:</i> Provide the serial number of your tobii pro device (e.g. TPNA1-030109123456.\n" +
-                                        "If provided, the calibration will be opened directly."
+                                    "If provided, the calibration will be opened directly.",
                             )
                     }
                 }
@@ -103,9 +110,10 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
         // Persist the current values in the modifiedDeviceSpecs
         currentSubPanel?.apply()
         // Create new UI elements for all deviceSpecs
-        currentSubPanel = panel {
-            modifiedDeviceSpecs.forEach { deviceSpec -> buildSingleSpec(this, deviceSpec) }
-        }
+        currentSubPanel =
+            panel {
+                modifiedDeviceSpecs.forEach { deviceSpec -> buildSingleSpec(this, deviceSpec) }
+            }
         // Render the new elements
         wrapper.setContent(currentSubPanel)
         wrapper.revalidate()
@@ -133,7 +141,10 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
         super.cancel()
     }
 
-    private fun deepCopyList(source: MutableList<DeviceSpec>, target: MutableList<DeviceSpec>) {
+    private fun deepCopyList(
+        source: MutableList<DeviceSpec>,
+        target: MutableList<DeviceSpec>,
+    ) {
         target.clear()
         target.addAll(source.map { it.copy() })
     }
@@ -146,19 +157,24 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
         deepCopyList(model.devices, modifiedDeviceSpecs)
     }
 
-    private fun buildSingleSpec(panel: Panel, deviceSpec: DeviceSpec) {
+    private fun buildSingleSpec(
+        panel: Panel,
+        deviceSpec: DeviceSpec,
+    ) {
         with(panel) {
             row("Stream Name:") { textField().bindText(deviceSpec::name) }
             row("Number of channels:") { textField().bindText(deviceSpec::channelCount) }
-            row("Connector application path:") {textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
+            row("Connector application path:") {
+                textFieldWithBrowseButton(fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor())
                     .bindText(deviceSpec::connectorPath)
                     .comment(
-                            "The connector application is used to create an LSL stream for the given device. " +
+                        "The connector application is used to create an LSL stream for the given device. " +
                             "It will be used by the plugin to get the required data.\n" +
-                            "Provide the application path <i>optionally</i> so the application can be opened when needed."
-                    ) }
+                            "Provide the application path <i>optionally</i> so the application can be opened when needed.",
+                    )
+            }
             // Button to remove this device spec
-            row() {
+            row {
                 button("Remove") {
                     modifiedDeviceSpecs.remove(deviceSpec)
                     // Refresh the settings panel to reflect the removal

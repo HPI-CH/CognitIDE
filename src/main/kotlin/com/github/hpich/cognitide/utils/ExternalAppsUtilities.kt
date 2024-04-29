@@ -9,15 +9,18 @@ fun openTobiiProConnector(project: Project) {
     execExternalUtility(
         project,
         CognitIDESettingsState.instance.tobiiProConnectorExecutable,
-        "Please provide a valid path to the TobiiPro Connector executable."
+        "Please provide a valid path to the TobiiPro Connector executable.",
     )
 }
 
-fun openConnector(project: Project, device: DeviceSpec) {
+fun openConnector(
+    project: Project,
+    device: DeviceSpec,
+) {
     execExternalUtility(
         project,
         device.connectorPath,
-        "Please provide a valid path to the connector executable."
+        "Please provide a valid path to the connector executable.",
     )
 }
 
@@ -30,11 +33,15 @@ fun cognitIDETrackerManager(project: Project) {
     execExternalUtility(
         project,
         command,
-        "Please provide a valid path to the Eye Tracker Manager executable."
+        "Please provide a valid path to the Eye Tracker Manager executable.",
     )
 }
 
-fun execExternalUtility(project: Project, path: String, notFoundMessage: String) {
+fun execExternalUtility(
+    project: Project,
+    path: String,
+    notFoundMessage: String,
+) {
     if (path.isBlank() || File(wrapPath(path)).exists()) {
         requestSettingsChange(project, notFoundMessage)
         return

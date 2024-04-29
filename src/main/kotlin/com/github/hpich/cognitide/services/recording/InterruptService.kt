@@ -12,7 +12,7 @@ import kotlin.concurrent.timerTask
 
 class InterruptService(
     private val project: Project,
-    private val dataCollectingService: DataCollectingService
+    private val dataCollectingService: DataCollectingService,
 ) {
     private val settings = CognitIDESettingsState.instance
 
@@ -38,30 +38,32 @@ class InterruptService(
         thisLogger().info("Canceled interrupt timer!")
     }
 
-    private fun interruptUser() = invokeLater {
-        val interruptStart = System.currentTimeMillis()
-        val response = Messages.showInputDialog(
-            project,
-            "Please pause your workings and answer the verbal questions.",
-            "Interrupt ${numInterrupted + 1}/${settings.interruptCount}",
-            null
-        )
-        val interruptEnd = System.currentTimeMillis()
-        if (response == null) {
-            project.infoMsg("Stopping recording, user cancelled interrupt!")
-            dataCollectingService.stopRecording()
-            return@invokeLater
-        }
-        dataCollectingService.addUserInterrupt(interruptStart, interruptEnd, response)
+    private fun interruptUser() =
+        invokeLater {
+            val interruptStart = System.currentTimeMillis()
+            val response =
+                Messages.showInputDialog(
+                    project,
+                    "Please pause your workings and answer the verbal questions.",
+                    "Interrupt ${numInterrupted + 1}/${settings.interruptCount}",
+                    null,
+                )
+            val interruptEnd = System.currentTimeMillis()
+            if (response == null) {
+                project.infoMsg("Stopping recording, user cancelled interrupt!")
+                dataCollectingService.stopRecording()
+                return@invokeLater
+            }
+            dataCollectingService.addUserInterrupt(interruptStart, interruptEnd, response)
 
-        if (settings.interruptStopRecordingAfterLast && numInterrupted >= settings.interruptCount) {
-            thisLogger().info("All interrupts recorded. Stopping recording.")
-            dataCollectingService.stopRecording()
+            if (settings.interruptStopRecordingAfterLast && numInterrupted >= settings.interruptCount) {
+                thisLogger().info("All interrupts recorded. Stopping recording.")
+                dataCollectingService.stopRecording()
+            }
+            if (settings.interruptUser && numInterrupted < settings.interruptCount) {
+                newTimer()
+            } else {
+                thisLogger().info("All interrupts recorded. Purging timer.")
+            }
         }
-        if (settings.interruptUser && numInterrupted < settings.interruptCount) {
-            newTimer()
-        } else {
-            thisLogger().info("All interrupts recorded. Purging timer.")
-        }
-    }
 }

@@ -8,7 +8,7 @@ import kotlinx.serialization.encoding.*
 data class LookElement(
     val text: String,
     val filePath: String,
-    val startOffset: Int
+    val startOffset: Int,
 ) {
     val endOffset: Int
         get() = startOffset + text.length
@@ -18,7 +18,10 @@ data class LookElement(
 object LookElementSerializer : KSerializer<LookElement?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LookElement", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: LookElement?) {
+    override fun serialize(
+        encoder: Encoder,
+        value: LookElement?,
+    ) {
         val uniqueRepresentation = "${value?.text},;|${value?.filePath},;|${value?.startOffset}"
         encoder.encodeString(uniqueRepresentation)
     }
@@ -26,10 +29,10 @@ object LookElementSerializer : KSerializer<LookElement?> {
     override fun deserialize(decoder: Decoder): LookElement? {
         val parts = decoder.decodeString().split(",;|")
         if (parts[0] == "null") return null
-            return LookElement(
-                text = parts[0],
-                filePath = parts[1],
-                startOffset = parts[2].toInt()
-            )
+        return LookElement(
+            text = parts[0],
+            filePath = parts[1],
+            startOffset = parts[2].toInt(),
+        )
     }
 }

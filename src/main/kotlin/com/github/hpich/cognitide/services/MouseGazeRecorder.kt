@@ -24,42 +24,42 @@ class MouseGazeRecorder(project: Project) : StudyRecorder(project, "Recording Mo
 
     override fun dispose() {}
 
-    override fun loop(indicator: ProgressIndicator) = invokeLater {
-        editorMouseEvent?.let {
-            val editor = it.editor
-            if (editor.isDisposed) {
-                editorMouseEvent = null
-                return@let
+    override fun loop(indicator: ProgressIndicator) =
+        invokeLater {
+            editorMouseEvent?.let {
+                val editor = it.editor
+                if (editor.isDisposed) {
+                    editorMouseEvent = null
+                    return@let
+                }
+                val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
+                val offset = it.offset
+                val mousePoint = it.mouseEvent.locationOnScreen
+                val relativePoint = it.mouseEvent.point
+                val logicalPosition = it.logicalPosition
+
+                val element = psiFile.findElementAt(offset)
+                val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
+
+                val fakeData = GazeData(mousePoint, mousePoint, 1.0, 1.0)
+                if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
+                    dataCollectingService.addGazeSnapshot(
+                        LookElement(
+                            element.text,
+                            element.containingFile.virtualFile.path,
+                            element.startOffset,
+                        ),
+                        fakeData,
+                        arrayOf(floatArrayOf(-999f)),
+                    )
+                }
+                dataCollectingService.incrementLookElementsAround(psiFile, editor, mousePoint)
+                indicator.text = dataCollectingService.stats()
+                indicator.text2 =
+                    "mouse: ${mousePoint.x},${mousePoint.y} relative: ${relativePoint.x},${relativePoint.y} \n" +
+                    "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${element?.containingFile?.virtualFile?.name}"
             }
-            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return@invokeLater
-            val offset = it.offset
-            val mousePoint = it.mouseEvent.locationOnScreen
-            val relativePoint = it.mouseEvent.point
-            val logicalPosition = it.logicalPosition
-
-            val element = psiFile.findElementAt(offset)
-            val virtualFile = FileDocumentManager.getInstance().getFile(editor.document)
-
-            val fakeData = GazeData(mousePoint, mousePoint, 1.0, 1.0)
-            if (virtualFile != null && element != null && element !is PsiWhiteSpace) {
-                dataCollectingService.addGazeSnapshot(
-                    LookElement(
-                        element.text,
-                        element.containingFile.virtualFile.path,
-                        element.startOffset
-                    ),
-                    fakeData,
-                    arrayOf(floatArrayOf(-999f))
-                )
-            }
-            dataCollectingService.incrementLookElementsAround(psiFile, editor, mousePoint)
-            indicator.text = dataCollectingService.stats()
-            indicator.text2 =
-                "mouse: ${mousePoint.x},${mousePoint.y} relative: ${relativePoint.x},${relativePoint.y} \n" +
-                        "${logicalPosition.line}:${logicalPosition.column} ${element?.text} ${element?.containingFile?.virtualFile?.name}"
-
         }
-    }
 
     private companion object Listener : EditorFactoryListener, EditorMouseListener, EditorMouseMotionListener {
         var editorMouseEvent: EditorMouseEvent? = null

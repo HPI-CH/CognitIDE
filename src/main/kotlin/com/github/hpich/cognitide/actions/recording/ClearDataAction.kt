@@ -7,7 +7,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageDialogBuilder
 
 class ClearDataAction : AnAction() {
-
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
         e.presentation.isEnabled = currentProject?.service<DataCollectingService>()?.isAnyDataAvailable ?: false

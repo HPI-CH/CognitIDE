@@ -8,7 +8,6 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.EditorFactory
 
 class ClearHighlightersAction : AnAction() {
-
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
         e.presentation.isEnabled = currentProject?.service<DataCollectingService>()?.wasHighlighted ?: false

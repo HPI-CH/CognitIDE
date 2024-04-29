@@ -11,9 +11,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.*
 
-
 class MouseGazer(private val delayBetweenSamples: Long = 10L) : Disposable {
-
     private var nextSampleTime = 0L
 
     init {

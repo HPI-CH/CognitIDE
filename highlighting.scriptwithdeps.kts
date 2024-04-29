@@ -1,16 +1,10 @@
-import java.io.File
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.util.*
 import kotlinx.serialization.Serializable
-import java.awt.Color
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.awt.Point
-import java.awt.geom.Arc2D
-import java.lang.Math.pow
-import kotlin.math.pow
+import java.io.File
+import java.util.*
 
 
 /**
@@ -25,13 +19,17 @@ import kotlin.math.pow
  * @return A map of LookElement with updated weights.
  */
 fun adjustLookElementWeights(
-    elements: Map<LookElement, Double>, measurements: List<GazeSnapshot>
+    elements: Map<LookElement, Double>,
+    measurements: List<GazeSnapshot>,
 ): Map<LookElement, Double> {
-
+    @Suppress("ktlint")
     val RETURN_DEFAULT_WEIGHTS = true
 
+    @Suppress("ktlint")
     val SHIMMER_ID = 2
+    @Suppress("ktlint")
     val NUMBER_OF_STREAMS = 2
+    @Suppress("ktlint")
     val Z_AXIS_ACCELERATION_ID = 2
 
     if (RETURN_DEFAULT_WEIGHTS) return elements
@@ -42,12 +40,13 @@ fun adjustLookElementWeights(
     elements.forEach { (element, _) ->
         measurements.forEach { measurement ->
             if (element.startOffset == measurement.lookElement?.startOffset) {
-                val averageSensorValues = calculateSensorValuesAverage(
-                    measurement,
-                    streamID = SHIMMER_ID,
-                    numberOfStreams = NUMBER_OF_STREAMS,
-                    channelID = Z_AXIS_ACCELERATION_ID
-                )
+                val averageSensorValues =
+                    calculateSensorValuesAverage(
+                        measurement,
+                        streamID = SHIMMER_ID,
+                        numberOfStreams = NUMBER_OF_STREAMS,
+                        channelID = Z_AXIS_ACCELERATION_ID,
+                    )
                 if (averageSensorValues != null) {
                     alteredElements[element] = alteredElements[element]!! + averageSensorValues
                     elementCounters[element] = elementCounters[element]!! + 1.0
@@ -71,7 +70,10 @@ fun adjustLookElementWeights(
  * @return The average sensor value or null if no valid data is available.
  */
 fun calculateSensorValuesAverage(
-    measurement: GazeSnapshot, streamID: Int, numberOfStreams: Int, channelID: Int
+    measurement: GazeSnapshot,
+    streamID: Int,
+    numberOfStreams: Int,
+    channelID: Int,
 ): Double? {
     val sensorValues =
         measurement.otherLSLData.filterIndexed { index, _ -> ((index + 1) - streamID) % numberOfStreams == 0 }
@@ -80,19 +82,21 @@ fun calculateSensorValuesAverage(
     return if (sensorValues.isNotEmpty()) sensorValues.average() else null
 }
 
-
 fun main() {
-    val json = Json {
-        allowSpecialFloatingPointValues = true
-    }
+    val json =
+        Json {
+            allowSpecialFloatingPointValues = true
+        }
     val saveFolderPath: String = args.toString()
     val saveFolder = File(saveFolderPath)
     try {
-        val elementsStrings = json.decodeFromString<Map<String, Double>>(
-            File(
-                saveFolder, "lookElementGazeMap.json"
-            ).readText(Charsets.UTF_8)
-        )
+        val elementsStrings =
+            json.decodeFromString<Map<String, Double>>(
+                File(
+                    saveFolder,
+                    "lookElementGazeMap.json",
+                ).readText(Charsets.UTF_8),
+            )
 
         val measurementsString =
             json.decodeFromString<List<String>>(File(saveFolder, "measurements.json").readText(Charsets.UTF_8))
@@ -104,37 +108,38 @@ fun main() {
 
         val file = File(saveFolder, "lookElementGazeMapAlteredByUser.json")
         file.createNewFile()
-        file.writeText(json.encodeToString<Map<String, Double>>(elements.mapKeys { lookElementToString(it.key) }
-            .toMap()))
-
+        file.writeText(
+            json.encodeToString<Map<String, Double>>(
+                elements.mapKeys { lookElementToString(it.key) }
+                    .toMap(),
+            ),
+        )
     } catch (ex: Exception) {
         println("EXCEPTION: " + ex)
     }
 }
 
-
 // Utilities
 @Serializable
 data class FloatArrayContainer(val data: List<FloatArray?>)
 
-
 @Serializable
 data class LookElement(
-    val text: String, val filePath: String, val startOffset: Int
+    val text: String,
+    val filePath: String,
+    val startOffset: Int,
 ) {
     val endOffset: Int
         get() = startOffset + text.length
 }
-
 
 @Serializable
 data class GazeSnapshot(
     val epochMillis: Long,
     val lookElement: LookElement?,
     val rawGazeData: GazeData?,
-    val otherLSLData: List<FloatArray?>
+    val otherLSLData: List<FloatArray?>,
 )
-
 
 @Serializable
 data class GazeData(
@@ -143,17 +148,23 @@ data class GazeData(
     val rightEyeX: Int,
     val rightEyeY: Int,
     val leftPupil: Double,
-    val rightPupil: Double
+    val rightPupil: Double,
 ) {
     constructor(leftEye: Point, rightEye: Point, leftPupil: Double, rightPupil: Double) : this(
-        leftEye.x, leftEye.y, rightEye.x, rightEye.y, leftPupil, rightPupil
+        leftEye.x,
+        leftEye.y,
+        rightEye.x,
+        rightEye.y,
+        leftPupil,
+        rightPupil,
     )
 
     val eyeCenter: Point
-        get() = Point(
-            (leftEyeX + rightEyeX) / 2,
-            (leftEyeY + rightEyeY) / 2,
-        )
+        get() =
+            Point(
+                (leftEyeX + rightEyeX) / 2,
+                (leftEyeY + rightEyeY) / 2,
+            )
 
     fun correctMissingEye(): GazeData? {
         if (leftPupil.isNaN() && rightPupil.isNaN()) {
@@ -177,7 +188,9 @@ fun lookElementToString(value: LookElement): String {
 fun stringToLookElement(lookElementString: String): LookElement {
     val parts = lookElementString.split(",;|")
     return LookElement(
-        text = parts[0], filePath = parts[1], startOffset = parts[2].replace("\\", "").trim('"').toInt()
+        text = parts[0],
+        filePath = parts[1],
+        startOffset = parts[2].replace("\\", "").trim('"').toInt(),
     )
 }
 
@@ -187,7 +200,7 @@ fun stringToGazeSnapshot(gazeSnapshotString: String): GazeSnapshot {
         epochMillis = parts[0].replace("\\", "").trim('"').toLong(),
         lookElement = stringToLookElement(parts[1]),
         rawGazeData = stringToRawGazeData(parts[2]),
-        otherLSLData = stringToOtherLSLData(parts[3])
+        otherLSLData = stringToOtherLSLData(parts[3]),
     )
 }
 
@@ -199,7 +212,7 @@ fun stringToRawGazeData(gazeDataString: String): GazeData? {
         rightEyeX = parts[2].replace("\\", "").trim('"').toInt(),
         rightEyeY = parts[3].replace("\\", "").trim('"').toInt(),
         leftPupil = parts[4].replace("\\", "").trim('"').toDouble(),
-        rightPupil = parts[5].replace("\\", "").trim('"').toDouble()
+        rightPupil = parts[5].replace("\\", "").trim('"').toDouble(),
     )
 }
 
@@ -207,9 +220,10 @@ fun stringToOtherLSLData(dataString: String): List<FloatArray?> {
     val floatListsString = dataString.split("\":")[1].trim('}', '"').split("],[")
     if ("[]" in floatListsString) return emptyList()
 
-    val transformedList = floatListsString.map {
-        it.trim('[', ']').split(",").map { numStr -> numStr.trim().toFloat() }.toFloatArray()
-    }
+    val transformedList =
+        floatListsString.map {
+            it.trim('[', ']').split(",").map { numStr -> numStr.trim().toFloat() }.toFloatArray()
+        }
 
     return transformedList
 }

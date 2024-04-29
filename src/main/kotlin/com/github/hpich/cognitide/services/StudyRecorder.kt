@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 
 abstract class StudyRecorder(
     project: Project,
-    progressTitle: String
+    progressTitle: String,
 ) : Task.Backgroundable(project, progressTitle, true), Disposable {
     protected val dataCollectingService: DataCollectingService = project.service<DataCollectingService>()
     protected open val delay = 100L
@@ -29,6 +29,7 @@ abstract class StudyRecorder(
     }
 
     private var shouldRun = false
+
     final override fun run(indicator: ProgressIndicator) {
         runBlocking {
             indicator.isIndeterminate = true

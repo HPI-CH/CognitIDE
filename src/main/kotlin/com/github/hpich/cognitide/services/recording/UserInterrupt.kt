@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class UserInterrupt(
     val epochMillisStart: Long,
     val epochMillisEnd: Long,
-    val answer: String = ""
+    val answer: String = "",
 )

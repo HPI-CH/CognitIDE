@@ -8,8 +8,7 @@ import java.awt.Robot
 import java.awt.Toolkit
 import java.awt.image.BufferedImage
 
-
-class CalculateScreenBrightnessAction: AnAction() {
+class CalculateScreenBrightnessAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val rect = Rectangle(Toolkit.getDefaultToolkit().screenSize)
         val capture = Robot().createScreenCapture(rect)
@@ -17,6 +16,7 @@ class CalculateScreenBrightnessAction: AnAction() {
         val lum = lum(capture)
         Messages.showInfoMessage("Average Luminance is $lum", "Luminance")
     }
+
     private fun lum(img: BufferedImage): Double {
         val width = img.width
         val height = img.height

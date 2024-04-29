@@ -8,8 +8,8 @@ import com.intellij.openapi.components.service
 class StopRecordingAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val currentProject = e.project
-        e.presentation.isEnabled = currentProject != null
-                && currentProject.service<DataCollectingService>().isRecording
+        e.presentation.isEnabled = currentProject != null &&
+            currentProject.service<DataCollectingService>().isRecording
     }
 
     override fun actionPerformed(e: AnActionEvent) {

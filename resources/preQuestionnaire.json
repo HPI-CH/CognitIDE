@@ -1,0 +1,151 @@
+{
+  "questionnaireType": "preQuestionnaire",
+  "sections": [
+    {
+      "title": "Traits",
+      "questions": [
+        {
+          "title": "Gender",
+          "property": "gender",
+          "type": "dropdown",
+          "answers": ["male", "female", "diverse"]
+        },
+        {
+          "title": "Age",
+          "property": "age",
+          "type": "freetext"
+        },
+        {
+          "title": "Profession",
+          "property": "profession",
+          "type": "freetext"
+        }
+      ]
+    },
+    {
+      "title": "Typical Work Week",
+      "text": "We want to get a sense of your typical work week. In the table below, please enter roughly how many hours per week you spend on each of the activities.\nIf there are activities that you think should be included, please list them at the bottom of the table in the row “Enter another option”.",
+      "questions": [
+        {
+          "title": "Writing Code",
+          "property": "writing_code",
+          "type": "freetext"
+        },
+        {
+          "title": "Debugging or fixing bugs",
+          "property": "debugging_code",
+          "type": "freetext"
+        },
+        {
+          "title": "Running tests on code",
+          "property": "running_tests",
+          "type": "freetext"
+        },
+        {
+          "title": "Meetings",
+          "property": "meetings",
+          "type": "freetext"
+        },
+        {
+          "title": "Email",
+          "property": "email",
+          "type": "freetext"
+        },
+        {
+          "title": "Helping / Monitoring",
+          "property": "helping_monitoring",
+          "type": "freetext"
+        },
+        {
+          "title": "Working on / with specs / requirements",
+          "property": "specs_requirements",
+          "type": "freetext"
+        },
+        {
+          "title": "Reviewing Code",
+          "property": "reviewing_code",
+          "type": "freetext"
+        },
+        {
+          "title": "Documentation",
+          "property": "documentation",
+          "type": "freetext"
+        },
+        {
+          "title": "Honing skills / continuous learning",
+          "property": "learning",
+          "type": "freetext"
+        },
+        {
+          "title": "Administrative Tasks",
+          "property": "admin_tasks",
+          "type": "freetext"
+        },
+        {
+          "title": "Networking / Maintaining relationships",
+          "property": "relationships",
+          "type": "freetext"
+        },
+        {
+          "title": "Enter another option: ",
+          "property": "other",
+          "type": "freetext"
+        }
+      ]
+    },
+    {
+      "title": "Experience",
+      "questions": [
+        {
+          "title": "How many years of IT or programming experience do you have?",
+          "property": "programming_experience",
+          "type": "dropdown",
+          "answers": ["1 year or less", "Between 1 and 2 years", "Between 2 and 5 years", "Between 5 and 10 years", "Between 10 and 20 years", "More than 20 years"]
+        },
+        {
+          "title": "Which programming languages do you use?",
+          "property": "programming_languages",
+          "type": "freetext"
+        },
+        {
+          "title": "How would you rate your overall cognitive load on average on a normal working day?\nCognitive load is the amount of mental processing you require to perform a task.",
+          "property": "cognitive_load_pre",
+          "type": "dropdown",
+          "answers": ["Very low", "Low", "Neither low nor high", "High", "Very high"]
+        }
+      ]
+    },
+    {
+      "title": "Participant Information",
+      "text": "To evaluate the physiological data from the body sensors after the study, we need the following information.",
+      "questions": [
+        {
+          "title": "Handedness",
+          "property": "handedness",
+          "type": "dropdown",
+          "answers": ["left", "right", "mixed", "ambidextrous"]
+        },
+        {
+          "title": "Please specify neurological psychological or chronic medical conditions if applicable.",
+          "property": "medical_conditions",
+          "type": "freetext"
+        },
+        {
+          "title": "Please specify which medication you are currently taking if applicable.",
+          "property": "medication",
+          "type": "freetext"
+        },
+        {
+          "title": "Please specify which drugs you have consumed in the near past if applicable.\nPlease state which drug, the frequency of consumption and the data of last consumption.",
+          "property": "drugs",
+          "type": "freetext"
+        },
+        {
+          "title": "Please specify any hair and skin products you have used in the near past if applicable",
+          "property": "hair_skin_products",
+          "type": "freetext"
+        }
+      ]
+    }
+  ]
+}

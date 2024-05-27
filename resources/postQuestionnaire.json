@@ -1,0 +1,31 @@
+{
+  "questionnaireType": "postQuestionnaire",
+  "sections": [
+    {
+      "title": "Experience",
+      "questions": [
+        {
+          "title": "How would you rate your overall cognitive load during this study? Cognitive load is the\namount of mental processing you require to perform a task.",
+          "property": "cognitive_load_post",
+          "type": "dropdown",
+          "answers": ["Very low", "Low", "Neither low nor high", "High", "Very high"]
+        },
+        {
+          "title": "Please order the different types of tasks according to difficulty (from easy to hard):\nwriting code, debugging, documentation, writing email.",
+          "property": "task_difficulty",
+          "type": "freetext"
+        },
+        {
+          "title": "Please order the different types of tasks according to mental effort that needed to be\ninvested in completing the tasks (from little mental effort to a lot of mental effort):\nwriting code, debugging, documentation, writing email.",
+          "property": "task_mental_effort",
+          "type": "freetext"
+        },
+        {
+          "title": "Further Comments",
+          "property": "further_comments",
+          "type": "freetext"
+        }
+      ]
+    }
+  ]
+}

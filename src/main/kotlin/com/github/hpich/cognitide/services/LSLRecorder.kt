@@ -179,6 +179,10 @@ class LSLRecorder(
             project.errorMsg("Error whilst opening LSL inlet: ${ex.localizedMessage}", logger = thisLogger(), ex)
             return false
         }
+        if (debugMode && CognitIDESettingsState.instance.devices.size == 0) {
+            mouseGazer = MouseGazer()
+            return true
+        }
         invokeLater {
             if (!debugMode && CognitIDESettingsState.instance.includeTobii) {
                 if (MessageDialogBuilder

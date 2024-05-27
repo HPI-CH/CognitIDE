@@ -1,0 +1,72 @@
+{
+  "questionnaireType": "midStudyQuestionnaire",
+  "sections": [
+    {
+      "title": "Participant",
+      "questions": [
+        {
+          "title": "Task",
+          "property": "task_number",
+          "type": "slider",
+          "min": 1,
+          "max": 4,
+          "step": 1
+        }
+      ]
+    },
+    {
+      "title": "Task Load",
+      "text": "Hart and Staveland’s NASA Task Load Index (TLX) method assesses work load on five 7-point scales. \nIncrements of high, medium and low estimates for each point result in 21 gradations on the scales.",
+      "questions": [
+        {
+          "title": "How mentally demanding was the task?",
+          "property": "mental_demand",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "title": "How physically demanding was the task?",
+          "property": "physical_demand",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "title": "How hurried or rushed was the pace of the task?",
+          "property": "temporal_demand",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "title": "How successful were you in accomplishing what you were asked to do?",
+          "property": "performance",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "title": "How hard did you have to work to accomplish your level of performance?",
+          "property": "effort",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "title": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+          "property": "frustration",
+          "type": "slider",
+          "min": 0,
+          "max": 20,
+          "step": 1
+        }
+      ]
+    }
+  ]
+}

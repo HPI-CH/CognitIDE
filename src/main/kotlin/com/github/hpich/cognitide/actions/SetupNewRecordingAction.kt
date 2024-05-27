@@ -2,6 +2,7 @@ package com.github.hpich.cognitide.actions
 
 import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.config.ParticipantState
+import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.github.hpich.cognitide.utils.cognitIDETrackerManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -46,6 +47,7 @@ class SetupNewRecordingAction : AnAction() {
                 .show(e.project)
         ) {
             YES -> {
+                QuestionnaireState.instance.reset()
                 ParticipantState.instance.loadState(ParticipantState())
                 ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
             }

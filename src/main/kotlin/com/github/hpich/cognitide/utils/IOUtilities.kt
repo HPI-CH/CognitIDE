@@ -3,6 +3,7 @@ package com.github.hpich.cognitide.utils
 import com.github.hpich.cognitide.config.CognitIDESettingsConfigurable
 import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.config.ParticipantState
+import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.extensions.screenshot
 import com.github.hpich.cognitide.services.dto.GazeSnapshot
 import com.github.hpich.cognitide.services.dto.LookElement
@@ -51,6 +52,8 @@ fun saveRecordingToDisk(
     val participantState = ParticipantState.instance
     val participantId = participantState.id
 
+    val questionnaireState = QuestionnaireState.instance.propertiesMap
+
     val settingsState = CognitIDESettingsState.instance
     val saveFolder = File(settingsState.recordingsSaveLocation, "${participantId}_$timestamp")
 
@@ -71,9 +74,13 @@ fun saveRecordingToDisk(
             saveToDisk(json.encodeToString(userInterrupts), file)
             notifyFileSaved(project, file)
         }
-        val file = File(saveFolder, "participant.json")
-        saveToDisk(json.encodeToString(participantState), file)
-        notifyFileSaved(project, file)
+        val file1 = File(saveFolder, "participant.json")
+        saveToDisk(json.encodeToString(participantState), file1)
+        notifyFileSaved(project, file1)
+
+        val questionnairesFile = File(saveFolder, "questionnaires.json")
+        saveToDisk(json.encodeToString(questionnaireState), questionnairesFile)
+        notifyFileSaved(project, questionnairesFile)
 
         if (gazeSnapshots != null) {
             // highlight, open editors and save screenshots

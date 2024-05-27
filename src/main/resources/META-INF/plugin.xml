@@ -20,6 +20,7 @@
                                  id="plugin.cognitide.participant"
                                  displayName="Participant Configuration"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.ParticipantState"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.questionnaires.QuestionnaireState"/>
         <applicationConfigurable parentId="plugin.cognitide"
                                  instance="com.github.hpich.cognitide.config.HighlightingConfigurable"
                                  id="plugin.cognitide.highlighting"
@@ -39,9 +40,44 @@
 
             <action id="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
                     class="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
-                    text="Setup New Participant"
-                    description="Clears all data and opens questioner for new participant."
+                    text="Initial Participant Setup"
+                    description="Clears all data and opens setup for new participant."
                     icon="AllIcons.Actions.AddFile"/>
+
+            <group id="com.github.hpich.cognitide.actions.ViewQuestionnaireGroup"
+                   text="Show Study Questionnaire"
+                   popup="true">
+                <action id="com.github.hpich.cognitide.actions.ViewPreQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewPreQuestionnaireAction"
+                        text="Pre-Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+                <action id="com.github.hpich.cognitide.actions.ViewFirstQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
+                        text="First Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+                <action id="com.github.hpich.cognitide.actions.ViewSecondQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
+                        text="Second Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+                <action id="com.github.hpich.cognitide.actions.ViewThirdQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
+                        text="Third Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+                <action id="com.github.hpich.cognitide.actions.ViewFourthQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
+                        text="Fourth Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+                <action id="com.github.hpich.cognitide.actions.ViewPostQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewPostQuestionnaireAction"
+                        text="Post-Questionnaire"
+                        description="Show and edit the pre-questionnaire."
+                        icon="AllIcons.Actions.AddFile"/>
+            </group>
             <action id="com.github.hpich.cognitide.actions.recording.ClearDataAction"
                     class="com.github.hpich.cognitide.actions.recording.ClearDataAction" text="Clear Recording"
                     description="Clears all recorded data."
@@ -102,6 +138,7 @@
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
             </group>
+
         </group>
     </actions>
 </idea-plugin>

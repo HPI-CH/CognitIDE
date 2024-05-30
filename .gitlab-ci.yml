@@ -2,6 +2,7 @@ stages:
   - lint
 #   - test
   - inspect
+  - verify
   - build
 
 before_script:
@@ -17,7 +18,7 @@ ktlint:
   only:
     - main
     - merge_requests
-  image: gradle:jdk11
+  image: gradle:8.1-jdk11
   script:
     - ./gradlew ktlintCheck
 
@@ -26,7 +27,7 @@ ktlint:
 #   only:
 #     - main
 #     - merge_requests
-#   image: gradle:jdk11
+#   image: gradle:8.1-jdk11
 #   script:
 #     - ./gradlew test
 
@@ -52,11 +53,51 @@ qodana:
     reports:
       codequality: .qodana/results/gl-code-quality-report.json
 
-build:
+plugin-verifier:
+  stage: verify
+  only:
+    - main
+  image: gradle:8.1-jdk11
+  cache:
+    - key: plugin-verifier-$CI_DEFAULT_BRANCH-$CI_COMMIT_REF_SLUG
+      fallback_keys:
+        - plugin-verifier-$CI_DEFAULT_BRANCH-
+        - plugin-verifier-
+      paths:
+        - .pluginVerifier/ides
+  script:
+    - ./gradlew runPluginVerifier
+
+pre-build:
   stage: build
   only:
     - main
-  image: gradle:jdk11
+  image: gradle:8.1-jdk11
+  script:
+    - export PLUGIN_NAME=$(cat gradle.properties | grep 'pluginName = .*' | awk -F '= ' '{print $2}')
+    - export PLUGIN_VERSION=$(cat gradle.properties | grep 'pluginVersion = .*' | awk -F '= ' '{print $2}')
+    - export ARTIFACT_FOLDER="${PLUGIN_NAME}-${PLUGIN_VERSION}"
+    - echo $ARTIFACT_FOLDER
+    - echo "PLUGIN_NAME=${PLUGIN_NAME}" >> build.dotenv
+    - echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> build.dotenv
+    - echo "ARTIFACT_FOLDER=${ARTIFACT_FOLDER}" >> build.dotenv
+  artifacts:
+    reports:
+      dotenv: build.dotenv
+
+build-plugin:
+  stage: build
+  only:
+    - main
+  image: gradle:8.1-jdk11
+  needs:
+    - pre-build
   script:
     - ./gradlew buildPlugin
-
+    - unzip "build/distributions/${ARTIFACT_FOLDER}.zip" -d content
+    - mv content/* ./
+  artifacts:
+    name: "$ARTIFACT_FOLDER"
+    paths:
+      - $PLUGIN_NAME
+    expire_in: never

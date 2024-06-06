@@ -25,12 +25,21 @@ data class Question(
     val answers: List<String>? = null,
     val min: Int? = null,
     val max: Int? = null,
-    val step: Int? = null,
+    val minorTickSpacing: Int? = null,
+    val majorTickSpacing: Int? = null,
 )
 
-fun readJSON(filePath: String): Questionnaire {
+fun readJson(filePath: String): Questionnaire {
     val file = File(filePath)
     val jsonString = file.readText()
     val questionnaire = Json.decodeFromString<Questionnaire>(jsonString)
     return questionnaire
+}
+
+fun readJsonOptional(filePath: String): Questionnaire? {
+    return try {
+        readJson(filePath)
+    } catch (e: Exception) {
+        null
+    }
 }

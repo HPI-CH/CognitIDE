@@ -16,9 +16,10 @@
                 displayName="CognitIDE Settings"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.CognitIDESettingsState"/>
         <applicationConfigurable parentId="plugin.cognitide"
-                                 instance="com.github.hpich.cognitide.config.ParticipantConfigurable"
-                                 id="plugin.cognitide.participant"
-                                 displayName="Participant Configuration"/>
+                                 instance="com.github.hpich.cognitide.config.study.StudyConfigurable"
+                                 id="plugin.cognitide.study"
+                                 displayName="Study Configuration"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.study.StudyState"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.ParticipantState"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.questionnaires.QuestionnaireState"/>
         <applicationConfigurable parentId="plugin.cognitide"
@@ -40,9 +41,14 @@
 
             <action id="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
                     class="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
-                    text="Initial Participant Setup"
+                    text="Setup New Participant"
                     description="Clears all data and opens setup for new participant."
                     icon="AllIcons.Actions.AddFile"/>
+            <action id="com.github.hpich.cognitide.actions.EditParticipantAction"
+                    class="com.github.hpich.cognitide.actions.EditParticipantAction"
+                    text="Edit Participant"
+                    description="Opens participant setup panel."
+                    icon="AllIcons.Actions.Edit"/>
 
             <group id="com.github.hpich.cognitide.actions.ViewQuestionnaireGroup"
                    text="Show Study Questionnaire"

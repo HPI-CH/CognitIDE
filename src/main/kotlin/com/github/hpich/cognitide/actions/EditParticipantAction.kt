@@ -1,13 +1,13 @@
-package com.github.hpich.cognitide.actions.questionnaires
+package com.github.hpich.cognitide.actions
 
-import com.github.hpich.cognitide.config.questionnaires.PreQuestionnaireConfigurable
+import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ShowSettingsUtil
 
-class ViewPreQuestionnaireAction : AnAction() {
+class EditParticipantAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val dataCollectingService = e.project?.service<DataCollectingService>()
         e.presentation.isEnabled = dataCollectingService != null &&
@@ -15,6 +15,6 @@ class ViewPreQuestionnaireAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        ShowSettingsUtil.getInstance().editConfigurable(e.project, PreQuestionnaireConfigurable())
+        ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
     }
 }

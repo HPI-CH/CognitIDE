@@ -5,28 +5,16 @@
       "title": "Participant",
       "questions": [
         {
-          "title": "Id",
-          "property": "id",
-          "type": "number",
-          "min": 0,
-          "max": 10000,
-          "step": 1
+          "title": "A test question",
+          "property": "test",
+          "type": "freetext"
         },
         {
-          "title": "Device/Setup Inaccuracy (Horizontal inaccuracy margin diameter in px)",
-          "property": "horizontalSpread",
+          "title": "A test number question",
+          "property": "test2",
           "type": "number",
-          "min": 2,
-          "max": 1000,
-          "step": 2
-        },
-        {
-          "title": "Device/Setup Inaccuracy (Vertical inaccuracy margin diameter in px)",
-          "property": "verticalSpread",
-          "type": "number",
-          "min": 2,
-          "max": 1000,
-          "step": 2
+          "min": 1,
+          "max": 1000
         }
       ]
     }

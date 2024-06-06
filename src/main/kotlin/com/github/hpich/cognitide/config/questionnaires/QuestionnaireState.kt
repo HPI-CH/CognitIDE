@@ -24,19 +24,12 @@ class QuestionnaireState : PersistentStateComponent<QuestionnaireState> {
     override fun getState(): QuestionnaireState = this
 
     override fun loadState(state: QuestionnaireState) {
+        propertiesMap.clear()
         state.propertiesMap.toMap(propertiesMap)
     }
 
     fun reset() {
-        propertiesMap.clear()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is QuestionnaireState && propertiesMap == other.propertiesMap
-    }
-
-    override fun hashCode(): Int {
-        return propertiesMap.hashCode()
+        loadState(QuestionnaireState())
     }
 
     fun accessPropertyString(
@@ -45,15 +38,6 @@ class QuestionnaireState : PersistentStateComponent<QuestionnaireState> {
     ): Pair<() -> String, (Any?) -> Unit> {
         val getter = { getQuestionnaire(questionnaire).getOrDefault(key, "") }
         val setter = { value: Any? -> getQuestionnaire(questionnaire)[key] = value.toString() }
-        return Pair(getter, setter)
-    }
-
-    fun accessPropertyIntOpt(
-        questionnaire: String,
-        key: String,
-    ): Pair<() -> Int?, (Int?) -> Unit> {
-        val getter = { getQuestionnaire(questionnaire).getOrDefault(key, "0").toIntOrNull() }
-        val setter = { value: Int? -> getQuestionnaire(questionnaire)[key] = value.toString() }
         return Pair(getter, setter)
     }
 

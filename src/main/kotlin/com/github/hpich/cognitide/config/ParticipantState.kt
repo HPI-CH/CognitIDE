@@ -12,14 +12,7 @@ import kotlinx.serialization.Serializable
     storages = [Storage("CognitIDEPlugin_participant.xml")],
 )
 class ParticipantState : PersistentStateComponent<ParticipantState> {
-    @Suppress("ktlint")
-    // absolute paths will be obsolete once study workflow is implemented
-    var participantSetupJSONpath = "D:/Programming/Uni/HPI/Masterprojekt/CognitIDE/resources/participantSetup.json"
-    var preQuestionnaireJSONpath = "D:/Programming/Uni/HPI/Masterprojekt/CognitIDE/resources/preQuestionnaire.json"
-    var midStudyQuestionnaireJSONpath = "D:/Programming/Uni/HPI/Masterprojekt/CognitIDE/resources/midStudyQuestionnaire.json"
-    var postQuestionnaireJSONpath = "D:/Programming/Uni/HPI/Masterprojekt/CognitIDE/resources/postQuestionnaire.json"
-
-    var id: Int = (1..10000).random()
+    var id: Int = 0
     var horizontalSpread = 16
     var verticalSpread = 16
 
@@ -28,19 +21,11 @@ class ParticipantState : PersistentStateComponent<ParticipantState> {
     override fun getState(): ParticipantState = this
 
     override fun loadState(state: ParticipantState) {
-        state.propertiesMap.toMap(propertiesMap)
-    }
-
-    fun reset() {
         propertiesMap.clear()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is ParticipantState && propertiesMap == other.propertiesMap
-    }
-
-    override fun hashCode(): Int {
-        return propertiesMap.hashCode()
+        state.propertiesMap.toMap(propertiesMap)
+        id = state.id
+        horizontalSpread = state.horizontalSpread
+        verticalSpread = state.verticalSpread
     }
 
     fun accessPropertyString(key: String): Pair<() -> String, (Any?) -> Unit> {
@@ -49,16 +34,14 @@ class ParticipantState : PersistentStateComponent<ParticipantState> {
         return Pair(getter, setter)
     }
 
-    fun accessPropertyIntOpt(key: String): Pair<() -> Int?, (Int?) -> Unit> {
-        val getter = { propertiesMap.getOrDefault(key, "0").toIntOrNull() }
-        val setter = { value: Int? -> propertiesMap[key] = value.toString() }
-        return Pair(getter, setter)
-    }
-
     fun accessPropertyInt(key: String): Pair<() -> Int, (Int?) -> Unit> {
         val getter = { propertiesMap.getOrDefault(key, "0").toInt() }
         val setter = { value: Int? -> propertiesMap[key] = value.toString() }
         return Pair(getter, setter)
+    }
+
+    fun reset() {
+        loadState(ParticipantState())
     }
 
     companion object {

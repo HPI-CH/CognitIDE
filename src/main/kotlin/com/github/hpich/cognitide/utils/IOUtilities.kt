@@ -74,9 +74,9 @@ fun saveRecordingToDisk(
             saveToDisk(json.encodeToString(userInterrupts), file)
             notifyFileSaved(project, file)
         }
-        val file1 = File(saveFolder, "participant.json")
-        saveToDisk(json.encodeToString(participantState), file1)
-        notifyFileSaved(project, file1)
+        val file = File(saveFolder, "participant.json")
+        saveToDisk(json.encodeToString(participantState), file)
+        notifyFileSaved(project, file)
 
         val questionnairesFile = File(saveFolder, "questionnaires.json")
         saveToDisk(json.encodeToString(questionnaireState), questionnairesFile)

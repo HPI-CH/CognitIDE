@@ -4,13 +4,11 @@ import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.services.DataCollectingService
-import com.github.hpich.cognitide.utils.cognitIDETrackerManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.ui.MessageDialogBuilder
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.Messages.CANCEL
 import com.intellij.openapi.ui.Messages.YES
 
@@ -31,41 +29,20 @@ class SetupNewRecordingAction : AnAction() {
         // clear data
         when (
             MessageDialogBuilder
-                .yesNoCancel(dialogTitle, "Clear all recorded data?")
-                .asWarning()
-                .show(e.project)
-        ) {
-            YES -> dataCollectingService.clearData()
-            CANCEL -> return
-        }
-
-        // reset participant questioner, generate new id
-        when (
-            MessageDialogBuilder
-                .yesNoCancel(dialogTitle, "Reset participant?")
+                .yesNoCancel(
+                    dialogTitle,
+                    "Setting up a new participant clears all recorded data and resets all participant data. Do you wish to proceed?",
+                )
                 .asWarning()
                 .show(e.project)
         ) {
             YES -> {
+                dataCollectingService.clearData()
+                ParticipantState.instance.reset()
                 QuestionnaireState.instance.reset()
-                ParticipantState.instance.loadState(ParticipantState())
                 ShowSettingsUtil.getInstance().editConfigurable(e.project, ParticipantConfigurable())
             }
-
             CANCEL -> return
         }
-
-        // calibrate user
-        when (
-            MessageDialogBuilder
-                .yesNoCancel(dialogTitle, "Redo calibration?")
-                .show(e.project)
-        ) {
-            YES -> cognitIDETrackerManager(e.project!!)
-            CANCEL -> return
-        }
-
-        // confirm finished
-        Messages.showInfoMessage("Great! You can now start your recording session!", dialogTitle)
     }
 }

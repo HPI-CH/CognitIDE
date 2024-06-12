@@ -17,7 +17,7 @@ class StartMouseRecordingAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         e.project?.service<DataCollectingService>()?.apply {
-            setRecorder(LSLRecorder(e.project!!, debugMode = true))
+            setRecorder(LSLRecorder(e.project!!))
             startRecording()
         }
     }

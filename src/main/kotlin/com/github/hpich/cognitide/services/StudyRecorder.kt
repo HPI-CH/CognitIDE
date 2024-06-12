@@ -24,7 +24,7 @@ abstract class StudyRecorder(
         ProgressManager.getInstance().run(this)
     }
 
-    fun stopRecording() {
+    open fun stopRecording() {
         shouldRun = false
     }
 

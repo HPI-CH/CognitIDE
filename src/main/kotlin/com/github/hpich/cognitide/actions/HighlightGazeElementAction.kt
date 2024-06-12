@@ -12,6 +12,6 @@ class HighlightGazeElementAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.project?.service<DataCollectingService>()?.highlightGazedElements()
+        e.project?.service<DataCollectingService>()?.highlightLatestRecording()
     }
 }

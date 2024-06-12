@@ -1,5 +1,6 @@
 package com.github.hpich.cognitide.services
 
+import com.github.hpich.cognitide.config.HighlightingState
 import com.github.hpich.cognitide.services.dto.FileChangeset
 import com.github.hpich.cognitide.services.dto.FileCheckpoint
 import com.github.hpich.cognitide.ui.CognitIDEColors
@@ -128,7 +129,8 @@ class Highlighter(
      */
     private fun runHighlightScript() {
         // TODO make path to script configurable.
-        val scriptPath = "C:\\IntelliJProjects\\CognitIDE\\highlighting.py"
+        val scriptPath = HighlightingState.instance.highlightingScript
+        // val scriptPath = "C:\\IntelliJProjects\\CognitIDE\\highlighting.py"
         val pythonCommand = "python $scriptPath \"${saveFolder.absolutePath}\" $time"
         val process = Runtime.getRuntime().exec(pythonCommand)
         process.waitFor()

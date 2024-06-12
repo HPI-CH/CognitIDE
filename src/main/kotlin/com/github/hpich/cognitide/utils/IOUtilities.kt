@@ -5,9 +5,7 @@ import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.extensions.screenshot
-import com.github.hpich.cognitide.services.dto.GazeSnapshot
-import com.github.hpich.cognitide.services.dto.LookElement
-import com.github.hpich.cognitide.services.dto.LookElementGaze
+import com.github.hpich.cognitide.services.dto.*
 import com.github.hpich.cognitide.services.recording.UserInterrupt
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
@@ -42,10 +40,12 @@ private val logger = Logger.getInstance("com.github.hpich.cognitide.utils.IOUtil
 fun saveRecordingToDisk(
     project: Project,
     date: Date,
-    lookElementGazeList: List<LookElementGaze>,
-    gazeSnapshots: List<GazeSnapshot>?,
+    sensorData: MutableMap<String, MutableList<SensorSample>>,
+    gazeData: MutableMap<Int, MutableList<GazeSample>>,
+    initialFileContents: MutableMap<String, FileCheckpoint>,
+    fileChangeData: MutableMap<String, MutableList<FileChangeset>>,
     userInterrupts: List<UserInterrupt>?,
-) {
+): File? {
     val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
     val timestamp = timestampFormat.format(date)
 
@@ -59,19 +59,29 @@ fun saveRecordingToDisk(
 
     saveFolder.mkdirs()
     try {
-        if (!gazeSnapshots.isNullOrEmpty()) {
-            val file = File(saveFolder, "measurements.json")
-            saveToDisk(json.encodeToString(gazeSnapshots), file)
-            notifyFileSaved(project, file)
-        }
-        if (lookElementGazeList.isNotEmpty()) {
-            val file = File(saveFolder, "elements.json")
-            saveToDisk(json.encodeToString(lookElementGazeList), file)
-            notifyFileSaved(project, file)
-        }
         if (!userInterrupts.isNullOrEmpty()) {
             val file = File(saveFolder, "interrupts.json")
             saveToDisk(json.encodeToString(userInterrupts), file)
+            notifyFileSaved(project, file)
+        }
+        if (sensorData.isNotEmpty()) {
+            val file = File(saveFolder, "sensorData.json")
+            saveToDisk(json.encodeToString(sensorData), file)
+            notifyFileSaved(project, file)
+        }
+        if (gazeData.isNotEmpty()) {
+            val file = File(saveFolder, "gazeData.json")
+            saveToDisk(json.encodeToString(gazeData), file)
+            notifyFileSaved(project, file)
+        }
+        if (initialFileContents.isNotEmpty()) {
+            val file = File(saveFolder, "initialFileContents.json")
+            saveToDisk(json.encodeToString(initialFileContents), file)
+            notifyFileSaved(project, file)
+        }
+        if (fileChangeData.isNotEmpty()) {
+            val file = File(saveFolder, "fileChangeData.json")
+            saveToDisk(json.encodeToString(fileChangeData), file)
             notifyFileSaved(project, file)
         }
         val file = File(saveFolder, "participant.json")
@@ -82,12 +92,12 @@ fun saveRecordingToDisk(
         saveToDisk(json.encodeToString(questionnaireState), questionnairesFile)
         notifyFileSaved(project, questionnairesFile)
 
-        if (gazeSnapshots != null) {
+        if (initialFileContents.isNotEmpty()) {
             // highlight, open editors and save screenshots
             val images =
                 screenshotFilesInEditor(
                     project,
-                    gazeSnapshots.mapNotNull { it.lookElement }.map { it.filePath }.distinct(),
+                    initialFileContents.keys.toList(),
                 )
             val imageFolder = File(saveFolder, "files")
             imageFolder.mkdirs()
@@ -100,7 +110,9 @@ fun saveRecordingToDisk(
         }
     } catch (ex: Exception) {
         project.errorMsg("An unknown error occurred whilst saving data!", logger, ex)
+        return null
     }
+    return saveFolder
 }
 
 fun screenshotFilesInEditor(
@@ -192,28 +204,6 @@ fun requestSettingsChange(
 }
 
 fun wrapPath(path: String) = if (path.startsWith('\"')) path else "\"$path\""
-
-fun saveTmpFiles(
-    lookElementGazeMap: MutableMap<LookElement, Double>,
-    gazeSnapshotList: MutableList<GazeSnapshot>,
-) {
-    val settingsState = CognitIDESettingsState.instance
-    val saveFolder = File(settingsState.recordingsSaveLocation, "tmp")
-    saveFolder.mkdirs()
-
-    val elementFile = File(saveFolder, "lookElementGazeMap.json")
-    val measurementFile = File(saveFolder, "measurements.json")
-    try {
-        elementFile.createNewFile()
-        elementFile.writeText(
-            json.encodeToString(lookElementGazeMap.mapKeys { json.encodeToString(LookElement.serializer(), it.key) }.toMap()),
-        )
-        measurementFile.createNewFile()
-        measurementFile.writeText(json.encodeToString(gazeSnapshotList.map { json.encodeToString(GazeSnapshot.serializer(), it) }.toList()))
-    } catch (ex: Exception) {
-        print("EXCEPTION: " + ex)
-    }
-}
 
 private fun openFileAction(file: File) =
     NotificationAction.createSimple("Open") {

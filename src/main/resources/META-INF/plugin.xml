@@ -93,7 +93,7 @@
 
             <action id="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
                     class="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
-                    text="Visualize Recorded Data"
+                    text="Visualize Last Saved Recording"
                     description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
             <action id="com.github.hpich.cognitide.actions.ClearHighlightersAction"

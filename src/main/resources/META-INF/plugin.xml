@@ -94,16 +94,19 @@
             <action id="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
                     class="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
                     text="Visualize Last Saved Recording"
-                    description="Will used previously recorded gaze data to color looked-at elements based on how often they were looked at."
+                    description="Will use previously recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
+            <action id="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
+                    class="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
+                    text="Select and Visualize Recording"
+                    description="Will use selected recorded gaze data to color looked-at elements based on how often they were looked at."
+                    icon="AllIcons.Actions.ToggleVisibility"/>
             <action id="com.github.hpich.cognitide.actions.ClearHighlightersAction"
                     class="com.github.hpich.cognitide.actions.ClearHighlightersAction"
                     text="Clear Highlights"
                     description="Clears all previously highlighted elements."
                     icon="AllIcons.General.Reset"/>
-
             <separator/>
-
             <action id="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     class="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     text="Start Recording"

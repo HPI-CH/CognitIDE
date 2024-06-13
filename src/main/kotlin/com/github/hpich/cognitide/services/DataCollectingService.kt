@@ -10,10 +10,13 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
@@ -23,6 +26,7 @@ import com.jetbrains.rd.util.getOrCreate
 import java.io.File
 import java.time.Instant
 import java.util.*
+import javax.swing.JOptionPane
 
 @Service(Service.Level.PROJECT)
 class DataCollectingService(val project: Project) {
@@ -283,12 +287,33 @@ class DataCollectingService(val project: Project) {
         latestRecordingSaveFolder?.let { highlightRecording(it) }
     }
 
+    fun selectAndHighlightRecording() {
+        val settingsState = CognitIDESettingsState.instance
+        val fileChooser = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+        val initialDirectory =
+            VirtualFileManager.getInstance().findFileByUrl("file://" + settingsState.recordingsSaveLocation)
+
+        fileChooser.setRoots(initialDirectory)
+        fileChooser.title = "Open Participant Recording Directory"
+        fileChooser.description = "Select the directory where recording is saved"
+
+        val selectedFolder = FileChooser.chooseFiles(fileChooser, null, initialDirectory)
+
+        if (selectedFolder.isNotEmpty()) {
+            val selectedDir = File(selectedFolder[0].path)
+            highlightRecording(selectedDir)
+        } else {
+            JOptionPane.showMessageDialog(null, "No directory selected")
+        }
+    }
+
     /**
      * Highlight the recorded data for a specified recording.
      * @param saveFolder The folder containing the recording.
      */
-    fun highlightRecording(saveFolder: File) {
+    private fun highlightRecording(saveFolder: File) {
         ProgressManager.getInstance().run(Highlighter(project, saveFolder))
+        wasHighlighted = true
     }
 
     fun getRecordedFiles() = initialFileContents.keys.toList()

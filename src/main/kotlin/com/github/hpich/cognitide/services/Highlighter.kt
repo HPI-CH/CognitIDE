@@ -14,9 +14,11 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.wm.WindowManager
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
+import javax.swing.*
 
 /**
  * Class to visualize a recording by highlighting looked at elements based on the recorded data.
@@ -44,7 +46,8 @@ class Highlighter(
     project: Project,
     private val saveFolder: File,
     private val time: Double = 0.0,
-) : Task.Backgroundable(project, "Highlighting recording", true) {
+    loadingText: String = "Highlighting recording",
+) : Task.Backgroundable(project, loadingText, true) {
     // map(file path -> changesets).
     private var fileChangeData = mapOf<String, List<FileChangeset>>()
 
@@ -54,6 +57,42 @@ class Highlighter(
     // map(element id -> highlight intensity).
     private var elementHighlighting = mapOf<Int, Double>()
 
+    // Progress Bar UI
+    private val progressFrame = JFrame(loadingText)
+    private val progressBar = JProgressBar()
+    private val progressLabel = JLabel("Process Highlighting...")
+    private val panelWidth = 400
+    private val panelHeight = 100
+
+    /**
+     * Ensure that the progress bar panel is always IDE-centered and on the same screen as the IDE.
+     */
+    private fun setScreenPosition() {
+        val ideFrame = WindowManager.getInstance().getFrame(project)
+        if (ideFrame != null) {
+            val ideBounds = ideFrame.bounds
+            progressFrame.setLocation(
+                ideBounds.x + (ideBounds.width - progressFrame.width) / 2,
+                ideBounds.y + (ideBounds.height - progressFrame.height) / 2,
+            )
+        } else {
+            progressFrame.setLocationRelativeTo(null)
+        }
+    }
+
+    private fun initProgressBar() {
+        progressBar.isIndeterminate = true
+        val panel = JPanel()
+        panel.layout = BoxLayout(panel, BoxLayout.Y_AXIS)
+        panel.add(progressLabel)
+        panel.add(progressBar)
+        progressFrame.add(panel)
+        progressFrame.setSize(panelWidth, panelHeight)
+        setScreenPosition()
+        progressFrame.defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE
+        progressFrame.isVisible = true
+    }
+
     /**
      * Main run function.
      * This will be executed when calling `ProgressManager.getInstance().run(Highlighter(project, saveFolder))`.
@@ -61,11 +100,19 @@ class Highlighter(
      */
     override fun run(indicator: ProgressIndicator) {
         indicator.isIndeterminate = true
-
-        loadData()
-        reconstructFiles()
-        runHighlightScript()
-        displayHighlighting()
+        try {
+            initProgressBar()
+            loadData()
+            reconstructFiles()
+            runHighlightScript()
+            displayHighlighting()
+        } catch (e: Exception) {
+            JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+        } finally {
+            SwingUtilities.invokeLater {
+                progressFrame.dispose()
+            }
+        }
     }
 
     /**
@@ -91,7 +138,12 @@ class Highlighter(
                         return@changesetLoop
                     }
                     changeset.changes.forEach { change ->
-                        checkpoint.text = checkpoint.text.replaceRange(change.offset, change.offset + change.oldText.length, change.newText)
+                        checkpoint.text =
+                            checkpoint.text.replaceRange(
+                                change.offset,
+                                change.offset + change.oldText.length,
+                                change.newText,
+                            )
                     }
                     checkpoint.elementOffsets = changeset.elementOffsets
                 }

@@ -130,7 +130,6 @@ class Highlighter(
     private fun runHighlightScript() {
         // TODO make path to script configurable.
         val scriptPath = HighlightingState.instance.highlightingScript
-        // val scriptPath = "C:\\IntelliJProjects\\CognitIDE\\highlighting.py"
         val pythonCommand = "python $scriptPath \"${saveFolder.absolutePath}\" $time"
         val process = Runtime.getRuntime().exec(pythonCommand)
         process.waitFor()

@@ -128,10 +128,9 @@ class Highlighter(
      * These results are then parsed by this function.
      */
     private fun runHighlightScript() {
-        // TODO make path to script configurable.
-        val scriptPath = HighlightingState.instance.highlightingScript
-        val pythonCommand = "python $scriptPath \"${saveFolder.absolutePath}\" $time"
-        val process = Runtime.getRuntime().exec(pythonCommand)
+        val command = HighlightingState.instance.highlightingCommand
+        val commandWithParameters = "$command \"${saveFolder.absolutePath}\" $time"
+        val process = Runtime.getRuntime().exec(commandWithParameters)
         process.waitFor()
         // TODO catch errors.
 

@@ -55,9 +55,11 @@ fun saveRecordingToDisk(
     val questionnaireState = QuestionnaireState.instance.propertiesMap
 
     val settingsState = CognitIDESettingsState.instance
-    val saveFolder = File(settingsState.recordingsSaveLocation, "${participantId}_$timestamp")
+    val saveFolder = File(settingsState.recordingsSaveLocation, "participant_$participantId/${timestamp}_recording")
 
-    saveFolder.mkdirs()
+    if (!saveFolder.exists()) {
+        saveFolder.mkdirs()
+    }
     try {
         if (!userInterrupts.isNullOrEmpty()) {
             val file = File(saveFolder, "interrupts.json")

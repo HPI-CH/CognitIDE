@@ -8,8 +8,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "com.github.hpich.cognitide.config.HighlightingSettingsState", storages = [Storage("CognitIDEPlugin_highlighting.xml")])
 class HighlightingState : PersistentStateComponent<HighlightingState> {
-    //
-    var highlightingScript = ""
+    var highlightingCommand = ""
 
     override fun getState(): HighlightingState = this
 

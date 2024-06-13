@@ -9,6 +9,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Encoder
 import java.awt.Point
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Serializable(with = GazeDataSerializer::class)
 data class GazeData(
     val leftEyeX: Int,
@@ -48,6 +49,7 @@ data class GazeData(
     }
 }
 
+@kotlinx.serialization.ExperimentalSerializationApi
 @Serializer(forClass = GazeData::class)
 object GazeDataSerializer : KSerializer<GazeData> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("GazeData", PrimitiveKind.STRING)

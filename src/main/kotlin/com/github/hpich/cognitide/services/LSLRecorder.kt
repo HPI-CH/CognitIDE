@@ -204,9 +204,9 @@ class LSLRecorder(private val project: Project) : StudyRecorder(project, "Record
         val mouse = sample.values.size == 2
         val leftX = (sample.values[0] * screenDimensions.width).toInt()
         val leftY = (sample.values[1] * screenDimensions.height).toInt()
-        val rightX = if (mouse) leftX else (sample.values[2] * screenDimensions.width).toInt()
-        val rightY = if (mouse) leftY else (sample.values[3] * screenDimensions.height).toInt()
-        val leftPupil = if (mouse) 1.0 else sample.values[4].toDouble()
+        val leftPupil = if (mouse) 1.0 else sample.values[2].toDouble()
+        val rightX = if (mouse) leftX else (sample.values[3] * screenDimensions.width).toInt()
+        val rightY = if (mouse) leftY else (sample.values[4] * screenDimensions.height).toInt()
         val rightPupil = if (mouse) 1.0 else sample.values[5].toDouble()
 
         return GazeData(leftX, leftY, rightX, rightY, leftPupil, rightPupil).correctMissingEye()?.eyeCenter

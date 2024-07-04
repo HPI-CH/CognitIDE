@@ -26,6 +26,128 @@
           "type": "freetext"
         }
       ]
+    },
+    {
+      "title": "Evaluation",
+      "questions": [
+        {
+          "title": "The tasks were difficult to solve.",
+          "property": "ICL1",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The tasks were complex.",
+          "property": "ICL2",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The tasks contained a lot of complex information.",
+          "property": "ICL3",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The tasks were incomprehensible without prior knowledge.",
+          "property": "ICL4",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "It was difficult to get an overview of the structure of the tasks.",
+          "property": "ECL1",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The design of the tasks made it difficult to establish the connections between the individual pieces of information",
+          "property": "ECL2",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The tasks were unfavorably designed.",
+          "property": "ECL3",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "The design of the tasks made it difficult to find important information quickly.",
+          "property": "ECL4",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "Due to the design of the tasks, I had the feeling that I could not concentrate on the tasks.",
+          "property": "ECL5",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "I actively thought about the tasks.",
+          "property": "GCL1",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "I made an effort to understand the tasks",
+          "property": "GCL2",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "I have gained a comprehensive understanding of the tasks.",
+          "property": "GCL3",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "I can also solve similar tasks quickly and reliably.",
+          "property": "GCL4",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        }
+      ]
     }
   ]
 }

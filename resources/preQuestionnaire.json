@@ -8,17 +8,17 @@
           "title": "Gender",
           "property": "gender",
           "type": "dropdown",
-          "answers": ["male", "female", "diverse"]
+          "answers": ["woman", "man", "non-binary person", "prefer not to say"]
         },
         {
-          "title": "Age",
+          "title": "What is your age?",
           "property": "age",
           "type": "number",
           "min": 1,
           "max": 100
         },
         {
-          "title": "Profession",
+          "title": "What is your profession/job title?",
           "property": "profession",
           "type": "freetext"
         }
@@ -99,15 +99,149 @@
       "title": "Experience",
       "questions": [
         {
-          "title": "How many years of IT or programming experience do you have?",
-          "property": "programming_experience",
-          "type": "dropdown",
-          "answers": ["1 year or less", "Between 1 and 2 years", "Between 2 and 5 years", "Between 5 and 10 years", "Between 10 and 20 years", "More than 20 years"]
-        },
-        {
           "title": "Which programming languages do you use?",
           "property": "programming_languages",
           "type": "freetext"
+        },
+        {
+          "title": "On a scale from 1 to 10, how do you estimate your programming experience?",
+          "property": "s.PE",
+          "type": "slider",
+          "min": 1,
+          "max": 10,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 10
+        },
+        {
+          "title": "How do you estimate your programming experience compared to experts with 20 years of practical experience?",
+          "property": "s.Experts",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How do you estimate your programming experience compared to your class mates?",
+          "property": "s.ClassMates",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following language: Java",
+          "property": "s.Java",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following language: C",
+          "property": "s.C",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following language: Haskell",
+          "property": "s.Haskell",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following language: Prolog",
+          "property": "s.Prolog",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How many additional languages do you know (medium experience or better)?",
+          "property": "s.NumLnguages",
+          "type": "number",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "title": "How experienced are you with the following programming paradigm: functional",
+          "property": "s.Functional",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following programming paradigm: imperative",
+          "property": "s.Imperative",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following programming paradigm: logical",
+          "property": "s.Logical",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "How experienced are you with the following programming paradigm: object-oriented",
+          "property": "s.ObjectOriented",
+          "type": "slider",
+          "min": 1,
+          "max": 5,
+          "minorTickSpacing": 1,
+          "majorTickSpacing": 5
+        },
+        {
+          "title": "For how many years have you been programming?",
+          "property": "y.Prog",
+          "type": "number",
+          "min": 0,
+          "max": 100
+        },
+        {
+        "title": "For how many years have you been programming for larger software projects, e.g., in a company?",
+        "property": "y.ProgProf",
+        "type": "number",
+        "min": 0,
+        "max": 100
+        },
+        {
+        "title": "What year did you enroll at university?",
+        "property": "e.Years",
+        "type": "number",
+        "min": 1950,
+        "max": 2024
+        },
+        {
+        "title": "How many courses did you take in which you had to implement source code?",
+        "property": "e.Courses",
+        "type": "number",
+        "min": 0,
+        "max": 100
+        },
+        {
+        "title": "How large were the professional projects typically? (Lines of Code)",
+        "property": "z.Size",
+        "type": "dropdown",
+        "answers": ["NA", "<900", "900-40000", ">40000"]
         },
         {
           "title": "How would you rate your overall cognitive load on average on a normal working day?\nCognitive load is the amount of mental processing you require to perform a task.",
@@ -126,21 +260,6 @@
           "property": "handedness",
           "type": "dropdown",
           "answers": ["left", "right", "mixed", "ambidextrous"]
-        },
-        {
-          "title": "Please specify neurological psychological or chronic medical conditions if applicable.",
-          "property": "medical_conditions",
-          "type": "freetext"
-        },
-        {
-          "title": "Please specify which medication you are currently taking if applicable.",
-          "property": "medication",
-          "type": "freetext"
-        },
-        {
-          "title": "Please specify which drugs you have consumed in the near past if applicable.\nPlease state which drug, the frequency of consumption and the data of last consumption.",
-          "property": "drugs",
-          "type": "freetext"
         },
         {
           "title": "Please specify any hair and skin products you have used in the near past if applicable",

@@ -2,19 +2,7 @@
   "questionnaireType": "midStudyQuestionnaire",
   "sections": [
     {
-      "title": "Participant",
-      "questions": [
-        {
-          "title": "Task",
-          "property": "task_number",
-          "type": "dropdown",
-          "answers": ["1", "2", "3", "4"]
-        }
-      ]
-    },
-    {
       "title": "Task Load",
-      "text": "Hart and Staveland’s NASA Task Load Index (TLX) method assesses work load on five 7-point scales. \nIncrements of high, medium and low estimates for each point result in 21 gradations on the scales.",
       "questions": [
         {
           "title": "How mentally demanding was the task?",

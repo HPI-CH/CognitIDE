@@ -62,7 +62,7 @@ abstract class QuestionnaireConfigurable : BoundConfigurable(
                                         .labelTable(
                                             mapOf(
                                                 question.min to JLabel(question.min.toString()),
-                                                question.max / 2 to JLabel((question.max / 2).toString()),
+                                                (question.max + question.min) / 2 to JLabel(((question.max + question.min) / 2).toString()),
                                                 question.max to JLabel(question.max.toString()),
                                             ),
                                         )

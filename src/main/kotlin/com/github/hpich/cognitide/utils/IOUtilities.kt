@@ -18,6 +18,7 @@ import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
@@ -165,10 +166,10 @@ fun saveWorkflowToDisk(
     saveToDisk(json.encodeToString(state), workflowFile)
 }
 
-fun screenshotFilesInEditor(
+fun reopenFilesFromPaths(
     project: Project,
     filePaths: List<String>,
-): Map<String, BufferedImage?> =
+): Map<String, FileEditor?> =
     runReadAction {
         val fileEditorManager = FileEditorManager.getInstance(project)
         return@runReadAction filePaths.associateWith { filePath ->
@@ -177,14 +178,46 @@ fun screenshotFilesInEditor(
                 logger.error("Could not find recorded file in my $filePath")
                 return@associateWith null
             }
+            // Check if the file is already open
+            val openEditors = fileEditorManager.getEditors(vFile)
+            if (openEditors.isNotEmpty()) {
+                return@associateWith openEditors.firstOrNull()
+            }
             val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
             if (editor == null) {
                 logger.error("Could not open an editor for $filePath")
                 return@associateWith null
             }
-            editor.screenshot()
+            editor
         }
     }
+
+fun reopenFileFromPath(
+    project: Project,
+    filePath: String,
+): FileEditor? =
+    runReadAction {
+        val fileEditorManager = FileEditorManager.getInstance(project)
+        val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
+        if (vFile == null) {
+            logger.error("Could not find recorded file in my $filePath")
+        }
+        val editor = vFile?.let { fileEditorManager.openFile(it, false, true).firstOrNull() }
+        if (editor == null) {
+            logger.error("Could not open an editor for $filePath")
+        }
+        editor
+    }
+
+fun screenshotFilesInEditor(
+    project: Project,
+    filePaths: List<String>,
+): Map<String, BufferedImage?> {
+    return filePaths.associateWith { filePath ->
+        val editor = reopenFileFromPath(project, filePath) ?: return@associateWith null
+        editor.screenshot()
+    }
+}
 
 fun saveToDisk(
     encoded: String,

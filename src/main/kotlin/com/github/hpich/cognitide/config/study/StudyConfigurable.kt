@@ -1,6 +1,7 @@
 package com.github.hpich.cognitide.config.study
 
 import com.github.hpich.cognitide.services.study.WorkflowItem
+import com.intellij.json.JsonFileType
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
@@ -36,9 +37,20 @@ class StudyConfigurable : BoundConfigurable(
 
     override fun createPanel() =
         panel {
+            pathSetupGroup()
             questionnaireGroup()
             workflowGroup()
         }
+
+    private fun Panel.pathSetupGroup() {
+        group("Workflow") {
+            row("Workflow File:") {
+                textFieldWithBrowseButton(
+                    fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor(JsonFileType.INSTANCE),
+                ).bindText(model::workflowJsonPath)
+            }.rowComment("The workflow JSON which should be executed")
+        }
+    }
 
     private fun Panel.questionnaireGroup() {
         group("Questionnaires") {
@@ -67,7 +79,7 @@ class StudyConfigurable : BoundConfigurable(
 
     private fun Panel.workflowGroup() {
         panel {
-            group("Workflow") {
+            group("Workflow Configurator") {
                 row {
                     text("Configure the workflow that should run, after starting the study.")
                     button("Add Step") {

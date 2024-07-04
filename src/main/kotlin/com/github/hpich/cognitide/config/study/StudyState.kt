@@ -13,6 +13,10 @@ import kotlinx.serialization.Serializable
     storages = [Storage("CognitIDEPlugin_study.xml")],
 )
 class StudyState : PersistentStateComponent<StudyState> {
+    // The workflow file containing all the workflow items to execute
+    var workflowJsonPath: String = ""
+
+    // Questionnaires
     var participantSetupJsonPath: String = ""
     var preStudyQuestionnaireJsonPath = ""
     var midStudyQuestionnaireJsonPath = ""

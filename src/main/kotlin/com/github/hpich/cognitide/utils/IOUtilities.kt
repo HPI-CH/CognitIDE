@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.awt.Desktop
@@ -159,11 +160,22 @@ fun saveQuestionnaireToDisk(
 }
 
 fun saveWorkflowToDisk(
-    state: MutableList<AWorkflowItem>,
+    workflowItems: MutableList<AWorkflowItem>,
     date: Date,
 ) {
-    val workflowFile = createTimestampedFile(createAndGetParticipantFolder(), "workflow.json", date)
-    saveToDisk(json.encodeToString(state), workflowFile)
+    val workflowFile = createTimestampedFile(createAndGetRecordingsFolder(), "workflow.json", date)
+    saveToDisk(json.encodeToString(workflowItems), workflowFile)
+}
+
+fun parseWorkflowFromDisk(path: String): MutableList<AWorkflowItem>? {
+    try {
+        val jsonString = File(path).readLines().joinToString("\n")
+        val workflowList = json.decodeFromString<MutableList<AWorkflowItem>>(jsonString)
+        return workflowList
+    } catch (e: Exception) {
+        logger.error(e.message, e)
+        return null
+    }
 }
 
 fun reopenFilesFromPaths(

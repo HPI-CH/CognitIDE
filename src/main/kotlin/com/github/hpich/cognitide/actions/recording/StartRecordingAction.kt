@@ -16,6 +16,7 @@ class StartRecordingAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
+        val currentProject = e.project
         e.project?.service<DataCollectingService>()?.apply {
             setRecorder(LSLRecorder(e.project!!))
             startRecording()

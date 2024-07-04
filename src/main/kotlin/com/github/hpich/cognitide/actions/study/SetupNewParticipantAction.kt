@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.actions
+package com.github.hpich.cognitide.actions.study
 
 import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.config.ParticipantState
@@ -12,7 +12,7 @@ import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.ui.Messages.CANCEL
 import com.intellij.openapi.ui.Messages.YES
 
-class SetupNewRecordingAction : AnAction() {
+class SetupNewParticipantAction : AnAction() {
     override fun update(e: AnActionEvent) {
         val dataCollectingService = e.project?.service<DataCollectingService>()
         e.presentation.isEnabled = dataCollectingService != null &&

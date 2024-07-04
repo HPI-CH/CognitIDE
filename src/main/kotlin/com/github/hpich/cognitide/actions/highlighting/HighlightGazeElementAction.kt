@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.actions
+package com.github.hpich.cognitide.actions.highlighting
 
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.intellij.openapi.actionSystem.AnAction

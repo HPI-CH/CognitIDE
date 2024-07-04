@@ -7,6 +7,8 @@ import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.extensions.screenshot
 import com.github.hpich.cognitide.services.dto.*
 import com.github.hpich.cognitide.services.recording.UserInterrupt
+import com.github.hpich.cognitide.services.study.AWorkflowItem
+import com.intellij.icons.AllIcons
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
@@ -20,6 +22,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageDialogBuilder
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -37,6 +40,41 @@ val json =
 
 private val logger = Logger.getInstance("com.github.hpich.cognitide.utils.IOUtilities")
 
+fun createAndGetRecordingsFolder(): File {
+    val recordingsSaveLocation = CognitIDESettingsState.instance.recordingsSaveLocation
+    val recordingsFolder = File(recordingsSaveLocation)
+    if (!recordingsFolder.exists()) {
+        // Show Popup
+        val result = Messages.showYesNoDialog("Should the recordings folder be created?", "", "Yes", "No", AllIcons.General.Warning)
+        if (result == Messages.OK) {
+            recordingsFolder.mkdirs()
+        } else {
+            throw Error("Could not create recordings folder: $recordingsFolder")
+        }
+    }
+    return recordingsFolder
+}
+
+fun createAndGetParticipantFolder(): File {
+    val participantId = ParticipantState.instance.id
+    val recordingsFolder = createAndGetRecordingsFolder()
+    val folder = File(recordingsFolder, "participant_$participantId")
+    if (!folder.exists()) {
+        folder.mkdir()
+    }
+    return folder
+}
+
+fun createTimestampedFile(
+    parent: File,
+    filename: String,
+    date: Date,
+): File {
+    val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
+    val timestamp = timestampFormat.format(date)
+    return File(parent, "${timestamp}_$filename")
+}
+
 fun saveRecordingToDisk(
     project: Project,
     date: Date,
@@ -46,16 +84,9 @@ fun saveRecordingToDisk(
     fileChangeData: MutableMap<String, MutableList<FileChangeset>>,
     userInterrupts: List<UserInterrupt>?,
 ): File? {
-    val timestampFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
-    val timestamp = timestampFormat.format(date)
-
-    val participantState = ParticipantState.instance
-    val participantId = participantState.id
-
     val questionnaireState = QuestionnaireState.instance.propertiesMap
-
-    val settingsState = CognitIDESettingsState.instance
-    val saveFolder = File(settingsState.recordingsSaveLocation, "participant_$participantId/${timestamp}_recording")
+    val saveFolder = createTimestampedFile(createAndGetParticipantFolder(), "recording", date)
+    val participantState = ParticipantState.instance
 
     if (!saveFolder.exists()) {
         saveFolder.mkdirs()
@@ -115,6 +146,23 @@ fun saveRecordingToDisk(
         return null
     }
     return saveFolder
+}
+
+fun saveQuestionnaireToDisk(
+    name: String,
+    state: MutableMap<String, String>,
+    date: Date,
+) {
+    val questionnaireFile = createTimestampedFile(createAndGetParticipantFolder(), "questionnaire_$name.json", date)
+    saveToDisk(json.encodeToString(state), questionnaireFile)
+}
+
+fun saveWorkflowToDisk(
+    state: MutableList<AWorkflowItem>,
+    date: Date,
+) {
+    val workflowFile = createTimestampedFile(createAndGetParticipantFolder(), "workflow.json", date)
+    saveToDisk(json.encodeToString(state), workflowFile)
 }
 
 fun screenshotFilesInEditor(

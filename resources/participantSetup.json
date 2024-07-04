@@ -4,18 +4,6 @@
     {
       "title": "Participant",
       "questions": [
-        {
-          "title": "A test question",
-          "property": "test",
-          "type": "freetext"
-        },
-        {
-          "title": "A test number question",
-          "property": "test2",
-          "type": "number",
-          "min": 1,
-          "max": 1000
-        }
       ]
     }
   ]

@@ -39,87 +39,94 @@
                icon="AllIcons.Actions.ShowCode">
             <add-to-group group-id="MainMenu" anchor="last"/>
 
-            <action id="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
-                    class="com.github.hpich.cognitide.actions.SetupNewRecordingAction"
+            <action id="com.github.hpich.cognitide.actions.study.SetupNewParticipantAction"
+                    class="com.github.hpich.cognitide.actions.study.SetupNewParticipantAction"
                     text="Setup New Participant"
                     description="Clears all data and opens setup for new participant."
-                    icon="AllIcons.Actions.AddFile"/>
-            <action id="com.github.hpich.cognitide.actions.EditParticipantAction"
-                    class="com.github.hpich.cognitide.actions.EditParticipantAction"
+                    icon="AllIcons.Actions.NewFolder"/>
+            <action id="com.github.hpich.cognitide.actions.study.EditParticipantAction"
+                    class="com.github.hpich.cognitide.actions.study.EditParticipantAction"
                     text="Edit Participant"
                     description="Opens participant setup panel."
-                    icon="AllIcons.Actions.Edit"/>
+                    icon="AllIcons.Actions.EditSource"/>
 
-            <group id="com.github.hpich.cognitide.actions.ViewQuestionnaireGroup"
+            <group id="com.github.hpich.cognitide.actions.questionnaires.ViewQuestionnaireGroup"
                    text="Show Study Questionnaire"
+                   icon="AllIcons.Actions.ListFiles"
                    popup="true">
-                <action id="com.github.hpich.cognitide.actions.ViewPreQuestionnaireAction"
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
+                        class="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
+                        text="Select Questionnaire"
+                        description="Show and edit the selected questionnaire."
+                        icon="AllIcons.Actions.ListFiles"/>
+                <separator/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewPreQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewPreQuestionnaireAction"
                         text="Pre-Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
-                <action id="com.github.hpich.cognitide.actions.ViewFirstQuestionnaireAction"
+                        icon="AllIcons.Nodes.Property"/>
+                <separator/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewFirstQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
                         text="First Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
-                <action id="com.github.hpich.cognitide.actions.ViewSecondQuestionnaireAction"
+                        icon="AllIcons.Nodes.Method"/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewSecondQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
                         text="Second Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
-                <action id="com.github.hpich.cognitide.actions.ViewThirdQuestionnaireAction"
+                        icon="AllIcons.Nodes.Method"/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewThirdQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
                         text="Third Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
-                <action id="com.github.hpich.cognitide.actions.ViewFourthQuestionnaireAction"
+                        icon="AllIcons.Nodes.Method"/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewFourthQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
                         text="Fourth Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
-                <action id="com.github.hpich.cognitide.actions.ViewPostQuestionnaireAction"
+                        icon="AllIcons.Nodes.Method"/>
+                <separator/>
+                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewPostQuestionnaireAction"
                         class="com.github.hpich.cognitide.actions.questionnaires.ViewPostQuestionnaireAction"
                         text="Post-Questionnaire"
                         description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Actions.AddFile"/>
+                        icon="AllIcons.Nodes.Parameter"/>
             </group>
-            <action id="com.github.hpich.cognitide.actions.recording.ClearDataAction"
-                    class="com.github.hpich.cognitide.actions.recording.ClearDataAction" text="Clear Recording"
-                    description="Clears all recorded data."
-                    icon="AllIcons.Actions.GC"/>
 
             <separator/>
 
-            <action id="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
-                    class="com.github.hpich.cognitide.actions.HighlightGazeElementAction"
-                    text="Visualize Last Saved Recording"
-                    description="Will use previously recorded gaze data to color looked-at elements based on how often they were looked at."
-                    icon="AllIcons.Diff.MagicResolveToolbar"/>
-            <action id="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
-                    class="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
-                    text="Select and Visualize Recording"
-                    description="Will use selected recorded gaze data to color looked-at elements based on how often they were looked at."
-                    icon="AllIcons.Actions.ToggleVisibility"/>
-            <action id="com.github.hpich.cognitide.actions.ClearHighlightersAction"
-                    class="com.github.hpich.cognitide.actions.ClearHighlightersAction"
-                    text="Clear Highlights"
-                    description="Clears all previously highlighted elements."
-                    icon="AllIcons.General.Reset"/>
+            <action id="com.github.hpich.cognitide.actions.study.StartStudyWorkflowAction"
+                    class="com.github.hpich.cognitide.actions.study.StartStudyWorkflowAction"
+                    text="Start Study Workflow"
+                    description="Begins the study workflow."
+                    icon="AllIcons.Actions.Profile"/>
+            <action id="com.github.hpich.cognitide.actions.study.NextStudyStepAction"
+                    class="com.github.hpich.cognitide.actions.study.NextStudyStepAction"
+                    text="Next Workflow Step"
+                    description="Skips to the next workflow step."
+                    icon="AllIcons.Actions.Forward"/>
+            <action id="com.github.hpich.cognitide.actions.study.StopStudyWorkflowAction"
+                    class="com.github.hpich.cognitide.actions.study.StopStudyWorkflowAction"
+                    text="Stop Study Workflow and Save Data"
+                    description="Stops the study workflow and saves all recorded data."
+                    icon="AllIcons.Actions.ProfileCPU"/>
+
             <separator/>
+
             <action id="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     class="com.github.hpich.cognitide.actions.recording.StartRecordingAction"
                     text="Start Recording"
                     description="Starts or continuous a Tobii Pro recording via LSL."
-                    icon="AllIcons.Actions.RunAll">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
+                    icon="AllIcons.Actions.Execute">
+                    <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
             <action id="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
                     class="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
                     text="Stop Recording"
                     description="Stops an ongoing recording."
                     icon="AllIcons.Actions.Suspend">
-                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
+                    <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
 
             <action id="com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
@@ -127,6 +134,10 @@
                     text="Save Recording"
                     description="Saves element gazes and raw recorded data."
                     icon="AllIcons.Actions.MenuSaveall"/>
+            <action id="com.github.hpich.cognitide.actions.recording.ClearDataAction"
+                    class="com.github.hpich.cognitide.actions.recording.ClearDataAction" text="Clear Recording"
+                    description="Clears all recorded data."
+                    icon="AllIcons.Actions.GC"/>
 
             <separator/>
 
@@ -147,6 +158,25 @@
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
             </group>
+
+            <separator/>
+            <action id="com.github.hpich.cognitide.actions.highlighting.HighlightGazeElementAction"
+                    class="com.github.hpich.cognitide.actions.highlighting.HighlightGazeElementAction"
+                    text="Visualize Last Saved Recording"
+                    description="Will use previously recorded gaze data to color looked-at elements based on how often they were looked at."
+                    icon="AllIcons.Diff.MagicResolveToolbar"/>
+            <action id="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
+                    class="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
+                    text="Select and Visualize Recording"
+                    description="Will use selected recorded gaze data to color looked-at elements based on how often they were looked at."
+                    icon="AllIcons.Actions.ToggleVisibility"/>
+            <action id="com.github.hpich.cognitide.actions.highlighting.ClearHighlightersAction"
+                    class="com.github.hpich.cognitide.actions.highlighting.ClearHighlightersAction"
+                    text="Clear Highlights"
+                    description="Clears all previously highlighted elements."
+                    icon="AllIcons.General.Reset"/>
+
+            <separator/>
 
         </group>
     </actions>

@@ -12,10 +12,10 @@ import kotlinx.serialization.Serializable
     storages = [Storage("CognitIDEPlugin_questionnaire.xml")],
 )
 class QuestionnaireState : PersistentStateComponent<QuestionnaireState> {
-    var propertiesMap: MutableMap<String, MutableMap<String, String>> = mutableMapOf()
+    var propertiesMap: MutableMap<String, MutableMap<String, String>?> = mutableMapOf()
 
     private fun getQuestionnaire(questionaire: String): MutableMap<String, String> {
-        if (!propertiesMap.containsKey(questionaire)) {
+        if (!propertiesMap.containsKey(questionaire) || propertiesMap[questionaire] == null) {
             propertiesMap[questionaire] = mutableMapOf()
         }
         return propertiesMap[questionaire]!!
@@ -48,6 +48,10 @@ class QuestionnaireState : PersistentStateComponent<QuestionnaireState> {
         val getter = { getQuestionnaire(questionnaire).getOrDefault(key, "0").toInt() }
         val setter = { value: Int? -> getQuestionnaire(questionnaire)[key] = value.toString() }
         return Pair(getter, setter)
+    }
+
+    fun getQuestionnaireState(questionnaire: String): MutableMap<String, String>? {
+        return propertiesMap[questionnaire]
     }
 
     companion object {

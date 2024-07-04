@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.actions
+package com.github.hpich.cognitide.actions.study
 
 import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.services.DataCollectingService

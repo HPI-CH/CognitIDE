@@ -96,12 +96,11 @@ class ParticipantConfigurable : BoundConfigurable(
                                 else -> null
                             }
                         }
-
                 button("Generate Random ID") {
                     model.id = (1..10000).random()
                     idField.component.text = model.id.toString()
                 }
-            }
+            }.rowComment("ID must be integer between 1-10000. Leading zeros are omitted.")
             row("Horizontal Spread:") {
                 intTextField(2..1000).bindIntText(model::horizontalSpread)
             }

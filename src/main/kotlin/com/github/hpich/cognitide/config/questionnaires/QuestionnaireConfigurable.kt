@@ -1,12 +1,15 @@
 package com.github.hpich.cognitide.config.questionnaires
 
 import com.github.hpich.cognitide.utils.Questionnaire
+import com.github.hpich.cognitide.utils.saveQuestionnaireToDisk
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.ui.dsl.builder.*
+import java.time.Instant
+import java.util.*
 import javax.swing.JLabel
 
 abstract class QuestionnaireConfigurable : BoundConfigurable(
-    "QuestionnaireConfigurable",
+    "Questionnaire",
 ) {
     private val model = QuestionnaireState.instance
 
@@ -14,6 +17,14 @@ abstract class QuestionnaireConfigurable : BoundConfigurable(
 
     open fun getQuestionnaireName(): String {
         return questionnaire.questionnaireType
+    }
+
+    override fun apply() {
+        super.apply()
+        val state = model.getQuestionnaireState(getQuestionnaireName())
+        if (state != null) {
+            saveQuestionnaireToDisk(getQuestionnaireName(), state, Date.from(Instant.now()))
+        }
     }
 
     override fun createPanel() =

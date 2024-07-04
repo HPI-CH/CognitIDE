@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.actions
+package com.github.hpich.cognitide.actions.highlighting
 
 import com.github.hpich.cognitide.extensions.removeAllHighlighters
 import com.github.hpich.cognitide.services.DataCollectingService

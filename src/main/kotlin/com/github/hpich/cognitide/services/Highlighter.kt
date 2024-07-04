@@ -4,6 +4,7 @@ import com.github.hpich.cognitide.config.HighlightingState
 import com.github.hpich.cognitide.services.dto.FileChangeset
 import com.github.hpich.cognitide.services.dto.FileCheckpoint
 import com.github.hpich.cognitide.ui.CognitIDEColors
+import com.github.hpich.cognitide.utils.reopenFilesFromPaths
 import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.application.runWriteActionAndWait
@@ -101,13 +102,21 @@ class Highlighter(
     override fun run(indicator: ProgressIndicator) {
         indicator.isIndeterminate = true
         try {
-            initProgressBar()
+            SwingUtilities.invokeAndWait {
+                initProgressBar()
+            }
             loadData()
+            SwingUtilities.invokeAndWait {
+                val filePaths = fileContents.keys.toList()
+                reopenFilesFromPaths(project, filePaths)
+            }
             reconstructFiles()
             runHighlightScript()
             displayHighlighting()
         } catch (e: Exception) {
-            JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+            SwingUtilities.invokeAndWait {
+                JOptionPane.showMessageDialog(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
+            }
         } finally {
             SwingUtilities.invokeLater {
                 progressFrame.dispose()

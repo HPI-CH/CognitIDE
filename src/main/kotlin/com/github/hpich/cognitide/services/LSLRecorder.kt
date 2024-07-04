@@ -60,7 +60,7 @@ class LSLRecorder(private val project: Project) : StudyRecorder(project, "Record
         }
 
         initMouseSensor()
-        gazeSensor = sensors["Mouse"]
+        gazeSensor = sensors["Tobii"]
         return true
     }
 

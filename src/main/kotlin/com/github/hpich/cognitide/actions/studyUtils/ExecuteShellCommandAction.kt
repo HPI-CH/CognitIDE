@@ -4,14 +4,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
 
-class ExecuteShellCommandAction(command: String?, maxDuration: Duration?) : StudyUtilAction() {
-    @Suppress("ktlint")
-    private val command = command ?: "/Applications/VLC.app/Contents/MacOS/VLC --no-video-title-show --mouse-hide-timeout=1 --fullscreen \"/Users/franz/Downloads/bpm2016-w2-4-pip (720p).mp4\" vlc://quit"
-    private val maxDuration = maxDuration ?: 10.minutes
-
+class ExecuteShellCommandAction(private val command: String, private val maxDuration: Duration) : StudyUtilAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val basePath = event.project?.basePath ?: return
         val commandParts: List<String> =

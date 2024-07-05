@@ -157,6 +157,11 @@
                     class="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
                     text="Screen Brightness"
                     icon="AllIcons.Actions.Show"/>
+                <action id="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
+                        class="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
+                        text="Export Hardcoded Study Workflow"
+                        description="Saves the workflow hardcoded in StudyWorkflowService in the recordings folder."
+                        icon="AllIcons.Actions.MenuSaveall"/>
             </group>
 
             <separator/>

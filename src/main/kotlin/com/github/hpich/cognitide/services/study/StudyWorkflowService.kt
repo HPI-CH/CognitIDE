@@ -1,10 +1,13 @@
 package com.github.hpich.cognitide.services.study
 import com.github.hpich.cognitide.actions.studyUtils.SuspendableStudyAction
+import com.github.hpich.cognitide.config.study.StudyState
+import com.github.hpich.cognitide.utils.parseWorkflowFromDisk
 import com.github.hpich.cognitide.utils.saveWorkflowToDisk
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.ui.Messages
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,11 +25,8 @@ class StudyWorkflowService {
     var isRunning = false
     private var currentStep = 0
 
-    fun startWorkflow(e: AnActionEvent) {
-        initialActionEvent = e
-        isRunning = true
-        currentStep = 0
-        workflowItems =
+    fun saveHardcodedWorkflow() {
+        val hardcodedWorkflowItems =
             mutableListOf(
                 // WorkflowItem(true, "CloseAllEditors"),
                 QuestionnaireWorkflowItem(true, QUESTIONNAIRE_FOLDER + "preQuestionnaire.json", "pre"),
@@ -104,8 +104,25 @@ class StudyWorkflowService {
                 QuestionnaireWorkflowItem(true, QUESTIONNAIRE_FOLDER + "postQuestionnaire.json", "post"),
                 PopupWorkflowItem(true, "Study End", "The study is now finished. Thank you!"),
             )
-        saveWorkflowToDisk(workflowItems, Date.from(Instant.now()))
-        runNextAction()
+
+        saveWorkflowToDisk(hardcodedWorkflowItems, Date.from(Instant.now()))
+    }
+
+    fun startWorkflow(e: AnActionEvent) {
+        initialActionEvent = e
+        isRunning = true
+        currentStep = 0
+        val parsedWorkflow = parseWorkflowFromDisk(StudyState.instance.workflowJsonPath)
+        if (parsedWorkflow.isNullOrEmpty()) {
+            Messages.showErrorDialog(
+                "Workflow file not found or empty. Please check the workflow path configured in the" +
+                    " Study Configuration settings.",
+                "Study Workflow Loading Error.",
+            )
+        } else {
+            workflowItems = parsedWorkflow
+            runNextAction()
+        }
     }
 
     fun nextStep() {
@@ -168,8 +185,6 @@ class StudyWorkflowService {
                 // Only trigger the next action, if the scheduled action is still the current one.
                 // E.g. if the user pressed "next step" in the meantime, the currentStep will be larger
                 // than suspendableActionStep
-                println("Suspendable Step: $suspendableActionStep")
-                println("Current Step: $currentStep")
                 if (suspendableActionStep == currentStep) {
                     runNextAction()
                 }

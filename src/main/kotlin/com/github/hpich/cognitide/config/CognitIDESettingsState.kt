@@ -27,9 +27,14 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
     // devices //TODO refresh panel
     val devices =
         mutableListOf(
-            DeviceSpec("EmotivDataStream-EEG", "19", ""),
             DeviceSpec("Shimmer3 GSR+", "18", ""),
             DeviceSpec("Tobii", "6", ""),
+            DeviceSpec("EmotivDataStream-EEG", "19", ""),
+            DeviceSpec("EmotivDataStream-Motion", "13", ""),
+            DeviceSpec("EmotivDataStream-Performance-Metrics", "7", ""),
+            DeviceSpec("EmotivDataStream-Contact-Quality", "18", ""),
+            DeviceSpec("EmotivDataStream-EEG-Quality", "18", ""),
+            DeviceSpec("EmotivDataStream-Band-Power", "71", ""),
         ) // Todo ensure no empty entries
 
     override fun getState(): CognitIDESettingsState = this

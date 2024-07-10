@@ -119,14 +119,12 @@
                     text="Start Recording"
                     description="Starts or continuous a Tobii Pro recording via LSL."
                     icon="AllIcons.Actions.Execute">
-                    <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt PLUS"/>
             </action>
             <action id="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
                     class="com.github.hpich.cognitide.actions.recording.StopRecordingAction"
                     text="Stop Recording"
                     description="Stops an ongoing recording."
                     icon="AllIcons.Actions.Suspend">
-                    <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt MINUS"/>
             </action>
 
             <action id="com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
@@ -162,6 +160,10 @@
                         text="Export Hardcoded Study Workflow"
                         description="Saves the workflow hardcoded in StudyWorkflowService in the recordings folder."
                         icon="AllIcons.Actions.MenuSaveall"/>
+                <action id="com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+                        class="com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction" text="Clear Recording without warning"
+                        description="Clears all recorded data."
+                        icon="AllIcons.Actions.GC"/>
             </group>
 
             <separator/>

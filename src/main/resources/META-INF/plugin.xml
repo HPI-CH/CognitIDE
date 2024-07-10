@@ -33,6 +33,12 @@
     </extensions>
 
     <actions>
+        <action id="com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+                class="com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+                text="Close All Editor Tabs"
+                description="Closes all editor tabs"
+                icon="AllIcons.Actions.Close"
+        />
         <group id="com.github.hpich.cognitide.actions.CognitIDEGroup"
                text="CognitIDE"
                popup="true"

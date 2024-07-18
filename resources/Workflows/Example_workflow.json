@@ -1,0 +1,85 @@
+[
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Popup Workflow Item",
+    "popupText": "This is a Popup Workflow Item."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 60
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\Example-User\\Desktop\\example_file.txt"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+    "enabled": true,
+    "questionnaireFilePath": "C:\\Users\\Example-User\\Desktop\\example_questionnaire.json",
+    "questionnaireName": "example"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\Example-User\\Desktop\\example_video.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT1M1S"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ShuffleItemsWorkflowItem",
+    "enabled": true,
+    "items": [
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Group 1 Popup",
+            "popupText": "This is a Popup in the first group. Since the groups are shuffled, this might show up second."
+          }
+        ]
+      },
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Group 2 Popup",
+            "popupText": "This is a Popup in the second group. Since the groups are shuffled, this might show up first."
+          }
+        ]
+      }
+    ]
+  }
+]

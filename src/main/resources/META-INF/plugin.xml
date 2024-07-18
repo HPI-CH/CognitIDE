@@ -15,18 +15,8 @@
                 id="plugin.cognitide"
                 displayName="CognitIDE Settings"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.CognitIDESettingsState"/>
-        <applicationConfigurable parentId="plugin.cognitide"
-                                 instance="com.github.hpich.cognitide.config.study.StudyConfigurable"
-                                 id="plugin.cognitide.study"
-                                 displayName="Study Configuration"/>
-        <applicationService serviceImplementation="com.github.hpich.cognitide.config.study.StudyState"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.ParticipantState"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.questionnaires.QuestionnaireState"/>
-        <applicationConfigurable parentId="plugin.cognitide"
-                                 instance="com.github.hpich.cognitide.config.HighlightingConfigurable"
-                                 id="plugin.cognitide.highlighting"
-                                 displayName="Highlighting Configuration"/>
-        <applicationService serviceImplementation="com.github.hpich.cognitide.config.HighlightingState"/>
 
         <notificationGroup id="Recording File Saved"
                            displayType="BALLOON"/>
@@ -56,50 +46,12 @@
                     description="Opens participant setup panel."
                     icon="AllIcons.Actions.EditSource"/>
 
-            <group id="com.github.hpich.cognitide.actions.questionnaires.ViewQuestionnaireGroup"
-                   text="Show Study Questionnaire"
-                   icon="AllIcons.Actions.ListFiles"
-                   popup="true">
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
-                        text="Select Questionnaire"
-                        description="Show and edit the selected questionnaire."
-                        icon="AllIcons.Actions.ListFiles"/>
-                <separator/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewPreQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewPreQuestionnaireAction"
-                        text="Pre-Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Property"/>
-                <separator/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewFirstQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
-                        text="First Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Method"/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewSecondQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
-                        text="Second Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Method"/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewThirdQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
-                        text="Third Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Method"/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewFourthQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewMidStudyQuestionnaireAction"
-                        text="Fourth Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Method"/>
-                <separator/>
-                <action id="com.github.hpich.cognitide.actions.questionnaires.ViewPostQuestionnaireAction"
-                        class="com.github.hpich.cognitide.actions.questionnaires.ViewPostQuestionnaireAction"
-                        text="Post-Questionnaire"
-                        description="Show and edit the pre-questionnaire."
-                        icon="AllIcons.Nodes.Parameter"/>
-            </group>
-
+            <separator/>
+            <action id="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
+                    class="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
+                    text="Select and view Questionnaire"
+                    description="Show and edit the selected questionnaire."
+                    icon="AllIcons.Actions.ListFiles"/>
             <separator/>
 
             <action id="com.github.hpich.cognitide.actions.study.StartStudyWorkflowAction"

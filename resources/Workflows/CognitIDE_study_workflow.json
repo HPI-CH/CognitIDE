@@ -1,0 +1,661 @@
+[
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Introduction Study-Workflow",
+    "popupText": "We will now give you an introduction to the automatic study-workflow."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\demo_task_description.md"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 600
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Introduction Study-Workflow",
+    "popupText": "You should now be familiar with the study-workflow."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\demo_task_description.md"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Begin Study",
+    "popupText": "When you are ready to begin the study, press okay. The automatic study workflow will then start."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Pre-Study Questionnaire",
+    "popupText": "Please fill out this pre-study questionnaire."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+    "enabled": true,
+    "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\preQuestionnaire.json",
+    "questionnaireName": "pre"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Relaxation Video",
+    "popupText": "You will now be shown a 2 minute video. Please try to relax."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Relaxation.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT2M"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Baseline Recording 1 - Open Eyes",
+    "popupText": "We will now do a baseline recording with open eyes. You will see a crosshair in the middle of the screen. Please look at it until it disappears after 1 minute. Press Ok to start the baseline recording."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Baseline_recording_Video.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT1M"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Baseline Recording 1 - Closed Eyes",
+    "popupText": "We will now do a baseline recording with closed eyes. Please keep your eyes closed during the recording until you hear a beep after 1 minute. Press Ok to start the baseline recording."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Baseline_recording_Audio.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT1M5S"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Settling- in period",
+    "popupText": "You now have 5 minutes to make yourself familiar with the code base, in which you will later solve four tasks."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\main\\java\\com\\cognitide\\demo\\DemoApplication.java"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\main\\java\\com\\cognitide\\demo\\TestResultCleanup.java"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\project_structure.md"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 300
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+    "enabled": true,
+    "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\project_structure.md"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ShuffleItemsWorkflowItem",
+    "enabled": true,
+    "items": [
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Coding Task",
+            "popupText": "The coding task will begin now. You have 10 minutes."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\main\\java\\com\\cognitide\\demo\\controller\\TestResultController.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\test\\java\\com\\cognitide\\demo\\TestResultControllerTest.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\programming.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+            "enabled": true,
+            "durationInSeconds": 600
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Coding Task",
+            "popupText": "The coding task is now finished. Please fill out the following questionnaire."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+            "enabled": true,
+            "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\midStudyQuestionnaire.json",
+            "questionnaireName": "mid-study-coding"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\programming.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+          }
+        ]
+      },
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Debugging Task",
+            "popupText": "The debugging task will begin now. You have 10 minutes."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\main\\java\\com\\cognitide\\demo\\TestResultCleanup.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\test\\java\\com\\cognitide\\demo\\TestResultCleanupTest.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\debugging.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+            "enabled": true,
+            "durationInSeconds": 600
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Debugging Task",
+            "popupText": "The debugging task is now finished. Please fill out the following questionnaire."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+            "enabled": true,
+            "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\midStudyQuestionnaire.json",
+            "questionnaireName": "mid-study-debugging"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\debugging.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+          }
+        ]
+      },
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Documentation Task",
+            "popupText": "The documentation task will begin now. You have 10 minutes."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\main\\java\\com\\cognitide\\demo\\service\\TestResultService.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\src\\test\\java\\com\\cognitide\\demo\\TestResultServiceTest.java"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\code_documentation.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+            "enabled": true,
+            "durationInSeconds": 600
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "Documentation Task",
+            "popupText": "The documentation task is now finished. Please fill out the following questionnaire."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+            "enabled": true,
+            "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\midStudyQuestionnaire.json",
+            "questionnaireName": "mid-study-documentation"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\code_documentation.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+          }
+        ]
+      },
+      {
+        "type": "com.github.hpich.cognitide.services.study.GroupWorkflowItem",
+        "enabled": true,
+        "items": [
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "E-Mail Task",
+            "popupText": "The e-mail task will begin now. You have 10 minutes."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\email.txt"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\IdeaProjects\\cognitide-mp-flow-study\\email_response.txt"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\natural_language_writing.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+            "enabled": true,
+            "durationInSeconds": 600
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+            "enabled": true,
+            "popupTitle": "E-Mail Task",
+            "popupText": "The e-mail task is now finished. Please fill out the following questionnaire."
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+            "enabled": true,
+            "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\midStudyQuestionnaire.json",
+            "questionnaireName": "mid-study-email"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.OpenFileWorkflowItem",
+            "enabled": true,
+            "filePath": "C:\\Users\\CogniPro-Student\\Desktop\\Tasks\\natural_language_writing.md"
+          },
+          {
+            "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+            "enabled": true,
+            "actionId": "com.github.hpich.cognitide.actions.studyUtils.CloseAllFilesAction"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Task End",
+    "popupText": "You have now completed all tasks. Please remain seated and follow the instructions."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Relaxation Video",
+    "popupText": "You will now be shown a 2 minute video again. Please try to relax."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Relaxation.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT2M"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Baseline Recording 2 - Open Eyes",
+    "popupText": "We will now do another baseline recording with open eyes. You will see a crosshair in the middle of the screen. Please look at it until it disappears after 1 minute. Press Ok to start the baseline recording."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Baseline_recording_Video.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT1M"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Baseline Recording 2 - Closed Eyes",
+    "popupText": "We will now do another baseline recording with closed eyes. Please keep your eyes closed during the recording until you hear a beep after 1 minute. Press Ok to start the baseline recording."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StartRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.ExecuteShellCommandWorkflowItem",
+    "enabled": true,
+    "command": "\"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe\" --fullscreen --no-video-title-show \"C:\\Users\\CogniPro-Student\\Desktop\\BaselineRecording-Videos\\Baseline_recording_Audio.mp4\" \"vlc://quit\"",
+    "maxDuration": "PT1M5S"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.TimerWorkflowItem",
+    "enabled": true,
+    "durationInSeconds": 2
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.StopRecordingAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.SaveAllRecordingDataAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.WorkflowItem",
+    "enabled": true,
+    "actionId": "com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Post-Study Questionnaire",
+    "popupText": "Please fill out this post-study questionnaire."
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.QuestionnaireWorkflowItem",
+    "enabled": true,
+    "questionnaireFilePath": "C:\\Users\\CogniPro-Student\\Desktop\\Questionaires\\postQuestionnaire.json",
+    "questionnaireName": "post"
+  },
+  {
+    "type": "com.github.hpich.cognitide.services.study.PopupWorkflowItem",
+    "enabled": true,
+    "popupTitle": "Study End",
+    "popupText": "The study is now finished. Thank you for your participation! Please stay seated until we come back and help you take off the sensors."
+  }
+]

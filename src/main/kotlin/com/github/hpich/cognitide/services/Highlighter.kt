@@ -1,6 +1,6 @@
 package com.github.hpich.cognitide.services
 
-import com.github.hpich.cognitide.config.HighlightingState
+import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.services.dto.FileChangeset
 import com.github.hpich.cognitide.services.dto.FileCheckpoint
 import com.github.hpich.cognitide.ui.CognitIDEColors
@@ -189,7 +189,7 @@ class Highlighter(
      * These results are then parsed by this function.
      */
     private fun runHighlightScript() {
-        val command = HighlightingState.instance.highlightingCommand
+        val command = CognitIDESettingsState.instance.highlightingCommand
         val commandWithParameters = "$command \"${saveFolder.absolutePath}\" $time"
         val process = Runtime.getRuntime().exec(commandWithParameters)
         process.waitFor()

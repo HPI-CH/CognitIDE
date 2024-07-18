@@ -18,6 +18,15 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
     var interruptDelay = 60
     var interruptCount = 10
 
+    // highlighting
+    var highlightingCommand = ""
+
+    // The workflow file containing all the workflow items to execute
+    var workflowJsonPath: String = ""
+
+    // Questionnaires
+    var participantSetupJsonPath: String = ""
+
     // external applications
     var tobiiProConnectorExecutable = ""
     var eyeTrackerManagerExecutable = ""

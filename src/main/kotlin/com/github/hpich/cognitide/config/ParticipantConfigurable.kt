@@ -1,6 +1,5 @@
 package com.github.hpich.cognitide.config
 
-import com.github.hpich.cognitide.config.study.StudyState
 import com.github.hpich.cognitide.utils.readJsonOptional
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.ui.DialogPanel
@@ -15,7 +14,7 @@ class ParticipantConfigurable : BoundConfigurable(
     private lateinit var createdPanel: DialogPanel
     private lateinit var idField: Cell<JBTextField>
 
-    private val questionnaire = readJsonOptional(StudyState.instance.participantSetupJsonPath)
+    private val questionnaire = readJsonOptional(CognitIDESettingsState.instance.participantSetupJsonPath)
 
     override fun apply() {
         val validation = createdPanel.validateAll()
@@ -100,7 +99,9 @@ class ParticipantConfigurable : BoundConfigurable(
                     model.id = (1..10000).random()
                     idField.component.text = model.id.toString()
                 }
-            }.rowComment("ID must be integer between 1-10000. Leading zeros are omitted.")
+            }.rowComment(
+                "ID must be integer between 1-10000. Leading zeros are omitted. Attention! CognitIDE does not check for duplicate IDs.",
+            )
             row("Horizontal Spread:") {
                 intTextField(2..1000).bindIntText(model::horizontalSpread)
             }

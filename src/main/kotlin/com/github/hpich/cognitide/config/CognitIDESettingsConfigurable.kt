@@ -1,5 +1,6 @@
 package com.github.hpich.cognitide.config
 
+import com.intellij.json.JsonFileType
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.ui.DialogPanel
@@ -51,19 +52,42 @@ class CognitIDESettingsConfigurable : BoundConfigurable(
                     }
                 }.enabledIf(interruptCheckBox.selected)
             }
+            group("Highlighting Configuration") {
+                row("Command:") {
+                    textField()
+                        .bindText(model::highlightingCommand)
+                        .comment(
+                            "This command will be appended with parameters providing the folder of the recording " +
+                                "as well as the timestamp that will be highlighted. \n" +
+                                "Example: `python \"path/to/highlighting.py\"` will be executed as " +
+                                "`python \"path/to/highlighting.py\" \"path/to/recording/folder\" timestamp`. " +
+                                "Further information and an example script can be found " +
+                                "<a href='https://github.com/HPI-CH/CognitIDE'>here</a>.",
+                        )
+                }
+            }
+
+            group("Study Workflow") {
+                row("Study Workflow File:") {
+                    textFieldWithBrowseButton(
+                        fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor(JsonFileType.INSTANCE),
+                    ).bindText(model::workflowJsonPath)
+                }.rowComment("The workflow JSON which should be executed")
+            }
+
             group("TobiiPro Eye Tracker") {
                 row("Use devices:") {
                     checkBox("Yes").bindSelected(model::includeTobii)
                         .comment("Should data from devices of this type be recorded?")
                 }
-                @Suppress("ktlint")
                 row("Connector path:") {
                     textFieldWithBrowseButton(
                         fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor(),
                     )
                         .bindText(model::tobiiProConnectorExecutable)
                         .comment(
-                            "Please <a href='https://labstreaminglayer.readthedocs.io/info/supported_devices.html'>build the TobiiPro Connector</a>. " +
+                            "Please <a href='https://labstreaminglayer.readthedocs.io/info/supported_devices.html'" +
+                                ">build the TobiiPro Connector</a>. " +
                                 "It is used to create an LSL stream for the eye tracker. " +
                                 "It will be used by the plugin to get the required data.\n" +
                                 "Provide the application path <i>optionally</i> so the application can be opened when needed.",

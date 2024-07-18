@@ -1,6 +1,6 @@
 stages:
   - lint
-#   - test
+  - test
 #   - inspect
   - verify
   - build
@@ -22,14 +22,14 @@ ktlint:
   script:
     - ./gradlew ktlintCheck
 
-# test:
-#   stage: test
-#   only:
-#     - main
-#     - merge_requests
-#   image: gradle:8.1-jdk11
-#   script:
-#     - ./gradlew test
+test:
+  stage: test
+  only:
+    - main
+    - merge_requests
+  image: gradle:8.1-jdk11
+  script:
+    - ./gradlew test
 
 # qodana:
 #   stage: inspect

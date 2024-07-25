@@ -43,11 +43,13 @@ abstract class QuestionnaireConfigurable : BoundConfigurable(
                             when (question.type) {
                                 "dropdown" -> {
                                     val (getValue, setValue) = model.accessPropertyString(getQuestionnaireName(), question.property)
+                                    if (getValue().isEmpty()) setValue("")
                                     comboBox(listOf("") + question.answers!!).bindItem(getValue, setValue)
                                 }
 
                                 "freetext" -> {
                                     val (getValue, setValue) = model.accessPropertyString(getQuestionnaireName(), question.property)
+                                    if (getValue().isEmpty()) setValue("")
                                     textField().bindText(getValue, setValue)
                                 }
 
@@ -70,6 +72,7 @@ abstract class QuestionnaireConfigurable : BoundConfigurable(
 
                                 "number" -> {
                                     val (getValue, setValue) = model.accessPropertyInt(getQuestionnaireName(), question.property)
+                                    if (getValue() == 0) setValue(0)
                                     intTextField(question.min!!..question.max!!).bindIntText(getValue, setValue)
                                 }
                             }

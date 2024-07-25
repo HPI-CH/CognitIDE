@@ -3,8 +3,6 @@ package com.github.hpich.cognitide.services
 import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.extensions.removeAllHighlighters
 import com.github.hpich.cognitide.services.dto.*
-import com.github.hpich.cognitide.services.recording.InterruptService
-import com.github.hpich.cognitide.services.recording.UserInterrupt
 import com.github.hpich.cognitide.utils.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
@@ -31,7 +29,6 @@ import javax.swing.JOptionPane
 @Service(Service.Level.PROJECT)
 class DataCollectingService(val project: Project) {
     private var currentRecorder: StudyRecorder? = null
-    private var interruptService = InterruptService(project, this)
 
     val isRecording: Boolean
         get() = currentRecorder?.isRunning ?: false
@@ -42,9 +39,6 @@ class DataCollectingService(val project: Project) {
 
     val isAnyDataAvailable: Boolean
         get() = sensorData.isNotEmpty() || gazeData.isNotEmpty() || fileChangeData.isNotEmpty() || initialFileContents.isNotEmpty()
-
-    val userInterruptCount: Int
-        get() = userInterruptList.size
 
     fun setRecorder(recorder: StudyRecorder) {
         if (isRecording) return
@@ -59,12 +53,10 @@ class DataCollectingService(val project: Project) {
         }
 
         currentRecorder!!.startRecording()
-        interruptService.startInterrupting()
     }
 
     fun stopRecording() {
         currentRecorder?.stopRecording()
-        interruptService.stopInterrupting()
 
         sortRecordedData()
     }
@@ -90,13 +82,9 @@ class DataCollectingService(val project: Project) {
     // map(file path -> file checkpoint).
     private val initialFileContents = mutableMapOf<String, FileCheckpoint>()
 
-    private val userInterruptList = mutableListOf<UserInterrupt>()
-
     private var latestRecordingSaveFolder: File? = null
 
-    fun stats() =
-        "interrupts: $userInterruptCount/${CognitIDESettingsState.instance.interruptCount}, " +
-            "tracked files: ${initialFileContents.size}, elements: ${psiElementIds.size}"
+    fun stats() = "tracked files: ${initialFileContents.size}, elements: ${psiElementIds.size}"
 
     /**
      * Add new sensor sample to the list of recorded samples.
@@ -233,28 +221,12 @@ class DataCollectingService(val project: Project) {
         }
     }
 
-    fun addUserInterrupt(
-        startMillis: Long,
-        endMillis: Long,
-        answer: String = "",
-    ) {
-        UserInterrupt(startMillis, endMillis, answer).let {
-            userInterruptList.add(it)
-            thisLogger().debug("UserInterrupt added: $it")
-        }
-    }
-
     fun clearData() {
         EditorFactory.getInstance().removeAllHighlighters()
         wasHighlighted = false
 
         currentRecorder?.stopRecording()
         currentRecorder = null
-        interruptService.stopInterrupting()
-        interruptService = InterruptService(project, this)
-
-        userInterruptList.clear()
-
         sensorData.clear()
         gazeData.clear()
         psiElementIds.clear()
@@ -275,7 +247,6 @@ class DataCollectingService(val project: Project) {
                 gazeData,
                 initialFileContents,
                 fileChangeData,
-                userInterruptList,
             )
     }
 

@@ -6,7 +6,6 @@ import com.github.hpich.cognitide.config.ParticipantState
 import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
 import com.github.hpich.cognitide.extensions.screenshot
 import com.github.hpich.cognitide.services.dto.*
-import com.github.hpich.cognitide.services.recording.UserInterrupt
 import com.github.hpich.cognitide.services.study.AWorkflowItem
 import com.intellij.icons.AllIcons
 import com.intellij.notification.NotificationAction
@@ -84,7 +83,6 @@ fun saveRecordingToDisk(
     gazeData: MutableMap<Int, MutableList<GazeSample>>,
     initialFileContents: MutableMap<String, FileCheckpoint>,
     fileChangeData: MutableMap<String, MutableList<FileChangeset>>,
-    userInterrupts: List<UserInterrupt>?,
 ): File? {
     val questionnaireState = QuestionnaireState.instance.propertiesMap
     val saveFolder = createTimestampedFile(createAndGetParticipantFolder(), "recording", date)
@@ -94,11 +92,6 @@ fun saveRecordingToDisk(
         saveFolder.mkdirs()
     }
     try {
-        if (!userInterrupts.isNullOrEmpty()) {
-            val file = File(saveFolder, "interrupts.json")
-            saveToDisk(json.encodeToString(userInterrupts), file)
-            notifyFileSaved(project, file)
-        }
         if (sensorData.isNotEmpty()) {
             val file = File(saveFolder, "sensorData.json")
             saveToDisk(json.encodeToString(sensorData), file)

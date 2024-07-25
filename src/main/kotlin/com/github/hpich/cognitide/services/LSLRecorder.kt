@@ -11,14 +11,12 @@ import com.github.hpich.cognitide.services.recording.LSLSensor
 import com.github.hpich.cognitide.services.recording.MouseSensor
 import com.github.hpich.cognitide.services.recording.Sensor
 import com.github.hpich.cognitide.utils.errorMatrix
-import com.github.hpich.cognitide.utils.openConnector
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageDialogBuilder
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -55,12 +53,11 @@ class LSLRecorder(private val project: Project) : StudyRecorder(project, "Record
     override fun setup(indicator: ProgressIndicator): Boolean {
         val streamInfos = LSL.resolve_streams(streamDiscoveryWaitTime)
         if (!initLslSensors(streamInfos)) {
-            showConnectorDialogues()
             return false
         }
 
         initMouseSensor()
-        gazeSensor = sensors["Tobii"]
+        gazeSensor = sensors[CognitIDESettingsState.instance.gazeSource]
         return true
     }
 
@@ -98,7 +95,6 @@ class LSLRecorder(private val project: Project) : StudyRecorder(project, "Record
      */
     private fun initMouseSensor() {
         val mouseSensor = MouseSensor(this)
-        // TODO add settings to select sensor for gaze data.
         sensors["Mouse"] = mouseSensor
     }
 
@@ -117,25 +113,6 @@ class LSLRecorder(private val project: Project) : StudyRecorder(project, "Record
             }
         }
         return addedLslSensorCount == lslSensorCount
-    }
-
-    /**
-     * Show Dialogues offering to open connector application for each sensor that was not initialized.
-     */
-    private fun showConnectorDialogues() {
-        invokeLater {
-            CognitIDESettingsState.instance.devices.forEach { device ->
-                if (sensors[device.name] == null &&
-                    MessageDialogBuilder.okCancel(
-                        "LSL stream for " + device.name + " could not be found.",
-                        "Maybe the connector application is not running. " +
-                            "By pressing \"Ok\" you can open its connector application.",
-                    ).ask(project)
-                ) {
-                    openConnector(project, device)
-                }
-            }
-        }
     }
 
     /**

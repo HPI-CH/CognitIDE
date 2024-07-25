@@ -1,8 +1,10 @@
 package com.github.hpich.cognitide.config
 
+import com.intellij.util.xmlb.annotations.Attribute
+import com.intellij.util.xmlb.annotations.Tag
+
+@Tag("DeviceSpec")
 data class DeviceSpec(
-    var name: String,
-    var channelCount: String,
-    var connectorPath: String,
-    // Add other necessary fields
+    @Attribute var name: String = "",
+    @Attribute var connectorPath: String = "",
 )

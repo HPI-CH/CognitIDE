@@ -47,9 +47,7 @@ class LSLSensor(private val info: StreamInfo, private val recorder: StudyRecorde
         if (id == -1) return false
 
         val correctFormat = info.channel_format() == LSL.ChannelFormat.float32
-        val correctChannelCount =
-            info.channel_count() == CognitIDESettingsState.instance.devices.get(id).channelCount.toInt()
-        return correctFormat && correctChannelCount
+        return correctFormat
     }
 
     override fun dispose() {

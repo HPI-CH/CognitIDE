@@ -12,12 +12,6 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
     // recording save location
     var recordingsSaveLocation: String = File(System.getProperty("user.home"), "cognitide-recordings").path
 
-    // interrupt
-    var interruptUser = false
-    var interruptStopRecordingAfterLast = true
-    var interruptDelay = 60
-    var interruptCount = 10
-
     // highlighting
     var highlightingCommand = ""
 
@@ -27,24 +21,11 @@ class CognitIDESettingsState : PersistentStateComponent<CognitIDESettingsState> 
     // Questionnaires
     var participantSetupJsonPath: String = ""
 
-    // external applications
-    var tobiiProConnectorExecutable = ""
-    var eyeTrackerManagerExecutable = ""
-    var eyeTrackerSerial = ""
-    var includeTobii = true
+    var gazeSource: String = "Tobii"
 
-    // devices //TODO refresh panel
-    val devices =
-        mutableListOf(
-            DeviceSpec("Shimmer3 GSR+", "18", ""),
-            DeviceSpec("Tobii", "6", ""),
-            DeviceSpec("EmotivDataStream-EEG", "19", ""),
-            DeviceSpec("EmotivDataStream-Motion", "13", ""),
-            DeviceSpec("EmotivDataStream-Performance-Metrics", "7", ""),
-            DeviceSpec("EmotivDataStream-Contact-Quality", "18", ""),
-            DeviceSpec("EmotivDataStream-EEG-Quality", "18", ""),
-            DeviceSpec("EmotivDataStream-Band-Power", "71", ""),
-        ) // Todo ensure no empty entries
+    // devices
+    var devices: MutableList<DeviceSpec> =
+        mutableListOf()
 
     override fun getState(): CognitIDESettingsState = this
 

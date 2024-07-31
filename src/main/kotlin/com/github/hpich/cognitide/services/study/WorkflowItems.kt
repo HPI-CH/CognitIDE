@@ -1,6 +1,6 @@
 package com.github.hpich.cognitide.services.study
 
-import com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction
+import com.github.hpich.cognitide.actions.study.ViewQuestionnaireAction
 import com.github.hpich.cognitide.actions.studyUtils.*
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration
@@ -63,7 +63,7 @@ data class QuestionnaireWorkflowItem(
     override val isAsyncAction: Boolean = false
 
     override fun buildAction(onActionCompleted: (() -> Unit)?): StudyAction {
-        return ViewAnyQuestionnaireAction(questionnaireName, questionnaireFilePath)
+        return ViewQuestionnaireAction(questionnaireName, questionnaireFilePath)
     }
 }
 

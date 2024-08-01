@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.actions.recording
+package com.github.hpich.cognitide.actions.studyUtils
 
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.intellij.openapi.actionSystem.AnAction

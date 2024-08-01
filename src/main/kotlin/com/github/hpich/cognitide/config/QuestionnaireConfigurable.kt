@@ -1,6 +1,6 @@
-package com.github.hpich.cognitide.config.questionnaires
+package com.github.hpich.cognitide.config
 
-import com.github.hpich.cognitide.utils.Questionnaire
+import com.github.hpich.cognitide.utils.readJson
 import com.github.hpich.cognitide.utils.saveQuestionnaireToDisk
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.ui.dsl.builder.*
@@ -8,16 +8,14 @@ import java.time.Instant
 import java.util.*
 import javax.swing.JLabel
 
-abstract class QuestionnaireConfigurable : BoundConfigurable(
+class QuestionnaireConfigurable(questionnairePath: String, val name: String) : BoundConfigurable(
     "Questionnaire",
 ) {
     private val model = QuestionnaireState.instance
 
-    abstract val questionnaire: Questionnaire
+    private val questionnaire = readJson(questionnairePath)
 
-    open fun getQuestionnaireName(): String {
-        return questionnaire.questionnaireType
-    }
+    private fun getQuestionnaireName(): String = name
 
     override fun apply() {
         super.apply()
@@ -25,6 +23,11 @@ abstract class QuestionnaireConfigurable : BoundConfigurable(
         if (state != null) {
             saveQuestionnaireToDisk(getQuestionnaireName(), state, Date.from(Instant.now()))
         }
+    }
+
+    // We want to save the questionnaire even if it is not modified
+    override fun isModified(): Boolean {
+        return true
     }
 
     override fun createPanel() =

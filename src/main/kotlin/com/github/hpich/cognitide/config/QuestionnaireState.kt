@@ -1,4 +1,4 @@
-package com.github.hpich.cognitide.config.questionnaires
+package com.github.hpich.cognitide.config
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @State(
-    name = "com.github.hpich.cognitide.config.questionnaires.QuestionnaireState",
+    name = "com.github.hpich.cognitide.config.QuestionnaireState",
     storages = [Storage("CognitIDEPlugin_questionnaire.xml")],
 )
 class QuestionnaireState : PersistentStateComponent<QuestionnaireState> {

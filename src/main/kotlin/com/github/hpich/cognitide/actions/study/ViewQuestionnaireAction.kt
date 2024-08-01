@@ -1,8 +1,8 @@
-package com.github.hpich.cognitide.actions.questionnaires
+package com.github.hpich.cognitide.actions.study
 
 import com.github.hpich.cognitide.actions.studyUtils.StudyUtilAction
 import com.github.hpich.cognitide.config.CognitIDESettingsState
-import com.github.hpich.cognitide.config.questionnaires.AnyQuestionnaireConfigurable
+import com.github.hpich.cognitide.config.QuestionnaireConfigurable
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.intellij.json.JsonFileType
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -13,7 +13,7 @@ import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.vfs.VirtualFileManager
 import javax.swing.JOptionPane
 
-class ViewAnyQuestionnaireAction(private val name: String = "", private val jsonPath: String = "") : StudyUtilAction() {
+class ViewQuestionnaireAction(private val name: String = "", private val jsonPath: String = "") : StudyUtilAction() {
     override fun update(e: AnActionEvent) {
         val dataCollectingService = e.project?.service<DataCollectingService>()
         e.presentation.isEnabled = dataCollectingService != null &&
@@ -39,6 +39,6 @@ class ViewAnyQuestionnaireAction(private val name: String = "", private val json
         }
 
         val questionnaireSaveName = if (name != "") name else JOptionPane.showInputDialog("Enter name to store questionnaire results")
-        ShowSettingsUtil.getInstance().editConfigurable(e.project, AnyQuestionnaireConfigurable(questionnairePath, questionnaireSaveName))
+        ShowSettingsUtil.getInstance().editConfigurable(e.project, QuestionnaireConfigurable(questionnairePath, questionnaireSaveName))
     }
 }

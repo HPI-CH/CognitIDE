@@ -2,7 +2,7 @@ package com.github.hpich.cognitide.actions.study
 
 import com.github.hpich.cognitide.config.ParticipantConfigurable
 import com.github.hpich.cognitide.config.ParticipantState
-import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
+import com.github.hpich.cognitide.config.QuestionnaireState
 import com.github.hpich.cognitide.services.DataCollectingService
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

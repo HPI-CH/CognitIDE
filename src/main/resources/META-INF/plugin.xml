@@ -16,7 +16,7 @@
                 displayName="CognitIDE Settings"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.CognitIDESettingsState"/>
         <applicationService serviceImplementation="com.github.hpich.cognitide.config.ParticipantState"/>
-        <applicationService serviceImplementation="com.github.hpich.cognitide.config.questionnaires.QuestionnaireState"/>
+        <applicationService serviceImplementation="com.github.hpich.cognitide.config.QuestionnaireState"/>
 
         <notificationGroup id="Recording File Saved"
                            displayType="BALLOON"/>
@@ -47,9 +47,9 @@
                     icon="AllIcons.Actions.EditSource"/>
 
             <separator/>
-            <action id="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
-                    class="com.github.hpich.cognitide.actions.questionnaires.ViewAnyQuestionnaireAction"
-                    text="Select and view Questionnaire"
+            <action id="com.github.hpich.cognitide.actions.study.ViewQuestionnaireAction"
+                    class="com.github.hpich.cognitide.actions.study.ViewQuestionnaireAction"
+                    text="Select and View Questionnaire"
                     description="Show and edit the selected questionnaire."
                     icon="AllIcons.Actions.ListFiles"/>
             <separator/>
@@ -97,41 +97,13 @@
 
             <separator/>
 
-            <group id="com.github.hpich.cognitide.actions.CognitIDEDebugGroup"
-                text="Debug"
-                popup="true">
-                <action id="com.github.hpich.cognitide.actions.debug.StartMouseRecordingAction"
-                    class="com.github.hpich.cognitide.actions.debug.StartMouseRecordingAction"
-                    text="Start Mouse Gaze Recording"
-                    description="Debug action to use the mouse location as simulated center of eye coordinates."
-                    icon="AllIcons.Actions.RunToCursor"/>
-                <action id="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction"
-                    class="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction" text="Open All Files"
-                    description="Opens all files contained in the current recording."
-                    icon="AllIcons.Actions.MenuOpen"/>
-                <action id="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
-                    class="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
-                    text="Screen Brightness"
-                    icon="AllIcons.Actions.Show"/>
-                <action id="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
-                        class="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
-                        text="Export Hardcoded Study Workflow"
-                        description="Saves the workflow hardcoded in StudyWorkflowService in the recordings folder."
-                        icon="AllIcons.Actions.MenuSaveall"/>
-                <action id="com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction"
-                        class="com.github.hpich.cognitide.actions.recording.ClearDataWithoutWarningAction" text="Clear Recording without warning"
-                        description="Clears all recorded data."
-                        icon="AllIcons.Actions.GC"/>
-            </group>
-
-            <separator/>
             <action id="com.github.hpich.cognitide.actions.highlighting.HighlightGazeElementAction"
                     class="com.github.hpich.cognitide.actions.highlighting.HighlightGazeElementAction"
                     text="Visualize Last Saved Recording"
                     description="Will use previously recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Diff.MagicResolveToolbar"/>
-            <action id="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
-                    class="com.github.hpich.cognitide.actions.HighlightSelectedGazeElementAction"
+            <action id="com.github.hpich.cognitide.actions.highlighting.HighlightSelectedGazeElementAction"
+                    class="com.github.hpich.cognitide.actions.highlighting.HighlightSelectedGazeElementAction"
                     text="Select and Visualize Recording"
                     description="Will use selected recorded gaze data to color looked-at elements based on how often they were looked at."
                     icon="AllIcons.Actions.ToggleVisibility"/>
@@ -142,6 +114,26 @@
                     icon="AllIcons.General.Reset"/>
 
             <separator/>
+
+            <group id="com.github.hpich.cognitide.actions.CognitIDEDebugGroup"
+                   text="Debug"
+                   popup="true">
+                <action id="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction"
+                        class="com.github.hpich.cognitide.actions.debug.OpenAllFilesAction" text="Open All Files"
+                        description="Opens all files contained in the current recording."
+                        icon="AllIcons.Actions.MenuOpen"/>
+                <action id="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
+                        class="com.github.hpich.cognitide.actions.debug.CalculateScreenBrightnessAction"
+                        text="Screen Brightness"
+                        icon="AllIcons.Actions.Show"/>
+                <action id="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
+                        class="com.github.hpich.cognitide.actions.study.ExportStudyWorkflowAction"
+                        text="Export Hardcoded Study Workflow"
+                        description="Saves the workflow hardcoded in StudyWorkflowService in the recordings folder."
+                        icon="AllIcons.Actions.MenuSaveall"/>
+                <action id="com.github.hpich.cognitide.actions.studyUtils.ClearDataWithoutWarningAction"
+                        class="com.github.hpich.cognitide.actions.studyUtils.ClearDataWithoutWarningAction"/>
+            </group>
 
         </group>
     </actions>

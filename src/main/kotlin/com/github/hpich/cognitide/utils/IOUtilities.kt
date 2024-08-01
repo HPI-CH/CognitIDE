@@ -3,7 +3,7 @@ package com.github.hpich.cognitide.utils
 import com.github.hpich.cognitide.config.CognitIDESettingsConfigurable
 import com.github.hpich.cognitide.config.CognitIDESettingsState
 import com.github.hpich.cognitide.config.ParticipantState
-import com.github.hpich.cognitide.config.questionnaires.QuestionnaireState
+import com.github.hpich.cognitide.config.QuestionnaireState
 import com.github.hpich.cognitide.extensions.screenshot
 import com.github.hpich.cognitide.services.dto.*
 import com.github.hpich.cognitide.services.study.AWorkflowItem

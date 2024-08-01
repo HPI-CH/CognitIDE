@@ -9,6 +9,7 @@ import com.intellij.codeInsight.highlighting.HighlightManager
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.application.runWriteActionAndWait
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.progress.ProgressIndicator
@@ -20,6 +21,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
 import javax.swing.*
+
+private val logger = Logger.getInstance("com.github.hpich.cognitide.utils.IOUtilities")
 
 /**
  * Class to visualize a recording by highlighting looked at elements based on the recorded data.
@@ -133,6 +136,10 @@ class Highlighter(
         fileChangeData =
             Json.decodeFromString<Map<String, List<FileChangeset>>>(File(saveFolder, "fileChangeData.json").readText())
     }
+
+    /*private fun createTempFile(prefix: String, suffix: String): VirtualFile {
+        return File.createTempFile(prefix, ".$suffix")
+    }*/
 
     /**
      * Reconstruct all files included in the recording at the timestamp specified in `time`.

@@ -174,28 +174,49 @@ fun parseWorkflowFromDisk(path: String): MutableList<AWorkflowItem>? {
 fun reopenFilesFromPaths(
     project: Project,
     filePaths: List<String>,
-): Map<String, FileEditor?> =
-    runReadAction {
-        val fileEditorManager = FileEditorManager.getInstance(project)
-        return@runReadAction filePaths.associateWith { filePath ->
-            val vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
-            if (vFile == null) {
-                logger.error("Could not find recorded file in my $filePath")
-                return@associateWith null
+): Map<String, FileEditor?> {
+    val fileEditorManager = FileEditorManager.getInstance(project)
+    return filePaths.associateWith { filePath ->
+        var vFile = LocalFileSystem.getInstance().findFileByPath(filePath)
+        if (vFile == null) {
+            logger.warn("File not found at $filePath, creating new file.")
+            runWriteAction {
+                val file = File(filePath)
+                if (!file.parentFile.exists() && !file.parentFile.mkdirs()) {
+                    logger.error("Failed to create parent directories for $filePath")
+                    return@runWriteAction
+                }
+
+                if (!file.createNewFile()) {
+                    logger.error("Failed to create file at $filePath")
+                    return@runWriteAction
+                }
+                vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
+                // vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file)
+                if (vFile == null) {
+                    logger.error("Failed to create file at $filePath")
+                }
             }
+        }
+        if (vFile == null) {
+            logger.error("Failed to create file at $filePath")
+            return@associateWith null
+        }
+        runReadAction {
             // Check if the file is already open
-            val openEditors = fileEditorManager.getEditors(vFile)
+            val openEditors = fileEditorManager.getEditors(vFile!!)
             if (openEditors.isNotEmpty()) {
-                return@associateWith openEditors.firstOrNull()
+                return@runReadAction openEditors.firstOrNull()
             }
-            val editor = fileEditorManager.openFile(vFile, false, true).firstOrNull()
+            val editor = fileEditorManager.openFile(vFile!!, false, true).firstOrNull()
             if (editor == null) {
                 logger.error("Could not open an editor for $filePath")
-                return@associateWith null
+                return@runReadAction null
             }
-            editor
+            return@runReadAction editor
         }
     }
+}
 
 fun reopenFileFromPath(
     project: Project,

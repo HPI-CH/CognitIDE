@@ -8,6 +8,7 @@ It is available for IntelliJ-based IDEs with build numbers 221 to 222. Lab Strea
 
 ## Citing CognitIDE
 If you use this software and/or source code, please cite:
+
 Fabian Stolp, Malte Stellmacher, and Bert Arnrich. 2024. CognitIDE: An IDE Plugin for Mapping Physiological Measurements to Source Code. In Companion Proceedings of the 32nd ACM International Conference on the Foundations of Software Engineering (FSE 2024). Association for Computing Machinery, New York, NY, USA, 592–596. https://doi.org/10.1145/3663529.3663805
 
 ## Installation

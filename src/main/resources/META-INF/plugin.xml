@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.hpich.cognitide</id>
     <name>CognitIDE - Physiological Studies</name>
-    <vendor>Malte Stellmacher, Fabian Stolp</vendor>
+    <vendor>Malte Stellmacher, Fabian Stolp, Franziska Hradilak, Amin Kanan, Lara Kursawe, Magnus Menger, Franz Sauerwald, Stefan Spangenberg</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 

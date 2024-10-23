@@ -5,7 +5,12 @@ CognitIDE
 <!-- Plugin description -->
 CognitIDE integrates body sensor hardware to record physiological data while reading and interacting with code and
 generates code highlightings and heatmaps for assessment.
-It is available for IntelliJ-based IDEs with build numbers 221 to 222. Lab Streaming Layer (LSL) streams are supported.
+It is available for IntelliJ-based IDEs for Windows with build numbers greater than 221 and smaller than 222. Lab Streaming Layer (LSL) streams are supported.
+
+## Citing CognitIDE
+If you use CognitIDE in one of your projects, please cite the following:
+
+Fabian Stolp, Malte Stellmacher, and Bert Arnrich. 2024. CognitIDE: An IDE Plugin for Mapping Physiological Measurements to Source Code. In Companion Proceedings of the 32nd ACM International Conference on the Foundations of Software Engineering (FSE 2024). Association for Computing Machinery, New York, NY, USA, 592–596. https://doi.org/10.1145/3663529.3663805
 
 ## Installation
 

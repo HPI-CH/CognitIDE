@@ -122,7 +122,7 @@
           "majorTickSpacing": 5
         },
         {
-          "title": "How do you estimate your programming experience compared to your class mates?",
+          "title": "How do you estimate your programming experience compared to your peers?",
           "property": "s.ClassMates",
           "type": "slider",
           "min": 1,

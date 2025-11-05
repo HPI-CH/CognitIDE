@@ -61,6 +61,20 @@ It will use the mouse to simulate the gaze and visualize the code elements, the 
 
 5. For a recording with more sensors, automated studies, custom questionaires or custom highlighting scripts, read the following sections.
 
+## Calculating the Eye Tracker Spread
+
+Eye trackers record gaze with a certain error. CognitIDE takes this into account by allowing the user to provide spread values. Those values can be configured in the participant setup and depend on the eye tracker and the screen used. To calculate the relevant values, the following formulas can be used:
+
+Accuracy of eye tracker α from degrees to length on screen: 
+
+$e = 2 \cdot \text{screenDistance} \cdot \tan\left(\frac{\alpha}{2}\right)$
+
+Horizontal and vertical error in pixel space:
+
+$\Delta_h = \frac{\text{screenPx}_h}{\text{screenLength}_h} \cdot e$ <- horizontal spread in px
+
+$\Delta_v = \frac{\text{screenPx}_v}{\text{screenLength}_v} \cdot e$ <- vertical spread in px
+
 ## Configuring Sensors
 
 Before starting a recording, the LSL streams for all sensors have to be configured in the settings. The settings of

@@ -65,7 +65,7 @@ It will use the mouse to simulate the gaze and visualize the code elements, the 
 
 Eye trackers record gaze with a certain error. CognitIDE takes this into account by allowing the user to provide spread values. Those values can be configured in the participant setup and depend on the eye tracker and the screen used. To calculate the relevant values, the following formulas can be used:
 
-Accuracy of eye tracker α from degrees to length on screen: 
+Manufacturer-specified accuracy of an eye tracker α from degrees to length on screen: 
 
 $e = 2 \cdot \text{screenDistance} \cdot \tan\left(\frac{\alpha}{2}\right)$
 
